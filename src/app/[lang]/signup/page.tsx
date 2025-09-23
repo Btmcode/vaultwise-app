@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useRouter, useParams } from 'next/navigation';
+import { useParams } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,7 +25,6 @@ export default function SignupPage() {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const router = useRouter();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,7 +53,7 @@ export default function SignupPage() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Bilinmeyen sunucu hatası' }));
+        const errorData = await response.json().catch(() => ({ details: 'Bilinmeyen sunucu hatası' }));
         console.error('Session cookie API error:', errorData);
         throw new Error(errorData.details || 'Session cookie creation failed');
       }
@@ -71,8 +70,6 @@ export default function SignupPage() {
       let description = signupDict.toast.error.default;
       if (error.code === 'auth/email-already-in-use') {
         description = signupDict.toast.error.emailInUse;
-      } else if (error.message.includes('Session cookie creation failed')) {
-         description = "Sunucuyla iletişim kurulamadı. Lütfen tekrar deneyin."
       } else if (error.message) {
         description = error.message;
       }

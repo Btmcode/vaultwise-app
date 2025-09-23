@@ -3,8 +3,6 @@ import {NextRequest, NextResponse} from 'next/server';
 import {cookies} from 'next/headers';
 import admin from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
-import { URL } from 'url';
-
 
 // This function initializes and returns the Firebase Admin App instance.
 // It ensures that the app is initialized only once.
@@ -62,12 +60,15 @@ export async function POST(request: NextRequest) {
     const requestUrl = new URL(request.url);
     const isLocalhost = requestUrl.hostname === 'localhost';
 
+    // For production, use the root domain. For localhost, don't set the domain.
+    const domain = isLocalhost ? undefined : requestUrl.hostname.split('.').slice(-2).join('.');
+
     cookies().set('firebase-session', sessionCookie, {
       httpOnly: true,
       secure: !isLocalhost,
       maxAge: expiresIn,
       path: '/',
-      domain: isLocalhost ? undefined : requestUrl.hostname.split('.').slice(-3).join('.'),
+      domain: domain,
     });
 
     return NextResponse.json({status: 'success'}, {status: 200});
@@ -80,4 +81,3 @@ export async function POST(request: NextRequest) {
     );
   }
 }
-
