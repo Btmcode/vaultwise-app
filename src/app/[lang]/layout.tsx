@@ -9,8 +9,7 @@ type LayoutProps = {
   params: { lang: 'tr' | 'en' };
 };
 
-export async function generateMetadata(props: LayoutProps): Promise<Metadata> {
-  const { params } = await props;
+export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
   const dict = await getDictionary(params.lang);
   return {
     title: dict.metadata.title,
