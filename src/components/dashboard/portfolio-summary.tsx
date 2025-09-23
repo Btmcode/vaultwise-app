@@ -17,15 +17,15 @@ export function PortfolioSummary({ dict }: { dict: any }) {
   }).format(totalPortfolioValue);
 
   return (
-    <Card className="relative z-10">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
+    <Card className="relative">
+      <CardHeader className="pb-2">
         <CardTitle>{dict.portfolioSummary.totalBalance}</CardTitle>
-        <div className="flex items-center gap-2">
-           <BuyDialog dict={dict} />
-           <SellDialog dict={dict} />
-           <AutoSaveDialog dict={dict} />
-        </div>
       </CardHeader>
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
+        <BuyDialog dict={dict} />
+        <SellDialog dict={dict} />
+        <AutoSaveDialog dict={dict} />
+      </div>
       <CardContent>
         <div className="text-4xl font-bold">{formattedValue}</div>
         <p className="text-xs text-muted-foreground flex items-center">
