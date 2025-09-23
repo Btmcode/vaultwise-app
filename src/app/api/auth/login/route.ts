@@ -1,20 +1,15 @@
 
 import {NextRequest, NextResponse} from 'next/server';
 import {cookies} from 'next/headers';
-import {
-  initializeApp,
-  getApps,
-  getApp,
-  credential,
-  App,
-} from 'firebase-admin/app';
-import {getAuth} from 'firebase-admin/auth';
+import admin from 'firebase-admin';
+import type { App } from 'firebase-admin/app';
+
 
 // This function initializes and returns the Firebase Admin App instance.
 // It ensures that the app is initialized only once.
 function getAdminApp(): App {
-  if (getApps().length > 0) {
-    return getApp();
+  if (admin.apps.length > 0) {
+    return admin.app();
   }
 
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
@@ -28,8 +23,8 @@ function getAdminApp(): App {
   }
 
   try {
-    return initializeApp({
-      credential: credential.cert({
+    return admin.initializeApp({
+      credential: admin.credential.cert({
         projectId,
         clientEmail,
         privateKey,
@@ -57,7 +52,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const adminApp = getAdminApp();
-    const adminAuth = getAuth(adminApp);
+    const adminAuth = admin.auth(adminApp);
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn,
     });
