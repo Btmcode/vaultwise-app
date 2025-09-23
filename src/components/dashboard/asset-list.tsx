@@ -39,20 +39,21 @@ const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
 }
 
 export function AssetList({ dict }: { dict: any }) {
+  const assetListDict = dict.assetList;
   return (
     <>
       <CardHeader>
-        <CardTitle>{dict.title}</CardTitle>
-        <CardDescription>{dict.description}</CardDescription>
+        <CardTitle>{assetListDict.title}</CardTitle>
+        <CardDescription>{assetListDict.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[80px]">{dict.table.asset}</TableHead>
-              <TableHead>{dict.table.balance}</TableHead>
-              <TableHead className="text-right">{dict.table.price}</TableHead>
-              <TableHead className="text-right">{dict.table.value}</TableHead>
+              <TableHead className="w-[80px]">{assetListDict.table.asset}</TableHead>
+              <TableHead>{assetListDict.table.balance}</TableHead>
+              <TableHead className="text-right">{assetListDict.table.price}</TableHead>
+              <TableHead className="text-right">{assetListDict.table.value}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

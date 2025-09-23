@@ -40,7 +40,7 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
         <div className="grid gap-4 md:gap-8">
           <Card>
             <Suspense fallback={<Skeleton className="h-96" />}>
-              <AssetList dict={dict.assetList} />
+              <AssetList dict={dict} />
             </Suspense>
           </Card>
         </div>
