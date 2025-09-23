@@ -31,16 +31,17 @@ const getBadgeVariant = (type: TransactionType) => {
 };
 
 const getTransactionTypeKey = (type: TransactionType) => {
-    return type.toLowerCase().replace('-', '_') as keyof typeof dict.transactionTypes;
+    return type.toLowerCase().replace('-', '_') as keyof typeof dict.recentTransactions.transactionTypes;
 }
 
 
 export function RecentTransactions({ dict }: { dict: any }) {
+    const recentTransactionsDict = dict.recentTransactions;
   return (
     <>
       <CardHeader>
-        <CardTitle>{dict.title}</CardTitle>
-        <CardDescription>{dict.description}</CardDescription>
+        <CardTitle>{recentTransactionsDict.title}</CardTitle>
+        <CardDescription>{recentTransactionsDict.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         {transactions.map((tx) => {
@@ -68,7 +69,7 @@ export function RecentTransactions({ dict }: { dict: any }) {
                   }).format(tx.amountUsd)}
                 </p>
                 <Badge variant={getBadgeVariant(tx.type)} className="text-xs">
-                  {dict.transactionTypes[transactionTypeKey]}
+                  {recentTransactionsDict.transactionTypes[transactionTypeKey]}
                 </Badge>
               </div>
             </div>
