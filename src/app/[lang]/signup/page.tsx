@@ -69,7 +69,10 @@ export default function SignupPage() {
       let description = signupDict.toast.error.default;
       if (error.code === 'auth/email-already-in-use') {
         description = signupDict.toast.error.emailInUse;
+      } else if (error.message === 'Session cookie creation failed') {
+         description = "Sunucuyla iletişim kurulamadı. Lütfen tekrar deneyin."
       }
+
 
       toast({
         variant: 'destructive',

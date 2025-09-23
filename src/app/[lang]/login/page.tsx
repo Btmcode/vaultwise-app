@@ -71,6 +71,8 @@ export default function LoginPage() {
       let description = loginDict.toast.error.default;
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-email') {
         description = loginDict.toast.error.invalidCredentials;
+      } else if (error.message === 'Session cookie creation failed') {
+        description = "Sunucuyla iletişim kurulamadı. Lütfen tekrar deneyin."
       }
       
       toast({
