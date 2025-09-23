@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
@@ -11,14 +12,18 @@ import { Switch } from '@/components/ui/switch';
 import { Eye, EyeOff } from 'lucide-react';
 
 
-export default function SettingsPage({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
+export default function SettingsPage() {
+  const params = useParams();
+  const lang = params.lang as 'tr' | 'en';
   const [dict, setDict] = useState<any>(null);
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
   useEffect(() => {
-    getDictionary(lang).then(setDict);
+    if (lang) {
+      getDictionary(lang).then(setDict);
+    }
   }, [lang]);
 
   if (!dict) {
