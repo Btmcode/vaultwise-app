@@ -123,7 +123,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline">
+        <Button variant="outline" size="sm">
           <Wand2 className="mr-2 h-4 w-4" />
           {autoSaveDialogDict.title}
         </Button>

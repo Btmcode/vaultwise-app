@@ -63,7 +63,7 @@ export function BuyDialog({ dict }: { dict: any }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className="buy-button">{buyDialogDict.title}</Button>
+        <Button size="sm" className="buy-button">{buyDialogDict.title}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
