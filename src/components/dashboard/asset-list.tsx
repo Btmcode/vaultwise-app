@@ -5,18 +5,10 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import { assets, portfolioAssets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol } from "@/lib/types";
+import { Separator } from "@/components/ui/separator";
 
 const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAU: GoldIcon,
@@ -39,64 +31,51 @@ const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
 }
 
 export function AssetList({ dict, assetNames }: { dict: any, assetNames: any }) {
-  const assetListDict = dict;
+  const assetListDict = dict.assetList;
   return (
     <>
       <CardHeader>
         <CardTitle>{assetListDict.title}</CardTitle>
         <CardDescription>{assetListDict.description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[80px]">{assetListDict.table.asset}</TableHead>
-              <TableHead>{assetListDict.table.balance}</TableHead>
-              <TableHead className="text-right">{assetListDict.table.price}</TableHead>
-              <TableHead className="text-right">{assetListDict.table.value}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {portfolioAssets.map((pa) => {
-              const assetInfo = assets[pa.assetSymbol];
-              const Icon = iconMap[pa.assetSymbol];
-              return (
-                <TableRow key={pa.assetSymbol}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="bg-muted p-2 rounded-full">
-                         <Icon className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <p className="font-medium">{assetNames[assetInfo.symbol]}</p>
-                        <p className="text-sm text-muted-foreground">{assetInfo.symbol}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {formatAssetAmount(pa.amount, pa.assetSymbol)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div>{formatCurrency(assetInfo.price)}</div>
-                    <div
-                      className={`text-xs ${
-                        assetInfo.change24h > 0
-                          ? "text-green-500"
-                          : "text-red-500"
-                      }`}
-                    >
-                      {assetInfo.change24h > 0 ? "+" : ""}
-                      {assetInfo.change24h.toFixed(2)}%
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatCurrency(pa.valueUsd)}
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
+      <CardContent className="grid gap-6">
+        {portfolioAssets.map((pa, index) => {
+          const assetInfo = assets[pa.assetSymbol];
+          const Icon = iconMap[pa.assetSymbol];
+          return (
+            <div key={pa.assetSymbol}>
+              <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+                <div className="flex items-center gap-4 w-full md:w-1/3">
+                  <div className="bg-muted p-3 rounded-full">
+                     <Icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="font-medium">{assetNames[assetInfo.symbol]}</p>
+                    <p className="text-sm text-muted-foreground">{assetInfo.symbol}</p>
+                  </div>
+                </div>
+                
+                <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4 w-full">
+                  <div className="text-left md:text-left">
+                    <p className="text-sm text-muted-foreground">{assetListDict.table.balance}</p>
+                    <p className="font-medium">{formatAssetAmount(pa.amount, pa.assetSymbol)}</p>
+                  </div>
+
+                  <div className="text-right md:text-left">
+                    <p className="text-sm text-muted-foreground">{assetListDict.table.price}</p>
+                    <div className="font-medium">{formatCurrency(assetInfo.price)}</div>
+                  </div>
+                  
+                  <div className="col-span-2 md:col-span-1 text-right">
+                    <p className="text-sm text-muted-foreground ">{assetListDict.table.value}</p>
+                    <p className="font-semibold text-lg">{formatCurrency(pa.valueUsd)}</p>
+                  </div>
+                </div>
+              </div>
+              {index < portfolioAssets.length - 1 && <Separator className="mt-6" />}
+            </div>
+          );
+        })}
       </CardContent>
     </>
   );
