@@ -1,9 +1,10 @@
+
 'use server';
 /**
  * @fileOverview This file defines a Genkit flow for generating personalized savings goal suggestions.
  *
  * The flow takes user's income, risk tolerance, and financial goals as input and provides
- * tailored suggestions for automated savings plans.
+ * tailored suggestions for automated savings plans. It also simulates a payment request.
  *
  * @param {AutomatedSavingsGoalInput} input - User's financial information and preferences.
  * @returns {Promise<AutomatedSavingsGoalOutput>} - A promise that resolves with savings goal suggestions.
@@ -11,6 +12,7 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
+import {v4 as uuidv4} from 'uuid';
 
 const AutomatedSavingsGoalInputSchema = z.object({
   income: z.number().describe('The user\u2019s monthly income.'),
@@ -54,6 +56,31 @@ export type AutomatedSavingsGoalOutput = z.infer<
   typeof AutomatedSavingsGoalOutputSchema
 >;
 
+// Tool to simulate a payment request
+const requestPayment = ai.defineTool(
+  {
+    name: 'requestPayment',
+    description: 'Requests a payment for a specific amount. Use this before finalizing a savings plan.',
+    inputSchema: z.object({
+        amount: z.number().describe("The amount to charge the user.")
+    }),
+    outputSchema: z.object({
+        success: z.boolean(),
+        transactionId: z.string().describe("The unique ID for the transaction.")
+    }),
+  },
+  async (input) => {
+    // In a real app, this would integrate with a payment provider like Stripe.
+    // For this simulation, we'll just assume the payment is always successful.
+    console.log(`Simulating payment request for $${input.amount}`);
+    return {
+        success: true,
+        transactionId: uuidv4(),
+    };
+  }
+);
+
+
 export async function generateSavingsGoalSuggestion(
   input: AutomatedSavingsGoalInput
 ): Promise<AutomatedSavingsGoalOutput> {
@@ -64,17 +91,18 @@ const prompt = ai.definePrompt({
   name: 'automatedSavingsGoalPrompt',
   input: {schema: AutomatedSavingsGoalInputSchema},
   output: {schema: AutomatedSavingsGoalOutputSchema},
-  prompt: `You are an AI assistant that provides personalized savings goal suggestions based on user input.
+  tools: [requestPayment],
+  prompt: `You are an AI assistant that provides personalized savings goal suggestions.
 
-  Consider the user's income, risk tolerance, and financial goals to generate a tailored suggestion.
-
-  Here's the user's information:
+  1.  First, analyze the user's information to determine a suggested savings amount and goal.
   - Income: {{income}}
   - Risk Tolerance: {{riskTolerance}}
   - Financial Goal: {{financialGoal}}
   - Interested Assets: {{assets}}
-
-  Generate a savings goal suggestion, a suggested amount to save regularly, a suggested asset to save in, and a rationale for your suggestions.
+  
+  2.  **Crucially, before you output the final suggestion, you must use the 'requestPayment' tool to charge the user for the suggested savings amount.**
+  
+  3.  If the payment is successful, provide the full savings goal suggestion, rationale, and the chosen asset. If it fails, do not provide a suggestion.
   `,
 });
 
