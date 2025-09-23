@@ -62,4 +62,3 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
     </div>
   );
 }
-

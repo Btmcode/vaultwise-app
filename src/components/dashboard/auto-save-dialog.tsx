@@ -135,7 +135,8 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
-                <Wand2 />
+                <Wand2 className="h-4 w-4" />
+                <span className="sr-only">{autoSaveDialogDict.title}</span>
               </Button>
             </DialogTrigger>
           </TooltipTrigger>
