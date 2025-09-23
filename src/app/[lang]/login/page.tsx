@@ -32,6 +32,16 @@ export default function LoginPage() {
     e.preventDefault();
     setIsLoading(true);
 
+    if (!email || !password) {
+        toast({
+            variant: 'destructive',
+            title: loginDict.toast.error.title,
+            description: loginDict.toast.error.invalidCredentials,
+        });
+        setIsLoading(false);
+        return;
+    }
+
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
@@ -59,7 +69,7 @@ export default function LoginPage() {
       console.error('Login error:', error);
       
       let description = loginDict.toast.error.default;
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-email') {
         description = loginDict.toast.error.invalidCredentials;
       }
       
