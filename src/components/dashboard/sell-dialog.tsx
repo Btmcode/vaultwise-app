@@ -42,8 +42,8 @@ export function SellDialog({ dict }: { dict: any }) {
     if (!asset || !amountAsset || parseFloat(amountAsset) <= 0) {
       toast({
         variant: "destructive",
-        title: dict.toastInvalidTitle,
-        description: dict.toastInvalidDescription,
+        title: dict.portfolioSummary.sellDialog.toastInvalidTitle,
+        description: dict.portfolioSummary.sellDialog.toastInvalidDescription,
       });
       return;
     }
@@ -51,41 +51,43 @@ export function SellDialog({ dict }: { dict: any }) {
     if (portfolioAsset && parseFloat(amountAsset) > portfolioAsset.amount) {
       toast({
         variant: "destructive",
-        title: dict.toastInsufficientTitle,
-        description: dict.toastInsufficientDescription.replace('{amount}', portfolioAsset.amount.toString()).replace('{symbol}', asset),
+        title: dict.portfolioSummary.sellDialog.toastInsufficientTitle,
+        description: dict.portfolioSummary.sellDialog.toastInsufficientDescription.replace('{amount}', portfolioAsset.amount.toString()).replace('{symbol}', asset),
       });
       return;
     }
     
     toast({
-      title: dict.toastSuccessTitle,
-      description: dict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset).replace('{usd}', amountUsd),
+      title: dict.portfolioSummary.sellDialog.toastSuccessTitle,
+      description: dict.portfolioSummary.sellDialog.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset).replace('{usd}', amountUsd),
     });
     setIsOpen(false);
     setAsset(null);
     setAmountAsset("");
   };
 
+  const sellDialogDict = dict.portfolioSummary.sellDialog;
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary">{dict.title}</Button>
+        <Button variant="secondary">{sellDialogDict.title}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{dict.title}</DialogTitle>
+          <DialogTitle>{sellDialogDict.title}</DialogTitle>
           <DialogDescription>
-            {dict.description}
+            {sellDialogDict.description}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="asset" className="text-right">
-              {dict.assetLabel}
+              {sellDialogDict.assetLabel}
             </Label>
             <Select onValueChange={(value) => setAsset(value as AssetSymbol)}>
               <SelectTrigger id="asset" className="col-span-3">
-                <SelectValue placeholder={dict.assetPlaceholder} />
+                <SelectValue placeholder={sellDialogDict.assetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
                 {portfolioAssets.map((pa) => (
@@ -98,7 +100,7 @@ export function SellDialog({ dict }: { dict: any }) {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="amount" className="text-right">
-              {dict.amountLabel}
+              {sellDialogDict.amountLabel}
             </Label>
             <Input
               id="amount"
@@ -106,17 +108,17 @@ export function SellDialog({ dict }: { dict: any }) {
               value={amountAsset}
               onChange={(e) => setAmountAsset(e.target.value)}
               className="col-span-3"
-              placeholder={dict.amountPlaceholder}
+              placeholder={sellDialogDict.amountPlaceholder}
             />
           </div>
           {assetDetails && (
             <div className="text-sm text-muted-foreground text-center col-span-4">
-              {dict.approximate.replace('{usd}', amountUsd)}
+              {sellDialogDict.approximate.replace('{usd}', amountUsd)}
             </div>
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleSell}>{dict.sellButton}</Button>
+          <Button onClick={handleSell}>{sellDialogDict.sellButton}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

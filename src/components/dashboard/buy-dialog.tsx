@@ -40,15 +40,15 @@ export function BuyDialog({ dict }: { dict: any }) {
     if (!asset || !amountUsd || parseFloat(amountUsd) <= 0) {
       toast({
         variant: "destructive",
-        title: dict.toastInvalidTitle,
-        description: dict.toastInvalidDescription,
+        title: dict.portfolioSummary.buyDialog.toastInvalidTitle,
+        description: dict.portfolioSummary.buyDialog.toastInvalidDescription,
       });
       return;
     }
     
     toast({
-      title: dict.toastSuccessTitle,
-      description: dict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset),
+      title: dict.portfolioSummary.buyDialog.toastSuccessTitle,
+      description: dict.portfolioSummary.buyDialog.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset),
     });
     setIsOpen(false);
     setAsset(null);
@@ -56,27 +56,28 @@ export function BuyDialog({ dict }: { dict: any }) {
   };
 
   const assetValues = Object.values(assets);
+  const buyDialogDict = dict.portfolioSummary.buyDialog;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>{dict.title}</Button>
+        <Button>{buyDialogDict.title}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>{dict.title}</DialogTitle>
+          <DialogTitle>{buyDialogDict.title}</DialogTitle>
           <DialogDescription>
-            {dict.description}
+            {buyDialogDict.description}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="asset" className="text-right">
-              {dict.assetLabel}
+              {buyDialogDict.assetLabel}
             </Label>
             <Select onValueChange={(value) => setAsset(value as AssetSymbol)}>
               <SelectTrigger id="asset" className="col-span-3">
-                <SelectValue placeholder={dict.assetPlaceholder} />
+                <SelectValue placeholder={buyDialogDict.assetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
                 {assetValues.map((a) => (
@@ -89,7 +90,7 @@ export function BuyDialog({ dict }: { dict: any }) {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="amount" className="text-right">
-              {dict.amountLabel}
+              {buyDialogDict.amountLabel}
             </Label>
             <Input
               id="amount"
@@ -97,17 +98,17 @@ export function BuyDialog({ dict }: { dict: any }) {
               value={amountUsd}
               onChange={(e) => setAmountUsd(e.target.value)}
               className="col-span-3"
-              placeholder={dict.amountPlaceholder}
+              placeholder={buyDialogDict.amountPlaceholder}
             />
           </div>
           {assetDetails && (
             <div className="text-sm text-muted-foreground text-center col-span-4">
-              {dict.approximate.replace('{amount}', amountAsset).replace('{symbol}', assetDetails.symbol)}
+              {buyDialogDict.approximate.replace('{amount}', amountAsset).replace('{symbol}', assetDetails.symbol)}
             </div>
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleBuy}>{dict.buyButton}</Button>
+          <Button onClick={handleBuy}>{buyDialogDict.buyButton}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

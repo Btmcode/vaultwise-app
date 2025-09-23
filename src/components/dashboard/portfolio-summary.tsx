@@ -21,18 +21,18 @@ export function PortfolioSummary({ dict }: { dict: any }) {
   return (
     <Card className="lg:col-span-4">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle>{dict.totalBalance}</CardTitle>
+        <CardTitle>{dict.portfolioSummary.totalBalance}</CardTitle>
         <div className="flex items-center gap-2">
-           <BuyDialog dict={dict.buyDialog} />
-           <SellDialog dict={dict.sellDialog} />
-           <AutoSaveDialog dict={dict.autoSave} />
+           <BuyDialog dict={dict} />
+           <SellDialog dict={dict} />
+           <AutoSaveDialog dict={dict.portfolioSummary.autoSave} />
         </div>
       </CardHeader>
       <CardContent>
         <div className="text-4xl font-bold">{formattedValue}</div>
         <p className="text-xs text-muted-foreground flex items-center">
           <ArrowUpRight className="h-4 w-4 text-green-500" />
-          {dict.growth}
+          {dict.portfolioSummary.growth}
         </p>
       </CardContent>
     </Card>
