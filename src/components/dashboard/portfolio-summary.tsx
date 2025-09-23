@@ -3,6 +3,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardFooter,
 } from "@/components/ui/card";
 import { totalPortfolioValue } from "@/lib/data";
 import { ArrowUpRight } from "lucide-react";
@@ -17,22 +18,22 @@ export function PortfolioSummary({ dict }: { dict: any }) {
   }).format(totalPortfolioValue);
 
   return (
-    <Card className="relative">
+    <Card className="flex flex-col">
       <CardHeader className="pb-2">
         <CardTitle>{dict.portfolioSummary.totalBalance}</CardTitle>
       </CardHeader>
-      <div className="absolute top-4 right-4 flex items-center gap-2 z-20">
-        <BuyDialog dict={dict} />
-        <SellDialog dict={dict} />
-        <AutoSaveDialog dict={dict} />
-      </div>
-      <CardContent>
+      <CardContent className="flex-grow">
         <div className="text-4xl font-bold">{formattedValue}</div>
         <p className="text-xs text-muted-foreground flex items-center">
           <ArrowUpRight className="h-4 w-4 text-green-500" />
           {dict.portfolioSummary.growth}
         </p>
       </CardContent>
+      <CardFooter className="flex gap-2">
+        <BuyDialog dict={dict} />
+        <SellDialog dict={dict} />
+        <AutoSaveDialog dict={dict} />
+      </CardFooter>
     </Card>
   );
 }
