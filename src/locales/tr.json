@@ -162,5 +162,16 @@
             "newsletter": "Bülten",
             "saveButton": "Tercihleri Kaydet"
         }
+    },
+     "autoSavePlans": {
+        "title": "Aktif Otomatik Tasarruf Planları",
+        "description": "Aktif otomatik tasarruf planlarınızı yönetin.",
+        "amount": "Tutar",
+        "frequency": "Aylık",
+        "stopButton": "Durdur",
+        "toast": {
+            "title": "Plan Durduruldu",
+            "description": "Otomatik tasarruf planınız başarıyla durduruldu."
+        }
     }
 }

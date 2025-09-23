@@ -1,4 +1,5 @@
-import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol } from "@/lib/types";
+
+import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol, AutoSavePlan } from "@/lib/types";
 
 export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
   BTC: {
@@ -79,6 +80,23 @@ export const transactions: Transaction[] = [
     amountUsd: 295.5,
     date: new Date("2024-05-12T11:00:00Z"),
   },
+];
+
+export const autoSavePlans: AutoSavePlan[] = [
+    {
+        id: "plan-1",
+        assetSymbol: "XAU",
+        amount: 100,
+        frequency: "monthly",
+        status: "active"
+    },
+    {
+        id: "plan-2",
+        assetSymbol: "BTC",
+        amount: 50,
+        frequency: "monthly",
+        status: "active"
+    }
 ];
 
 const generateChartData = (period: 'day' | 'week' | 'month' | 'year', count: number, baseValue: number, volatility: number) => {

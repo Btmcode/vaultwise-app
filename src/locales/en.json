@@ -162,5 +162,16 @@
             "newsletter": "Newsletter",
             "saveButton": "Save Preferences"
         }
+    },
+    "autoSavePlans": {
+        "title": "Active Auto-Save Plans",
+        "description": "Manage your active automated savings plans.",
+        "amount": "Amount",
+        "frequency": "Monthly",
+        "stopButton": "Stop",
+        "toast": {
+            "title": "Plan Stopped",
+            "description": "Your auto-save plan has been successfully stopped."
+        }
     }
 }

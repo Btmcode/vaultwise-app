@@ -12,6 +12,7 @@ import { getDictionary } from "../dictionaries";
 import { AssetDistribution } from "@/components/dashboard/asset-distribution";
 import { TopPerformer } from "@/components/dashboard/top-performer";
 import { WorstPerformer } from "@/components/dashboard/worst-performer";
+import { AutoSavePlans } from "@/components/dashboard/auto-save-plans";
 
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
@@ -52,6 +53,11 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
           </Card>
         </div>
         <div className="grid gap-4 md:gap-8">
+          <Card>
+             <Suspense fallback={<Skeleton className="h-48" />}>
+                <AutoSavePlans dict={dict} />
+            </Suspense>
+          </Card>
           <Card>
             <Suspense fallback={<Skeleton className="h-96" />}>
               <AssetList dict={dict} />

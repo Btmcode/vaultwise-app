@@ -1,3 +1,4 @@
+
 export type AssetSymbol = "XAU" | "XAG" | "BTC" | "PAXG" | "XAUT";
 
 export type Asset = {
@@ -38,4 +39,12 @@ export type ChartData = {
   "6m": ChartDataPoint[];
   "1y": ChartDataPoint[];
   "5y": ChartDataPoint[];
+};
+
+export type AutoSavePlan = {
+  id: string;
+  assetSymbol: AssetSymbol;
+  amount: number;
+  frequency: "daily" | "weekly" | "monthly";
+  status: "active" | "paused" | "cancelled";
 };
