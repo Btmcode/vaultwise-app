@@ -1,3 +1,4 @@
+
 import { Header } from "@/components/header";
 import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
 import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
@@ -53,7 +54,7 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
         <div className="grid gap-4 md:gap-8">
           <Card>
             <Suspense fallback={<Skeleton className="h-96" />}>
-              <AssetList dict={dict.assetList} assetNames={dict.assetNames} />
+              <AssetList dict={dict} assetNames={dict.assetNames} />
             </Suspense>
           </Card>
         </div>
@@ -61,3 +62,4 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
     </div>
   );
 }
+
