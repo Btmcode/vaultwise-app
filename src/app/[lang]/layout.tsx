@@ -6,24 +6,23 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
 type LayoutProps = {
-  params: Promise<{ lang: 'tr' | 'en' }>;
+  params: { lang: 'tr' | 'en' };
   children: React.ReactNode;
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ lang: 'tr' | 'en' }> }): Promise<Metadata> {
-  const { lang } = await params;
-  const dict = getDictionary(lang);
+export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en' } }): Promise<Metadata> {
+  const dict = getDictionary(params.lang);
   return {
     title: dict.metadata.title,
     description: dict.metadata.description,
   };
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params,
 }: LayoutProps) {
-  const { lang } = await params;
+  const { lang } = params;
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
