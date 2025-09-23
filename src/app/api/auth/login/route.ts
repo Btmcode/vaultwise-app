@@ -47,7 +47,7 @@ export async function POST(request: NextRequest) {
   const authorization = request.headers.get('Authorization');
   if (!authorization?.startsWith('Bearer ')) {
     return NextResponse.json(
-      {error: 'Unauthorized: No Bearer token found.'},
+      {error: 'Unauthorized', details: 'No Bearer token found.'},
       {status: 401}
     );
   }
