@@ -151,6 +151,7 @@
             "description": "Manage your account settings and password.",
             "currentPassword": "Current Password",
             "newPassword": "New Password",
+            "confirmNewPassword": "Confirm New Password",
             "saveButton": "Save Password"
         },
         "notifications": {

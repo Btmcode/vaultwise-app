@@ -1,3 +1,4 @@
+
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
@@ -33,6 +34,10 @@ export default async function SettingsPage({ params: { lang } }: { params: { lan
                          <div className="grid gap-2">
                             <label htmlFor="new-password">{settingsDict.account.newPassword}</label>
                             <Input id="new-password" type="password" />
+                        </div>
+                         <div className="grid gap-2">
+                            <label htmlFor="confirm-new-password">{settingsDict.account.confirmNewPassword}</label>
+                            <Input id="confirm-new-password" type="password" />
                         </div>
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">

@@ -151,6 +151,7 @@
             "description": "Hesap ayarlarınızı ve şifrenizi yönetin.",
             "currentPassword": "Mevcut Şifre",
             "newPassword": "Yeni Şifre",
+            "confirmNewPassword": "Yeni Şifreyi Onayla",
             "saveButton": "Şifreyi Kaydet"
         },
         "notifications": {
