@@ -1,3 +1,4 @@
+
 "use client"
 import * as React from "react"
 import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
@@ -26,6 +27,11 @@ const formatCurrency = (value: number) => {
 export function LivePrices({ dict }: { dict: any }) {
   const [assetOrder, setAssetOrder] = React.useState(Object.keys(assets) as AssetSymbol[]);
   const [cardWidth, setCardWidth] = React.useState(200);
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -37,7 +43,7 @@ export function LivePrices({ dict }: { dict: any }) {
     setAssetOrder(items);
   };
   
-  if (typeof window === 'undefined') {
+  if (!isClient) {
     return null;
   }
 
