@@ -3,7 +3,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +18,7 @@ import { Loader2 } from 'lucide-react';
 
 export default function LoginPage() {
   const params = useParams();
+  const router = useRouter();
   const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
   const loginDict = dict.loginPage;
