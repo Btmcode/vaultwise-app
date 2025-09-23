@@ -86,3 +86,25 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  .buy-button {
+    @apply bg-primary text-primary-foreground;
+  }
+  .buy-button:hover {
+    @apply bg-green-500 text-white;
+  }
+  .dark .buy-button:hover {
+    @apply bg-green-600 text-white;
+  }
+
+  .sell-button {
+    @apply bg-secondary text-secondary-foreground;
+  }
+  .sell-button:hover {
+    @apply bg-red-500 text-white;
+  }
+  .dark .sell-button:hover {
+    @apply bg-red-600 text-white;
+  }
+}
