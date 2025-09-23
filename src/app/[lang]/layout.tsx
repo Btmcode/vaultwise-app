@@ -9,7 +9,8 @@ type LayoutProps = {
   params: { lang: 'tr' | 'en' };
 };
 
-export async function generateMetadata({ params }: LayoutProps): Promise<Metadata> {
+export async function generateMetadata(props: LayoutProps): Promise<Metadata> {
+  const { params } = props;
   const dict = await getDictionary(params.lang);
   return {
     title: dict.metadata.title,
@@ -17,7 +18,7 @@ export async function generateMetadata({ params }: LayoutProps): Promise<Metadat
   };
 }
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params,
 }: Readonly<{
