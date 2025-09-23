@@ -6,26 +6,26 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
 type LayoutProps = {
-  params: { lang: 'tr' | 'en' };
+  params: Promise<{ lang: 'tr' | 'en' }>;
+  children: React.ReactNode;
 };
 
-export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en' } }): Promise<Metadata> {
-  const dict = getDictionary(params.lang);
+export async function generateMetadata({ params }: { params: Promise<{ lang: 'tr' | 'en' }> }): Promise<Metadata> {
+  const { lang } = await params;
+  const dict = getDictionary(lang);
   return {
     title: dict.metadata.title,
     description: dict.metadata.description,
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
-}: Readonly<{
-  children: React.ReactNode;
-  params: { lang: 'tr' | 'en' };
-}>) {
+}: LayoutProps) {
+  const { lang } = await params;
   return (
-    <html lang={params.lang} suppressHydrationWarning>
+    <html lang={lang} suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
