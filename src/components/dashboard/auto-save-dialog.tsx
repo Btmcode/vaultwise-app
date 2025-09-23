@@ -58,6 +58,8 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
   const [suggestion, setSuggestion] =
     useState<AutomatedSavingsGoalOutput | null>(null);
   const { toast } = useToast();
+  
+  const autoSaveDialogDict = dict.autoSaveDialog;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -85,8 +87,8 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
     } catch (error) {
       toast({
         variant: "destructive",
-        title: dict.toastErrorTitle,
-        description: dict.toastErrorDescription,
+        title: autoSaveDialogDict.toastErrorTitle,
+        description: autoSaveDialogDict.toastErrorDescription,
       });
     } finally {
       setIsLoading(false);
@@ -95,8 +97,8 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
 
   function handleAccept() {
     toast({
-      title: dict.toastSuccessTitle,
-      description: dict.toastSuccessDescription.replace('{asset}', suggestion?.suggestedAsset),
+      title: autoSaveDialogDict.toastSuccessTitle,
+      description: autoSaveDialogDict.toastSuccessDescription.replace('{asset}', suggestion?.suggestedAsset),
     });
     resetAndClose();
   }
@@ -122,18 +124,18 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
       <DialogTrigger asChild>
         <Button variant="outline">
           <Wand2 className="mr-2 h-4 w-4" />
-          {dict.title}
+          {autoSaveDialogDict.title}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {step === 1 ? dict.createTitle : dict.suggestionTitle}
+            {step === 1 ? autoSaveDialogDict.createTitle : autoSaveDialogDict.suggestionTitle}
           </DialogTitle>
           <DialogDescription>
             {step === 1
-              ? dict.createDescription
-              : dict.suggestionDescription}
+              ? autoSaveDialogDict.createDescription
+              : autoSaveDialogDict.suggestionDescription}
           </DialogDescription>
         </DialogHeader>
 
@@ -145,10 +147,10 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
                 name="financialGoal"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{dict.goalLabel}</FormLabel>
+                    <FormLabel>{autoSaveDialogDict.goalLabel}</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder={dict.goalPlaceholder}
+                        placeholder={autoSaveDialogDict.goalPlaceholder}
                         {...field}
                       />
                     </FormControl>
@@ -161,9 +163,9 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
                 name="income"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{dict.incomeLabel}</FormLabel>
+                    <FormLabel>{autoSaveDialogDict.incomeLabel}</FormLabel>
                     <FormControl>
-                      <Input type="number" placeholder={dict.incomePlaceholder} {...field} />
+                      <Input type="number" placeholder={autoSaveDialogDict.incomePlaceholder} {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -174,7 +176,7 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
                 name="riskTolerance"
                 render={({ field }) => (
                   <FormItem className="space-y-3">
-                    <FormLabel>{dict.riskLabel}</FormLabel>
+                    <FormLabel>{autoSaveDialogDict.riskLabel}</FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
@@ -185,19 +187,19 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
                           <FormControl>
                             <RadioGroupItem value="low" />
                           </FormControl>
-                          <FormLabel className="font-normal">{dict.riskLow}</FormLabel>
+                          <FormLabel className="font-normal">{autoSaveDialogDict.riskLow}</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
                             <RadioGroupItem value="medium" />
                           </FormControl>
-                          <FormLabel className="font-normal">{dict.riskMedium}</FormLabel>
+                          <FormLabel className="font-normal">{autoSaveDialogDict.riskMedium}</FormLabel>
                         </FormItem>
                         <FormItem className="flex items-center space-x-3 space-y-0">
                           <FormControl>
                             <RadioGroupItem value="high" />
                           </FormControl>
-                          <FormLabel className="font-normal">{dict.riskHigh}</FormLabel>
+                          <FormLabel className="font-normal">{autoSaveDialogDict.riskHigh}</FormLabel>
                         </FormItem>
                       </RadioGroup>
                     </FormControl>
@@ -211,7 +213,7 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
                 render={() => (
                   <FormItem>
                     <div className="mb-4">
-                      <FormLabel>{dict.assetsLabel}</FormLabel>
+                      <FormLabel>{autoSaveDialogDict.assetsLabel}</FormLabel>
                     </div>
                     {availableAssets.map((item) => {
                       const assetName = getAssetName(item.symbol);
@@ -260,7 +262,7 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  {dict.generateButton}
+                  {autoSaveDialogDict.generateButton}
                 </Button>
               </DialogFooter>
             </form>
@@ -274,8 +276,8 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
                 <CardTitle>{suggestion.suggestedGoal}</CardTitle>
                 <CardDescription
                   dangerouslySetInnerHTML={{
-                    __html: dict.suggestionCardDescription
-                      .replace('{amount}', suggestion.suggestedAmount)
+                    __html: autoSaveDialogDict.suggestionCardDescription
+                      .replace('{amount}', suggestion.suggestedAmount.toString())
                       .replace('{asset}', suggestedAssetName),
                   }}
                 />
@@ -287,8 +289,8 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
               </CardContent>
             </Card>
             <DialogFooter className="sm:justify-between">
-               <Button variant="ghost" onClick={() => setStep(1)}>{dict.backButton}</Button>
-               <Button onClick={handleAccept}>{dict.acceptButton}</Button>
+               <Button variant="ghost" onClick={() => setStep(1)}>{autoSaveDialogDict.backButton}</Button>
+               <Button onClick={handleAccept}>{autoSaveDialogDict.acceptButton}</Button>
             </DialogFooter>
           </div>
         )}
