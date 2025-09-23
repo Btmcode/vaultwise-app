@@ -84,16 +84,19 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
+      const assetSymbols = values.assets.map(assetName => {
+        const assetKey = Object.keys(assetNames).find(key => assetNames[key] === assetName);
+        return assetKey || assetName;
+      });
+
       const result = await getAutomatedSavingsGoal({
         ...values,
-        assets: values.assets.map(assetName => {
-          const assetKey = Object.keys(assetNames).find(key => assetNames[key] === assetName);
-          return assetKey || assetName;
-        })
+        assets: assetSymbols,
       });
       setSuggestion(result);
       setStep(2);
     } catch (error) {
+      console.error("Error generating suggestion:", error);
       toast({
         variant: "destructive",
         title: autoSaveDialogDict.toastErrorTitle,
