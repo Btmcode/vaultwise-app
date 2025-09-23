@@ -34,19 +34,20 @@ const formatCurrency = (value: number) => {
 
 export function LivePrices({ dict }: { dict: any }) {
   const assetValues = Object.values(assets);
+  const livePricesDict = dict.livePrices;
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{dict.title}</CardTitle>
-        <CardDescription>{dict.description}</CardDescription>
+        <CardTitle>{livePricesDict.title}</CardTitle>
+        <CardDescription>{livePricesDict.description}</CardDescription>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-[80px]">{dict.table.asset}</TableHead>
-              <TableHead className="text-right">{dict.table.price}</TableHead>
-              <TableHead className="text-right">{dict.table.change}</TableHead>
+              <TableHead className="w-[80px]">{livePricesDict.table.asset}</TableHead>
+              <TableHead className="text-right">{livePricesDict.table.price}</TableHead>
+              <TableHead className="text-right">{livePricesDict.table.change}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
