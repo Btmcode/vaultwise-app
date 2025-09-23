@@ -56,7 +56,7 @@ export default function SignupPage() {
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({ error: 'Bilinmeyen sunucu hatası' }));
         console.error('Session cookie API error:', errorData);
-        throw new Error('Session cookie creation failed');
+        throw new Error(errorData.details || 'Session cookie creation failed');
       }
 
       toast({
@@ -71,8 +71,10 @@ export default function SignupPage() {
       let description = signupDict.toast.error.default;
       if (error.code === 'auth/email-already-in-use') {
         description = signupDict.toast.error.emailInUse;
-      } else if (error.message === 'Session cookie creation failed') {
+      } else if (error.message.includes('Session cookie creation failed')) {
          description = "Sunucuyla iletişim kurulamadı. Lütfen tekrar deneyin."
+      } else if (error.message) {
+        description = error.message;
       }
 
 

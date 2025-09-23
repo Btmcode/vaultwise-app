@@ -59,7 +59,7 @@ export default function LoginPage() {
         // Hata durumunda daha fazla detay almak için
         const errorData = await response.json().catch(() => ({ error: 'Bilinmeyen sunucu hatası' }));
         console.error('Session cookie API error:', errorData);
-        throw new Error('Session cookie creation failed');
+        throw new Error(errorData.details || 'Session cookie creation failed');
       }
 
       toast({
@@ -74,8 +74,10 @@ export default function LoginPage() {
       let description = loginDict.toast.error.default;
       if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-email') {
         description = loginDict.toast.error.invalidCredentials;
-      } else if (error.message === 'Session cookie creation failed') {
+      } else if (error.message.includes('Session cookie creation failed')) {
         description = "Sunucuyla iletişim kurulamadı. Lütfen tekrar deneyin."
+      } else if (error.message) {
+        description = error.message;
       }
       
       toast({
