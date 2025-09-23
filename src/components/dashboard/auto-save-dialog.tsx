@@ -38,6 +38,7 @@ import { Loader2, Wand2 } from "lucide-react";
 import { assets } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import type { AutomatedSavingsGoalOutput } from "@/ai/flows/automated-savings-goal-suggestions";
+import { getDictionary } from "@/app/dictionaries";
 
 const formSchema = z.object({
   income: z.coerce.number().min(1, "Please enter your monthly income."),
@@ -50,7 +51,7 @@ const formSchema = z.object({
   }),
 });
 
-export function AutoSaveDialog({ dict }: { dict: any }) {
+export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -75,7 +76,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
       const result = await getAutomatedSavingsGoal({
         ...values,
         assets: values.assets.map(assetName => {
-          const assetKey = Object.keys(dict.assetNames).find(key => dict.assetNames[key] === assetName);
+          const assetKey = Object.keys(assetNames).find(key => assetNames[key] === assetName);
           return assetKey || assetName;
         })
       });
@@ -110,7 +111,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   }
 
   const getAssetName = (symbol: string) => {
-    return dict.assetNames[symbol] || symbol;
+    return assetNames[symbol] || symbol;
   }
 
   const suggestedAssetName = suggestion?.suggestedAsset ? getAssetName(suggestion.suggestedAsset) : '';

@@ -42,8 +42,8 @@ export function SellDialog({ dict }: { dict: any }) {
     if (!asset || !amountAsset || parseFloat(amountAsset) <= 0) {
       toast({
         variant: "destructive",
-        title: dict.portfolioSummary.sellDialog.toastInvalidTitle,
-        description: dict.portfolioSummary.sellDialog.toastInvalidDescription,
+        title: dict.sellDialog.toastInvalidTitle,
+        description: dict.sellDialog.toastInvalidDescription,
       });
       return;
     }
@@ -51,22 +51,22 @@ export function SellDialog({ dict }: { dict: any }) {
     if (portfolioAsset && parseFloat(amountAsset) > portfolioAsset.amount) {
       toast({
         variant: "destructive",
-        title: dict.portfolioSummary.sellDialog.toastInsufficientTitle,
-        description: dict.portfolioSummary.sellDialog.toastInsufficientDescription.replace('{amount}', portfolioAsset.amount.toString()).replace('{symbol}', asset),
+        title: dict.sellDialog.toastInsufficientTitle,
+        description: dict.sellDialog.toastInsufficientDescription.replace('{amount}', portfolioAsset.amount.toString()).replace('{symbol}', asset),
       });
       return;
     }
     
     toast({
-      title: dict.portfolioSummary.sellDialog.toastSuccessTitle,
-      description: dict.portfolioSummary.sellDialog.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset).replace('{usd}', amountUsd),
+      title: dict.sellDialog.toastSuccessTitle,
+      description: dict.sellDialog.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset).replace('{usd}', amountUsd),
     });
     setIsOpen(false);
     setAsset(null);
     setAmountAsset("");
   };
 
-  const sellDialogDict = dict.portfolioSummary.sellDialog;
+  const sellDialogDict = dict.sellDialog;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

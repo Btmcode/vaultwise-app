@@ -40,15 +40,15 @@ export function BuyDialog({ dict }: { dict: any }) {
     if (!asset || !amountUsd || parseFloat(amountUsd) <= 0) {
       toast({
         variant: "destructive",
-        title: dict.portfolioSummary.buyDialog.toastInvalidTitle,
-        description: dict.portfolioSummary.buyDialog.toastInvalidDescription,
+        title: dict.buyDialog.toastInvalidTitle,
+        description: dict.buyDialog.toastInvalidDescription,
       });
       return;
     }
     
     toast({
-      title: dict.portfolioSummary.buyDialog.toastSuccessTitle,
-      description: dict.portfolioSummary.buyDialog.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset),
+      title: dict.buyDialog.toastSuccessTitle,
+      description: dict.buyDialog.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset),
     });
     setIsOpen(false);
     setAsset(null);
@@ -56,7 +56,7 @@ export function BuyDialog({ dict }: { dict: any }) {
   };
 
   const assetValues = Object.values(assets);
-  const buyDialogDict = dict.portfolioSummary.buyDialog;
+  const buyDialogDict = dict.buyDialog;
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>

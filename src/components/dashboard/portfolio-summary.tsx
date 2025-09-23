@@ -25,7 +25,7 @@ export function PortfolioSummary({ dict }: { dict: any }) {
         <div className="flex items-center gap-2">
            <BuyDialog dict={dict} />
            <SellDialog dict={dict} />
-           <AutoSaveDialog dict={dict.portfolioSummary.autoSave} />
+           <AutoSaveDialog dict={dict.autoSaveDialog} />
         </div>
       </CardHeader>
       <CardContent>

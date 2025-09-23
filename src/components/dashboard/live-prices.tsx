@@ -24,7 +24,7 @@ const formatCurrency = (value: number) => {
   }).format(value);
 };
 
-export function LivePrices({ dict }: { dict: any }) {
+export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
   const assetOrder = Object.keys(assets) as AssetSymbol[];
   
   return (
@@ -53,7 +53,7 @@ export function LivePrices({ dict }: { dict: any }) {
                             <Icon className="h-6 w-6" />
                             </div>
                             <div className="flex-grow">
-                            <p className="font-medium text-sm whitespace-nowrap">{dict.assetNames[asset.symbol]}</p>
+                            <p className="font-medium text-sm whitespace-nowrap">{assetNames[asset.symbol]}</p>
                             <p className="text-xs text-muted-foreground">{formatCurrency(asset.price)}</p>
                             </div>
                             <div

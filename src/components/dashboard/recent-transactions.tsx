@@ -35,8 +35,8 @@ const getTransactionTypeKey = (type: TransactionType) => {
 }
 
 
-export function RecentTransactions({ dict }: { dict: any }) {
-    const recentTransactionsDict = dict.recentTransactions;
+export function RecentTransactions({ dict, assetNames }: { dict: any, assetNames: any }) {
+    const recentTransactionsDict = dict;
   return (
     <>
       <CardHeader>
@@ -55,7 +55,7 @@ export function RecentTransactions({ dict }: { dict: any }) {
               </div>
               <div className="grid gap-1 flex-1">
                 <p className="text-sm font-medium leading-none">
-                  {dict.assetNames[assetInfo.symbol]}
+                  {assetNames[assetInfo.symbol]}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {tx.date.toLocaleDateString()}

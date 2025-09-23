@@ -49,12 +49,12 @@ const CustomTooltip = ({ active, payload, dict }: any) => {
 export function AssetDistribution({ dict }: { dict: any }) {
     const assetDistributionDict = dict.assetDistribution;
     
-    const totalValue = useMemo(() => portfolioAssets.reduce((sum, asset) => sum + asset.valueUsd, 0), [portfolioAssets]);
+    const totalValue = useMemo(() => portfolioAssets.reduce((sum, asset) => sum + asset.valueUsd, 0), []);
     const chartData = useMemo(() => portfolioAssets.map(asset => ({
         name: asset.assetSymbol,
         value: asset.valueUsd,
         percent: (asset.valueUsd / totalValue) * 100
-    })), [portfolioAssets, totalValue]);
+    })), [totalValue]);
 
   return (
     <Card>

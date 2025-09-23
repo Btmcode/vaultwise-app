@@ -38,8 +38,8 @@ const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
     return `${amount.toLocaleString()} ${unit}`;
 }
 
-export function AssetList({ dict }: { dict: any }) {
-  const assetListDict = dict.assetList;
+export function AssetList({ dict, assetNames }: { dict: any, assetNames: any }) {
+  const assetListDict = dict;
   return (
     <>
       <CardHeader>
@@ -68,7 +68,7 @@ export function AssetList({ dict }: { dict: any }) {
                          <Icon className="h-6 w-6" />
                       </div>
                       <div>
-                        <p className="font-medium">{dict.assetNames[assetInfo.symbol]}</p>
+                        <p className="font-medium">{assetNames[assetInfo.symbol]}</p>
                         <p className="text-sm text-muted-foreground">{assetInfo.symbol}</p>
                       </div>
                     </div>
