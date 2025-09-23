@@ -31,6 +31,7 @@ const AutomatedSavingsGoalInputSchema = z.object({
   assets: z
     .array(z.string())
     .describe('The assets that the user is interested in (e.g., Gold, Bitcoin)'),
+  language: z.enum(['tr', 'en']).describe('The language for the AI-generated response.'),
 });
 export type AutomatedSavingsGoalInput = z.infer<
   typeof AutomatedSavingsGoalInputSchema
@@ -177,6 +178,8 @@ const prompt = ai.definePrompt({
 - Prioritize user safety, data privacy, and transaction integrity in all your responses. Your actions must be secure and verifiable.`,
   prompt: `You are an AI assistant that provides personalized savings goal suggestions, following a strict security protocol.
 
+  **CRITICAL:** You MUST generate your response (suggestedGoal, rationale, etc.) in the language specified in the '{{language}}' input field.
+
   **Security Protocol:**
   1.  **Determine a suggested savings amount** based on the user's information:
       - Income: {{income}}
@@ -207,5 +210,3 @@ const automatedSavingsGoalFlow = ai.defineFlow(
     return output!;
   }
 );
-
-    

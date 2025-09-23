@@ -46,6 +46,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useParams } from "next/navigation";
 
 
 const formSchema = z.object({
@@ -66,6 +67,8 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   const [suggestion, setSuggestion] =
     useState<AutomatedSavingsGoalOutput | null>(null);
   const { toast } = useToast();
+  const params = useParams();
+  const lang = params.lang as 'tr' | 'en';
   
   const autoSaveDialogDict = dict.portfolioSummary.autoSaveDialog;
   const assetNames = dict.assetNames;
@@ -92,6 +95,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
       const result = await getAutomatedSavingsGoal({
         ...values,
         assets: assetSymbols,
+        language: lang,
       });
       setSuggestion(result);
       setStep(2);
