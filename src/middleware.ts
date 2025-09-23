@@ -10,9 +10,8 @@ const i18n = {
 const PUBLIC_FILE = /\.(.*)$/;
 const AUTH_ROUTES = ['/login', '/signup'];
 
-// This middleware function is simplified to only handle routing and cookie checks,
-// without importing any server-side Node.js modules like 'firebase-admin'.
-// This resolves the "Edge runtime does not support Node.js 'path' module" error.
+// This middleware is simplified to only handle routing and basic cookie checks.
+// It avoids importing any server-side Node.js modules to prevent edge runtime errors.
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -37,18 +36,19 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  // Handle authentication routing
   const locale = pathname.split('/')[1] || i18n.defaultLocale;
   const sessionCookie = request.cookies.get('firebase-session');
   const isAuthRoute = AUTH_ROUTES.some(route => pathname.endsWith(route));
 
-  // If no session and trying to access a protected route, redirect to login
+  // If no session cookie and trying to access a protected route, redirect to login
   if (!sessionCookie && !isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = `/${locale}/login`;
     return NextResponse.redirect(url);
   }
 
-  // If there is a session and trying to access an auth route, redirect to home
+  // If there is a session cookie and trying to access an auth route, redirect to home
   if (sessionCookie && isAuthRoute) {
      const url = request.nextUrl.clone();
      url.pathname = `/${locale}/`;

@@ -8,23 +8,21 @@ import {
   App,
 } from 'firebase-admin/app';
 import {getAuth} from 'firebase-admin/auth';
-import {config} from 'dotenv';
 
-config();
-
-const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-
+// This function initializes and returns the Firebase Admin App instance.
+// It ensures that the app is initialized only once.
 function getAdminApp(): App {
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-
   if (getApps().length > 0) {
     return getApp();
   }
 
-  if (!projectId || !clientEmail || !privateKey) {
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+
+  if (!privateKey || !clientEmail || !projectId) {
     throw new Error(
-      'Missing Firebase Admin SDK environment variables. Check FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, and FIREBASE_PRIVATE_KEY.'
+      'Firebase Admin SDK environment variables are not set. Check FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL, and FIREBASE_PROJECT_ID.'
     );
   }
 
@@ -37,7 +35,7 @@ function getAdminApp(): App {
       }),
     });
   } catch (error: any) {
-    console.error('Firebase Admin SDK initialization error:', error.message);
+    console.error('Firebase Admin SDK initialization error:', error);
     throw new Error(
       'Firebase Admin SDK could not be initialized. ' + error.message
     );
@@ -73,6 +71,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({status: 'success'}, {status: 200});
   } catch (error: any) {
     console.error('Full Session cookie creation error:', error);
+    // Return a more descriptive error to the client
     return NextResponse.json(
       {error: 'Failed to create session', details: error.message},
       {status: 500}
