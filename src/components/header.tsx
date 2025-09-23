@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,15 +15,41 @@ import { Button } from "@/components/ui/button";
 import { VaultWiseLogo } from "@/components/icons";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { User, Settings, LogOut, Languages, Moon, Sun } from "lucide-react";
+import { auth } from "@/lib/firebase/client";
+import { signOut } from "firebase/auth";
+import { useToast } from "@/hooks/use-toast";
 
 const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
 
 export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
+  const { toast } = useToast();
   const otherLang = lang === 'tr' ? 'en' : 'tr';
   
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      // Oturum cookie'sini silmek için bir API rotası çağır
+      await fetch('/api/auth/logout', { method: 'POST' });
+      toast({
+        title: "Success",
+        description: "You have been logged out.",
+      });
+      router.push(`/${lang}/login`);
+       router.refresh();
+    } catch (error) {
+      console.error("Logout Error:", error);
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description: "An error occurred while logging out. Please try again.",
+      });
+    }
   };
 
   return (
@@ -76,7 +103,7 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>{dict.logout}</span>
               </DropdownMenuItem>

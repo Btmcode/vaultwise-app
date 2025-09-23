@@ -33,12 +33,24 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+
+      // Sunucuya ID token'ı göndererek session cookie oluşturmasını sağla
+      await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
+      });
+
       toast({
         title: loginDict.toast.success.title,
         description: loginDict.toast.success.description,
       });
       router.push(`/${lang}`);
+      router.refresh(); // Middleware'in çalışması ve yönlendirme yapması için sayfayı yenile
     } catch (error: any) {
       console.error('Login error:', error);
       

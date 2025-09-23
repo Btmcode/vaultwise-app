@@ -42,12 +42,23 @@ export default function SignupPage() {
     }
 
     try {
-      await createUserWithEmailAndPassword(auth, email, password);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const idToken = await userCredential.user.getIdToken();
+
+      await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
+      });
+
       toast({
         title: signupDict.toast.success.title,
         description: signupDict.toast.success.description,
       });
       router.push(`/${lang}`);
+      router.refresh();
     } catch (error: any) {
       console.error('Signup error:', error);
       
@@ -88,11 +99,11 @@ export default function SignupPage() {
                 placeholder="m@example.com"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.targe.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="password">{signupDict.passwordLabel}</Label>
+              <Label htmlFor="password">{signupDict.passwordLabel}</Label>              
               <Input 
                 id="password" 
                 type="password" 
