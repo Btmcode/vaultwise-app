@@ -69,9 +69,17 @@ export default function SignupPage() {
       console.error('Signup error:', error);
       
       let description = signupDict.toast.error.default;
-      if (error.code === 'auth/email-already-in-use') {
-        description = signupDict.toast.error.emailInUse;
+      // Handle Firebase client auth errors
+      if (error.code) {
+         switch (error.code) {
+          case 'auth/email-already-in-use':
+            description = signupDict.toast.error.emailInUse;
+            break;
+          default:
+            description = error.message;
+        }
       } else if (error.message) {
+        // Handle server-side errors from our API
         description = error.message;
       }
 

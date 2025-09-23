@@ -1,9 +1,23 @@
+
 import {NextResponse} from 'next/server';
 import {cookies} from 'next/headers';
 
-// Bu API rotası, session cookie'yi temizleyerek
-// sunucu tarafında kullanıcının oturumunu sonlandırır.
 export async function POST() {
-  cookies().delete('firebase-session');
-  return NextResponse.json({status: 'success'}, {status: 200});
+  const cookieStore = cookies();
+  const sessionCookie = cookieStore.get('firebase-session');
+  
+  // Create a response object to be able to set headers
+  const response = NextResponse.json({status: 'success'}, {status: 200});
+
+  // If the cookie exists, tell the browser to delete it
+  if (sessionCookie) {
+    response.cookies.set({
+      name: 'firebase-session',
+      value: '',
+      maxAge: -1, // Expire the cookie immediately
+      path: '/', // Ensure the path matches the one used to set it
+    });
+  }
+
+  return response;
 }

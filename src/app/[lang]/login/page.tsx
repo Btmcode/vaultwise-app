@@ -65,14 +65,26 @@ export default function LoginPage() {
         description: loginDict.toast.success.description,
       });
       // Use window.location.href for a full page refresh to ensure middleware catches the new cookie state.
+      // This is the most reliable way to handle redirection after setting an httpOnly cookie.
       window.location.href = `/${lang}`;
     } catch (error: any) {
       console.error('Login error:', error);
       
       let description = loginDict.toast.error.default;
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential' || error.code === 'auth/invalid-email') {
-        description = loginDict.toast.error.invalidCredentials;
+      // Handle Firebase client auth errors
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/user-not-found':
+          case 'auth/wrong-password':
+          case 'auth/invalid-credential':
+          case 'auth/invalid-email':
+            description = loginDict.toast.error.invalidCredentials;
+            break;
+          default:
+            description = error.message;
+        }
       } else if (error.message) {
+        // Handle server-side errors from our API
         description = error.message;
       }
       

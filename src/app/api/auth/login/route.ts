@@ -58,28 +58,28 @@ export async function POST(request: NextRequest) {
     });
     
     const isDevelopment = process.env.NODE_ENV === 'development';
-
-    // For production, use the root domain and set maxAge for persistence.
     const requestUrl = new URL(request.url);
-    // For localhost, domain will be 'localhost'. For cloud env, it will be the root domain.
-    const domain = isDevelopment ? 'localhost' : requestUrl.hostname.split('.').slice(-2).join('.');
 
     const cookieOptions: any = {
+        name: 'firebase-session',
+        value: sessionCookie,
         httpOnly: true,
         secure: !isDevelopment,
         path: '/',
-        domain: domain,
-        maxAge: isDevelopment ? undefined : expiresIn,
     };
     
-    // In development, we might not want to set domain for simplicity if it causes issues.
-    if (isDevelopment && requestUrl.hostname === 'localhost') {
-        delete cookieOptions.domain;
+    // For production, set domain and maxAge for persistence.
+    // For development, we leave them out to use a session cookie scoped to the current domain.
+    if (!isDevelopment) {
+        cookieOptions.domain = requestUrl.hostname.split('.').slice(-2).join('.');
+        cookieOptions.maxAge = expiresIn;
     }
+    
+    const response = NextResponse.json({status: 'success'}, {status: 200});
+    response.cookies.set(cookieOptions);
 
-    cookies().set('firebase-session', sessionCookie, cookieOptions);
+    return response;
 
-    return NextResponse.json({status: 'success'}, {status: 200});
   } catch (error: any)
    {
     console.error('Full Session cookie creation error:', error);
