@@ -52,6 +52,19 @@
         "autoSave": "Otomatik Kaydet",
         "growth": "geçen aydan +%2.1"
     },
+    "assetDistribution": {
+        "title": "Varlık Dağılımı",
+        "description": "Portföyünüzün varlık dağılımı.",
+        "percentage": "Yüzde"
+    },
+    "topPerformer": {
+        "title": "En İyi Performans (24s)",
+        "description": "Son 24 saatte en iyi performans gösteren varlık."
+    },
+    "worstPerformer": {
+        "title": "En Kötü Performans (24s)",
+        "description": "Son 24 saatte en kötü performans gösteren varlık."
+    },
     "portfolioChart": {
         "title": "Portföy Değeri",
         "description": "Portföy performansınızın bir özeti.",

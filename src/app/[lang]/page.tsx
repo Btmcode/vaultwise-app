@@ -8,6 +8,10 @@ import { Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDictionary } from "../dictionaries";
+import { AssetDistribution } from "@/components/dashboard/asset-distribution";
+import { TopPerformer } from "@/components/dashboard/top-performer";
+import { WorstPerformer } from "@/components/dashboard/worst-performer";
+
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
   const dict = await getDictionary(lang);
@@ -23,6 +27,15 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <Suspense fallback={<Skeleton className="h-48" />}>
             <PortfolioSummary dict={dict} />
+          </Suspense>
+          <Suspense fallback={<Skeleton className="h-48" />}>
+            <AssetDistribution dict={dict} />
+          </Suspense>
+          <Suspense fallback={<Skeleton className="h-48" />}>
+            <TopPerformer dict={dict} />
+          </Suspense>
+          <Suspense fallback={<Skeleton className="h-48" />}>
+            <WorstPerformer dict={dict} />
           </Suspense>
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">

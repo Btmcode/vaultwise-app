@@ -19,7 +19,7 @@ export function PortfolioSummary({ dict }: { dict: any }) {
   }).format(totalPortfolioValue);
 
   return (
-    <Card className="lg:col-span-4">
+    <Card>
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle>{dict.portfolioSummary.totalBalance}</CardTitle>
         <div className="flex items-center gap-2">

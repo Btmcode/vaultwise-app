@@ -52,6 +52,19 @@
         "autoSave": "Auto-Save",
         "growth": "+2.1% from last month"
     },
+    "assetDistribution": {
+        "title": "Asset Distribution",
+        "description": "Your portfolio's asset allocation.",
+        "percentage": "Percentage"
+    },
+    "topPerformer": {
+        "title": "Top Performer (24h)",
+        "description": "The best performing asset in the last 24 hours."
+    },
+    "worstPerformer": {
+        "title": "Worst Performer (24h)",
+        "description": "The worst performing asset in the last 24 hours."
+    },
     "portfolioChart": {
         "title": "Portfolio Value",
         "description": "A summary of your portfolio's performance.",
