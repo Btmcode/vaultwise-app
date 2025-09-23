@@ -4,7 +4,8 @@
  * @fileOverview This file defines a Genkit flow for generating personalized savings goal suggestions.
  *
  * The flow takes user's income, risk tolerance, and financial goals as input and provides
- * tailored suggestions for automated savings plans. It also simulates a payment request and verification.
+ * tailored suggestions for automated savings plans. It now includes multi-step security checks
+ * for KYC (Know Your Customer) and payment verification, simulating a real-world financial transaction process.
  *
  * @param {AutomatedSavingsGoalInput} input - User's financial information and preferences.
  * @returns {Promise<AutomatedSavingsGoalOutput>} - A promise that resolves with savings goal suggestions.
@@ -13,6 +14,9 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import {v4 as uuidv4} from 'uuid';
+
+// A placeholder for a real user ID from an auth system
+const FAKE_USER_ID = 'user-12345';
 
 const AutomatedSavingsGoalInputSchema = z.object({
   income: z.number().describe("The user’s monthly income. This is sensitive information and should not be leaked or used for any other purpose than calculating a savings suggestion."),
@@ -51,16 +55,83 @@ const AutomatedSavingsGoalOutputSchema = z.object({
     .describe(
       'The rationale behind the suggested goal, amount, and asset, explaining how it aligns with the user’s input.'
     ),
+    kycRequired: z.boolean().optional().describe('Set to true if KYC is required for this transaction but not yet completed by the user.'),
 });
 export type AutomatedSavingsGoalOutput = z.infer<
   typeof AutomatedSavingsGoalOutputSchema
 >;
 
+// Tool to simulate checking and initiating a KYC verification process.
+const requestKycVerification = ai.defineTool(
+    {
+        name: 'requestKycVerification',
+        description: 'Checks the KYC (Know Your Customer) status of a user. If the transaction amount requires KYC and the user is not verified, this tool will report it. All transactions over $1000 require KYC.',
+        inputSchema: z.object({
+            userId: z.string().describe("The unique identifier for the user."),
+            transactionAmount: z.number().describe("The amount of the transaction to check if KYC is needed.")
+        }),
+        outputSchema: z.object({
+            kycStatus: z.enum(['verified', 'unverified', 'pending']).describe("The user's current KYC status."),
+            isKycRequired: z.boolean().describe("Whether KYC is required for this specific transaction amount.")
+        }),
+    },
+    async ({ userId, transactionAmount }) => {
+        // SERVER-SIDE LOGIC
+        // In a real app, this would check a database for the user's KYC status.
+        // For simulation, we'll assume the user is 'unverified' to test the flow.
+        const currentUserStatus = 'unverified';
+        const isKycRequired = transactionAmount > 1000;
+
+        console.log(`SERVER: KYC check for user ${userId}. Status: ${currentUserStatus}. Transaction: $${transactionAmount}. KYC required: ${isKycRequired}`);
+
+        // If KYC is required and user is not verified, you might trigger a process here
+        // (e.g., sending an email to the user to start verification).
+
+        return {
+            kycStatus: currentUserStatus,
+            isKycRequired: isKycRequired,
+        };
+    }
+);
+
+// Tool to simulate managing a user's bank account for withdrawals.
+const manageUserBankAccount = ai.defineTool(
+    {
+        name: 'manageUserBankAccount',
+        description: 'Manages user bank accounts (IBAN). Use this to check if a user has a verified bank account before initiating a withdrawal. If no account exists, it instructs the user to add one.',
+        inputSchema: z.object({
+            userId: z.string().describe("The unique identifier for the user."),
+            action: z.enum(['check', 'add']).describe("The action to perform: check status or add a new account.")
+        }),
+        outputSchema: z.object({
+            isAccountVerified: z.boolean().describe("Whether the user has a verified bank account on file."),
+            statusMessage: z.string().describe("A message indicating the status or next steps.")
+        }),
+    },
+    async ({ userId, action }) => {
+        // SERVER-SIDE LOGIC
+        // In a real app, this would interact with a database to manage IBANs.
+        // For simulation, we assume no verified account exists to test the flow.
+        console.log(`SERVER: Bank account action '${action}' for user ${userId}.`);
+        if (action === 'check') {
+            return {
+                isAccountVerified: false, // Simulate user needing to add an account
+                statusMessage: "User does not have a verified bank account. Please ask the user to add and verify their IBAN before withdrawal."
+            };
+        }
+        return {
+            isAccountVerified: true,
+            statusMessage: "Bank account added successfully. Verification is pending."
+        };
+    }
+);
+
+
 // Tool to simulate a payment request and server-side verification.
 const requestAndVerifyPayment = ai.defineTool(
   {
     name: 'requestAndVerifyPayment',
-    description: 'Requests a payment for a specific amount and verifies the transaction. Use this before finalizing a savings plan. The server is the source of truth for the transaction amount.',
+    description: 'Requests a payment for a specific amount and verifies the transaction. Use this as the FINAL step before finalizing a savings plan, after all other checks (like KYC) have passed.',
     inputSchema: z.object({
         amount: z.number().describe("The amount to charge the user. This will be verified on the server.")
     }),
@@ -72,15 +143,11 @@ const requestAndVerifyPayment = ai.defineTool(
   },
   async (input) => {
     // SERVER-SIDE LOGIC
-    // In a real app, this would involve:
-    // 1. Creating a payment intent with a provider like Stripe.
-    // 2. Receiving a webhook from the provider upon successful payment.
-    // 3. Verifying the webhook signature and checking the amount paid against the expected amount.
-    // 4. Only then, returning success.
+    // In a real app, this would involve a secure call to a payment provider like Stripe.
     // We simulate this by assuming the payment is always successful for the exact requested amount.
     console.log(`SERVER: Verifying payment request for $${input.amount}`);
-    const isVerified = true; // Simulating a successful verification from a bank API.
-    const verifiedAmount = input.amount; // In a real scenario, this would come from the bank API response.
+    const isVerified = true; 
+    const verifiedAmount = input.amount; 
 
     return {
         success: isVerified,
@@ -101,24 +168,31 @@ const prompt = ai.definePrompt({
   name: 'automatedSavingsGoalPrompt',
   input: {schema: AutomatedSavingsGoalInputSchema},
   output: {schema: AutomatedSavingsGoalOutputSchema},
-  tools: [requestAndVerifyPayment],
-  system: `You are a helpful and trustworthy financial assistant for the VaultWise app. Your primary role is to provide personalized savings goal suggestions.
+  tools: [requestKycVerification, manageUserBankAccount, requestAndVerifyPayment],
+  system: `You are a helpful and highly secure financial assistant for the VaultWise app. Your primary role is to provide personalized savings goal suggestions by following a strict, multi-step security protocol.
 
-- You must strictly use the tools provided to you and not deviate from your purpose.
-- Do not engage in conversations or actions unrelated to financial planning and savings goals.
-- If a user tries to misuse your capabilities or asks for inappropriate content, you must politely decline and restate your purpose.
-- Prioritize user safety and data privacy in all your responses. Your actions must be secure and verifiable.`,
-  prompt: `You are an AI assistant that provides personalized savings goal suggestions.
+- You must strictly use the tools provided to you in the correct order and not deviate from your purpose.
+- Do not engage in conversations or actions unrelated to financial planning.
+- If a user tries to misuse your capabilities, you must politely decline and restate your purpose.
+- Prioritize user safety, data privacy, and transaction integrity in all your responses. Your actions must be secure and verifiable.`,
+  prompt: `You are an AI assistant that provides personalized savings goal suggestions, following a strict security protocol.
 
-  1.  First, analyze the user's information to determine a suggested savings amount and goal.
-  - Income: {{income}}
-  - Risk Tolerance: {{riskTolerance}}
-  - Financial Goal: {{financialGoal}}
-  - Interested Assets: {{assets}}
-  
-  2.  **Crucially, before you output the final suggestion, you must use the 'requestAndVerifyPayment' tool to charge the user for the suggested savings amount. The tool will verify the transaction on the server.**
-  
-  3.  Only if the payment is successful and verified, provide the full savings goal suggestion, rationale, and the chosen asset based on the verified amount. If it fails, do not provide a suggestion.
+  **Security Protocol:**
+  1.  **Determine a suggested savings amount** based on the user's information:
+      - Income: {{income}}
+      - Risk Tolerance: {{riskTolerance}}
+      - Financial Goal: {{financialGoal}}
+      - Interested Assets: {{assets}}
+
+  2.  **KYC Check (Mandatory):** Before any other action, use the 'requestKycVerification' tool to check if the user needs to complete KYC for the suggested amount. Pass it the user's ID ('${FAKE_USER_ID}') and the suggested transaction amount.
+
+  3.  **Handle KYC Requirement:**
+      - If the 'requestKycVerification' tool returns that KYC is required ('isKycRequired' is true) and the user is not verified ('kycStatus' is not 'verified'), you **must stop**. Your final output should set 'kycRequired' to true and provide a user-friendly 'suggestedGoal' explaining that they need to complete identity verification for transactions over $1000 before proceeding. Do not call any other tools.
+      - If KYC is not required, or the user is already verified, proceed to the next step.
+
+  4.  **Final Payment Verification:** Only after passing the KYC check, use the 'requestAndVerifyPayment' tool to securely process the transaction for the suggested savings amount.
+
+  5.  **Provide Suggestion:** Only if the payment is successfully verified, provide the full savings goal suggestion, rationale, and the chosen asset based on the verified amount. If any step fails, do not provide a suggestion.
   `,
 });
 
@@ -133,3 +207,5 @@ const automatedSavingsGoalFlow = ai.defineFlow(
     return output!;
   }
 );
+
+    
