@@ -50,7 +50,6 @@ export default function LoginPage() {
         description: loginDict.toast.success.description,
       });
       router.push(`/${lang}`);
-      router.refresh(); // Middleware'in çalışması ve yönlendirme yapması için sayfayı yenile
     } catch (error: any) {
       console.error('Login error:', error);
       

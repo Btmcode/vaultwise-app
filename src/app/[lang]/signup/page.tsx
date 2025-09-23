@@ -58,7 +58,6 @@ export default function SignupPage() {
         description: signupDict.toast.success.description,
       });
       router.push(`/${lang}`);
-      router.refresh();
     } catch (error: any) {
       console.error('Signup error:', error);
       
