@@ -63,8 +63,7 @@ export default function SignupPage() {
         title: signupDict.toast.success.title,
         description: signupDict.toast.success.description,
       });
-      // race condition'ı önlemek ve middleware'in yeni cookie'yi görmesini sağlamak için tam sayfa yenilemesi yap
-      window.location.href = `/${lang}`;
+      router.push(`/${lang}`);
     } catch (error: any) {
       console.error('Signup error:', error);
       

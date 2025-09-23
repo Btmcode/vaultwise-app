@@ -46,7 +46,6 @@ export default function LoginPage() {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
 
-      // Sunucuya ID token'ı göndererek session cookie oluşturmasını sağla
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -66,8 +65,7 @@ export default function LoginPage() {
         title: loginDict.toast.success.title,
         description: loginDict.toast.success.description,
       });
-      // race condition'ı önlemek ve middleware'in yeni cookie'yi görmesini sağlamak için tam sayfa yenilemesi yap
-      window.location.href = `/${lang}`;
+      router.push(`/${lang}`);
     } catch (error: any) {
       console.error('Login error:', error);
       

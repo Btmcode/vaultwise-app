@@ -3,6 +3,7 @@ import {NextRequest, NextResponse} from 'next/server';
 import {cookies} from 'next/headers';
 import admin from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
+import { URL } from 'url';
 
 
 // This function initializes and returns the Firebase Admin App instance.
@@ -57,12 +58,16 @@ export async function POST(request: NextRequest) {
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn,
     });
+    
+    const requestUrl = new URL(request.url);
+    const isLocalhost = requestUrl.hostname === 'localhost';
 
     cookies().set('firebase-session', sessionCookie, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: !isLocalhost,
       maxAge: expiresIn,
       path: '/',
+      domain: isLocalhost ? undefined : requestUrl.hostname.split('.').slice(-3).join('.'),
     });
 
     return NextResponse.json({status: 'success'}, {status: 200});
@@ -75,3 +80,4 @@ export async function POST(request: NextRequest) {
     );
   }
 }
+
