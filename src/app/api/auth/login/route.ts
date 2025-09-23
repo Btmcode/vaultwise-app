@@ -64,8 +64,9 @@ export async function POST(request: NextRequest) {
         name: 'firebase-session',
         value: sessionCookie,
         httpOnly: true,
-        secure: !isDevelopment,
+        secure: true, // Secure must be true for SameSite=None
         path: '/',
+        sameSite: 'None', // Allow cross-site cookie usage for iframe
     };
     
     // For production, set domain and maxAge for persistence.
