@@ -65,7 +65,8 @@ export default function LoginPage() {
         title: loginDict.toast.success.title,
         description: loginDict.toast.success.description,
       });
-      router.push(`/${lang}`);
+      // Use window.location.href for a full page refresh to ensure middleware catches the new cookie state.
+      window.location.href = `/${lang}`;
     } catch (error: any) {
       console.error('Login error:', error);
       
