@@ -51,7 +51,7 @@ const formSchema = z.object({
   }),
 });
 
-export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: any }) {
+export function AutoSaveDialog({ dict }: { dict: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,7 +59,8 @@ export function AutoSaveDialog({ dict, assetNames }: { dict: any, assetNames: an
     useState<AutomatedSavingsGoalOutput | null>(null);
   const { toast } = useToast();
   
-  const autoSaveDialogDict = dict.autoSaveDialog;
+  const autoSaveDialogDict = dict.portfolioSummary.autoSaveDialog;
+  const assetNames = dict.assetNames;
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

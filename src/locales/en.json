@@ -49,7 +49,30 @@
             "toastSuccessTitle": "Sale Successful",
             "toastSuccessDescription": "You have successfully sold {amount} {symbol} for ${usd}. The funds will be transferred to your bank account."
         },
-        "autoSave": "Auto-Save",
+        "autoSaveDialog": {
+            "title": "AI Auto-Save",
+            "createTitle": "Create an Auto-Save Plan",
+            "suggestionTitle": "Your AI Suggestion",
+            "createDescription": "Let our AI find the perfect savings plan for you.",
+            "suggestionDescription": "Based on your info, here's a plan we think you'll like.",
+            "goalLabel": "What is your primary financial goal?",
+            "goalPlaceholder": "e.g., Save for a house down payment",
+            "incomeLabel": "Monthly Income (USD)",
+            "incomePlaceholder": "e.g., 5000",
+            "riskLabel": "Risk Tolerance",
+            "riskLow": "Low",
+            "riskMedium": "Medium",
+            "riskHigh": "High",
+            "assetsLabel": "Interested Assets",
+            "generateButton": "Generate Suggestion",
+            "backButton": "Back",
+            "acceptButton": "Accept & Start Saving",
+            "suggestionCardDescription": "Recommended auto-save of <span class='font-bold text-primary'>${amount}</span> per month in <span class='font-bold text-primary'>{asset}</span>.",
+            "toastSuccessTitle": "Auto-Save Plan Activated!",
+            "toastSuccessDescription": "Your new plan to save in {asset} has been set up.",
+            "toastErrorTitle": "Error",
+            "toastErrorDescription": "Could not generate suggestion. Please try again."
+        },
         "growth": "+2.1% from last month"
     },
     "assetDistribution": {
@@ -101,29 +124,5 @@
             "price": "Price",
             "change": "24h Change"
         }
-    },
-    "autoSaveDialog": {
-        "title": "Auto-Save",
-        "createTitle": "Create an Auto-Save Plan",
-        "suggestionTitle": "Your AI Suggestion",
-        "createDescription": "Let our AI find the perfect savings plan for you.",
-        "suggestionDescription": "Based on your info, here's a plan we think you'll like.",
-        "goalLabel": "What is your primary financial goal?",
-        "goalPlaceholder": "e.g., Save for a house down payment",
-        "incomeLabel": "Monthly Income (USD)",
-        "incomePlaceholder": "e.g., 5000",
-        "riskLabel": "Risk Tolerance",
-        "riskLow": "Low",
-        "riskMedium": "Medium",
-        "riskHigh": "High",
-        "assetsLabel": "Interested Assets",
-        "generateButton": "Generate Suggestion",
-        "backButton": "Back",
-        "acceptButton": "Accept & Start Saving",
-        "suggestionCardDescription": "Recommended auto-save of <span class='font-bold text-primary'>${amount}</span> per month in <span class='font-bold text-primary'>{asset}</span>.",
-        "toastSuccessTitle": "Auto-Save Plan Activated!",
-        "toastSuccessDescription": "Your new plan to save in {asset} has been set up.",
-        "toastErrorTitle": "Error",
-        "toastErrorDescription": "Could not generate suggestion. Please try again."
     }
 }

@@ -49,7 +49,30 @@
             "toastSuccessTitle": "Satış Başarılı",
             "toastSuccessDescription": "{amount} {symbol} varlığını ${usd} karşılığında başarıyla sattınız. Para banka hesabınıza aktarılacaktır."
         },
-        "autoSave": "Otomatik Kaydet",
+        "autoSaveDialog": {
+            "title": "AI ile Oto-Tasarruf",
+            "createTitle": "Otomatik Tasarruf Planı Oluştur",
+            "suggestionTitle": "Yapay Zeka Öneriniz",
+            "createDescription": "Yapay zekamızın sizin için mükemmel tasarruf planını bulmasına izin verin.",
+            "suggestionDescription": "Bilgilerinize dayanarak, beğeneceğinizi düşündüğümüz bir plan.",
+            "goalLabel": "Birincil finansal hedefiniz nedir?",
+            "goalPlaceholder": "Örn: Ev peşinatı için biriktirmek",
+            "incomeLabel": "Aylık Gelir (USD)",
+            "incomePlaceholder": "Örn: 5000",
+            "riskLabel": "Risk Toleransı",
+            "riskLow": "Düşük",
+            "riskMedium": "Orta",
+            "riskHigh": "Yüksek",
+            "assetsLabel": "İlgilenilen Varlıklar",
+            "generateButton": "Öneri Oluştur",
+            "backButton": "Geri",
+            "acceptButton": "Kabul Et ve Tasarrufa Başla",
+            "suggestionCardDescription": "<span class='font-bold text-primary'>{asset}</span> içinde ayda <span class='font-bold text-primary'>${amount}</span> tutarında otomatik tasarruf önerilir.",
+            "toastSuccessTitle": "Otomatik Tasarruf Planı Etkinleştirildi!",
+            "toastSuccessDescription": "{asset} cinsinden birikim yapmak için yeni planınız oluşturuldu.",
+            "toastErrorTitle": "Hata",
+            "toastErrorDescription": "Öneri oluşturulamadı. Lütfen tekrar deneyin."
+        },
         "growth": "geçen aydan +%2.1"
     },
     "assetDistribution": {
@@ -101,29 +124,5 @@
             "price": "Fiyat",
             "change": "24s Değişim"
         }
-    },
-    "autoSaveDialog": {
-        "title": "Otomatik Kaydet",
-        "createTitle": "Otomatik Tasarruf Planı Oluştur",
-        "suggestionTitle": "Yapay Zeka Öneriniz",
-        "createDescription": "Yapay zekamızın sizin için mükemmel tasarruf planını bulmasına izin verin.",
-        "suggestionDescription": "Bilgilerinize dayanarak, beğeneceğinizi düşündüğümüz bir plan.",
-        "goalLabel": "Birincil finansal hedefiniz nedir?",
-        "goalPlaceholder": "Örn: Ev peşinatı için biriktirmek",
-        "incomeLabel": "Aylık Gelir (USD)",
-        "incomePlaceholder": "Örn: 5000",
-        "riskLabel": "Risk Toleransı",
-        "riskLow": "Düşük",
-        "riskMedium": "Orta",
-        "riskHigh": "Yüksek",
-        "assetsLabel": "İlgilenilen Varlıklar",
-        "generateButton": "Öneri Oluştur",
-        "backButton": "Geri",
-        "acceptButton": "Kabul Et ve Tasarrufa Başla",
-        "suggestionCardDescription": "<span class='font-bold text-primary'>{asset}</span> içinde ayda <span class='font-bold text-primary'>${amount}</span> tutarında otomatik tasarruf önerilir.",
-        "toastSuccessTitle": "Otomatik Tasarruf Planı Etkinleştirildi!",
-        "toastSuccessDescription": "{asset} cinsinden birikim yapmak için yeni planınız oluşturuldu.",
-        "toastErrorTitle": "Hata",
-        "toastErrorDescription": "Öneri oluşturulamadı. Lütfen tekrar deneyin."
     }
 }
