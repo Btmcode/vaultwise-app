@@ -1,0 +1,84 @@
+
+{
+    "metadata": {
+        "title": "VaultWise",
+        "description": "Modern, çok varlıklı bir tasarruf platformu."
+    },
+    "header": {
+        "myAccount": "Hesabım",
+        "profile": "Profil",
+        "settings": "Ayarlar",
+        "logout": "Çıkış Yap"
+    },
+    "portfolioSummary": {
+        "totalBalance": "Toplam Bakiye",
+        "buyDialog": {
+            "title": "Varlık Satın Al",
+            "description": "Bir varlık seçin ve ne kadar almak istediğinizi girin.",
+            "assetLabel": "Varlık",
+            "assetPlaceholder": "Bir varlık seçin",
+            "amountLabel": "Tutar (USD)",
+            "amountPlaceholder": "Örn: 100",
+            "approximate": "Yaklaşık {amount} {symbol} alacaksınız",
+            "buyButton": "Şimdi Al",
+            "toastInvalidTitle": "Geçersiz Giriş",
+            "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
+            "toastSuccessTitle": "Satın Alma Başarılı",
+            "toastSuccessDescription": "{amount} {symbol} başarıyla satın aldınız."
+        },
+        "autoSave": "Otomatik Kaydet",
+        "growth": "geçen aydan +%2.1"
+    },
+    "portfolioChart": {
+        "title": "Portföy Değeri",
+        "description": "Portföy performansınızın bir özeti.",
+        "tabs": {
+            "7d": "7g",
+            "30d": "30g",
+            "1y": "1y"
+        }
+    },
+    "recentTransactions": {
+        "title": "Son Etkinlik",
+        "description": "Son birkaç işleminiz.",
+        "transactionTypes": {
+            "Buy": "Alış",
+            "Sell": "Satış",
+            "Auto-Save": "Oto-Tasarruf"
+        }
+    },
+    "assetList": {
+        "title": "Varlıklarım",
+        "description": "Mevcut varlıklarınıza genel bir bakış.",
+        "table": {
+            "asset": "Varlık",
+            "balance": "Bakiye",
+            "price": "Fiyat",
+            "value": "Değer"
+        }
+    },
+    "autoSaveDialog": {
+        "title": "Otomatik Kaydet",
+        "createTitle": "Otomatik Tasarruf Planı Oluştur",
+        "suggestionTitle": "Yapay Zeka Öneriniz",
+        "createDescription": "Yapay zekamızın sizin için mükemmel tasarruf planını bulmasına izin verin.",
+        "suggestionDescription": "Bilgilerinize dayanarak, beğeneceğinizi düşündüğümüz bir plan.",
+        "goalLabel": "Birincil finansal hedefiniz nedir?",
+        "goalPlaceholder": "Örn: Ev peşinatı için biriktirmek",
+        "incomeLabel": "Aylık Gelir (USD)",
+        "incomePlaceholder": "Örn: 5000",
+        "riskLabel": "Risk Toleransı",
+        "riskLow": "Düşük",
+        "riskMedium": "Orta",
+        "riskHigh": "Yüksek",
+        "assetsLabel": "İlgilenilen Varlıklar",
+        "generateButton": "Öneri Oluştur",
+        "backButton": "Geri",
+        "acceptButton": "Kabul Et ve Tasarrufa Başla",
+        "suggestionCardDescription": "<span class='font-bold text-primary'>{asset}</span> içinde ayda <span class='font-bold text-primary'>${amount}</span> tutarında otomatik tasarruf önerilir.",
+        "toastSuccessTitle": "Otomatik Tasarruf Planı Etkinleştirildi!",
+        "toastSuccessDescription": "{asset} cinsinden birikim yapmak için yeni planınız oluşturuldu.",
+        "toastErrorTitle": "Hata",
+        "toastErrorDescription": "Öneri oluşturulamadı. Lütfen tekrar deneyin."
+    }
+}

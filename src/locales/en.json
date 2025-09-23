@@ -1,0 +1,84 @@
+
+{
+    "metadata": {
+        "title": "VaultWise",
+        "description": "A modern multi-asset saving platform."
+    },
+    "header": {
+        "myAccount": "My Account",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout"
+    },
+    "portfolioSummary": {
+        "totalBalance": "Total Balance",
+        "buyDialog": {
+            "title": "Buy Asset",
+            "description": "Select an asset and enter the amount you want to buy.",
+            "assetLabel": "Asset",
+            "assetPlaceholder": "Select an asset",
+            "amountLabel": "Amount (USD)",
+            "amountPlaceholder": "e.g., 100",
+            "approximate": "You will get approx. {amount} {symbol}",
+            "buyButton": "Buy Now",
+            "toastInvalidTitle": "Invalid Input",
+            "toastInvalidDescription": "Please select an asset and enter a valid amount.",
+            "toastSuccessTitle": "Purchase Successful",
+            "toastSuccessDescription": "You have successfully purchased {amount} {symbol}."
+        },
+        "autoSave": "Auto-Save",
+        "growth": "+2.1% from last month"
+    },
+    "portfolioChart": {
+        "title": "Portfolio Value",
+        "description": "A summary of your portfolio's performance.",
+        "tabs": {
+            "7d": "7d",
+            "30d": "30d",
+            "1y": "1y"
+        }
+    },
+    "recentTransactions": {
+        "title": "Recent Activity",
+        "description": "Your last few transactions.",
+        "transactionTypes": {
+            "Buy": "Buy",
+            "Sell": "Sell",
+            "Auto-Save": "Auto-Save"
+        }
+    },
+    "assetList": {
+        "title": "My Assets",
+        "description": "An overview of your current holdings.",
+        "table": {
+            "asset": "Asset",
+            "balance": "Balance",
+            "price": "Price",
+            "value": "Value"
+        }
+    },
+    "autoSaveDialog": {
+        "title": "Auto-Save",
+        "createTitle": "Create an Auto-Save Plan",
+        "suggestionTitle": "Your AI Suggestion",
+        "createDescription": "Let our AI find the perfect savings plan for you.",
+        "suggestionDescription": "Based on your info, here's a plan we think you'll like.",
+        "goalLabel": "What is your primary financial goal?",
+        "goalPlaceholder": "e.g., Save for a house down payment",
+        "incomeLabel": "Monthly Income (USD)",
+        "incomePlaceholder": "e.g., 5000",
+        "riskLabel": "Risk Tolerance",
+        "riskLow": "Low",
+        "riskMedium": "Medium",
+        "riskHigh": "High",
+        "assetsLabel": "Interested Assets",
+        "generateButton": "Generate Suggestion",
+        "backButton": "Back",
+        "acceptButton": "Accept & Start Saving",
+        "suggestionCardDescription": "Recommended auto-save of <span class='font-bold text-primary'>${amount}</span> per month in <span class='font-bold text-primary'>{asset}</span>.",
+        "toastSuccessTitle": "Auto-Save Plan Activated!",
+        "toastSuccessDescription": "Your new plan to save in {asset} has been set up.",
+        "toastErrorTitle": "Error",
+        "toastErrorDescription": "Could not generate suggestion. Please try again."
+    }
+}

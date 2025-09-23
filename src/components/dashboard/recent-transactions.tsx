@@ -31,12 +31,12 @@ const getBadgeVariant = (type: TransactionType) => {
 };
 
 
-export function RecentTransactions() {
+export function RecentTransactions({ dict }: { dict: any }) {
   return (
     <>
       <CardHeader>
-        <CardTitle>Recent Activity</CardTitle>
-        <CardDescription>Your last few transactions.</CardDescription>
+        <CardTitle>{dict.title}</CardTitle>
+        <CardDescription>{dict.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
         {transactions.map((tx) => {
@@ -63,7 +63,7 @@ export function RecentTransactions() {
                   }).format(tx.amountUsd)}
                 </p>
                 <Badge variant={getBadgeVariant(tx.type)} className="text-xs">
-                  {tx.type}
+                  {dict.transactionTypes[tx.type]}
                 </Badge>
               </div>
             </div>

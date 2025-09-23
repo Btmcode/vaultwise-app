@@ -24,7 +24,7 @@ import { assets } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import type { AssetSymbol } from "@/lib/types";
 
-export function BuyDialog() {
+export function BuyDialog({ dict }: { dict: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [asset, setAsset] = useState<AssetSymbol | null>(null);
   const [amountUsd, setAmountUsd] = useState("");
@@ -40,15 +40,15 @@ export function BuyDialog() {
     if (!asset || !amountUsd || parseFloat(amountUsd) <= 0) {
       toast({
         variant: "destructive",
-        title: "Invalid Input",
-        description: "Please select an asset and enter a valid amount.",
+        title: dict.toastInvalidTitle,
+        description: dict.toastInvalidDescription,
       });
       return;
     }
-    // Simulate buy action
+    
     toast({
-      title: "Purchase Successful",
-      description: `You have successfully purchased ${amountAsset} ${asset}.`,
+      title: dict.toastSuccessTitle,
+      description: dict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset),
     });
     setIsOpen(false);
     setAsset(null);
@@ -58,23 +58,23 @@ export function BuyDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button>Buy Asset</Button>
+        <Button>{dict.title}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Buy Asset</DialogTitle>
+          <DialogTitle>{dict.title}</DialogTitle>
           <DialogDescription>
-            Select an asset and enter the amount you want to buy.
+            {dict.description}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="asset" className="text-right">
-              Asset
+              {dict.assetLabel}
             </Label>
             <Select onValueChange={(value) => setAsset(value as AssetSymbol)}>
               <SelectTrigger id="asset" className="col-span-3">
-                <SelectValue placeholder="Select an asset" />
+                <SelectValue placeholder={dict.assetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
                 {Object.values(assets).map((a) => (
@@ -87,7 +87,7 @@ export function BuyDialog() {
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="amount" className="text-right">
-              Amount (USD)
+              {dict.amountLabel}
             </Label>
             <Input
               id="amount"
@@ -95,17 +95,17 @@ export function BuyDialog() {
               value={amountUsd}
               onChange={(e) => setAmountUsd(e.target.value)}
               className="col-span-3"
-              placeholder="e.g., 100"
+              placeholder={dict.amountPlaceholder}
             />
           </div>
           {assetDetails && (
             <div className="text-sm text-muted-foreground text-center col-span-4">
-              You will get approx. {amountAsset} {assetDetails.symbol}
+              {dict.approximate.replace('{amount}', amountAsset).replace('{symbol}', assetDetails.symbol)}
             </div>
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleBuy}>Buy Now</Button>
+          <Button onClick={handleBuy}>{dict.buyButton}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

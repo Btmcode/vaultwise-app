@@ -18,7 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { chartData, totalPortfolioValue } from "@/lib/data";
 import type { ChartData } from "@/lib/types";
 
-export function PortfolioChart() {
+export function PortfolioChart({ dict }: { dict: any }) {
   const [timeRange, setTimeRange] = useState<keyof ChartData>("7d");
   
   const currentData = chartData[timeRange];
@@ -38,9 +38,9 @@ export function PortfolioChart() {
     <>
       <CardHeader className="flex flex-row items-center justify-between">
         <div>
-          <CardTitle>Portfolio Value</CardTitle>
+          <CardTitle>{dict.title}</CardTitle>
           <CardDescription>
-            A summary of your portfolio's performance.
+            {dict.description}
           </CardDescription>
         </div>
         <Tabs
@@ -49,9 +49,9 @@ export function PortfolioChart() {
           onValueChange={(value) => setTimeRange(value as keyof ChartData)}
         >
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="7d">7d</TabsTrigger>
-            <TabsTrigger value="30d">30d</TabsTrigger>
-            <TabsTrigger value="1y">1y</TabsTrigger>
+            <TabsTrigger value="7d">{dict.tabs['7d']}</TabsTrigger>
+            <TabsTrigger value="30d">{dict.tabs['30d']}</TabsTrigger>
+            <TabsTrigger value="1y">{dict.tabs['1y']}</TabsTrigger>
           </TabsList>
         </Tabs>
       </CardHeader>
