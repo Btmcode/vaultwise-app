@@ -1,3 +1,6 @@
+
+export const runtime = 'nodejs';
+
 import {NextRequest, NextResponse} from 'next/server';
 import {auth} from '@/lib/firebase/server'; // Sunucu tarafı Firebase'i içe aktar
 
