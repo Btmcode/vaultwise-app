@@ -26,6 +26,22 @@
             "toastSuccessTitle": "Satın Alma Başarılı",
             "toastSuccessDescription": "{amount} {symbol} başarıyla satın aldınız."
         },
+        "sellDialog": {
+            "title": "Varlık Sat",
+            "description": "Portföyünüzden bir varlık seçin ve satmak istediğiniz tutarı girin.",
+            "assetLabel": "Varlık",
+            "assetPlaceholder": "Satmak için bir varlık seçin",
+            "amountLabel": "Tutar (Varlık)",
+            "amountPlaceholder": "Örn: 0.5",
+            "approximate": "Yaklaşık ${usd} alacaksınız",
+            "sellButton": "Şimdi Sat",
+            "toastInvalidTitle": "Geçersiz Giriş",
+            "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
+            "toastInsufficientTitle": "Yetersiz Bakiye",
+            "toastInsufficientDescription": "Satmak için sadece {amount} {symbol} varlığınız var.",
+            "toastSuccessTitle": "Satış Başarılı",
+            "toastSuccessDescription": "{amount} {symbol} varlığını ${usd} karşılığında başarıyla sattınız. Para banka hesabınıza aktarılacaktır."
+        },
         "autoSave": "Otomatik Kaydet",
         "growth": "geçen aydan +%2.1"
     },

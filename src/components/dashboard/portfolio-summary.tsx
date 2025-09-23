@@ -10,6 +10,7 @@ import { totalPortfolioValue } from "@/lib/data";
 import { ArrowUpRight } from "lucide-react";
 import { AutoSaveDialog } from "./auto-save-dialog";
 import { BuyDialog } from "./buy-dialog";
+import { SellDialog } from "./sell-dialog";
 
 export function PortfolioSummary({ dict }: { dict: any }) {
   const formattedValue = new Intl.NumberFormat("en-US", {
@@ -23,6 +24,7 @@ export function PortfolioSummary({ dict }: { dict: any }) {
         <CardTitle>{dict.totalBalance}</CardTitle>
         <div className="flex items-center gap-2">
            <BuyDialog dict={dict.buyDialog} />
+           <SellDialog dict={dict.sellDialog} />
            <AutoSaveDialog dict={dict.autoSave} />
         </div>
       </CardHeader>

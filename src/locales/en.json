@@ -26,6 +26,22 @@
             "toastSuccessTitle": "Purchase Successful",
             "toastSuccessDescription": "You have successfully purchased {amount} {symbol}."
         },
+        "sellDialog": {
+            "title": "Sell Asset",
+            "description": "Select an asset from your portfolio and enter the amount you want to sell.",
+            "assetLabel": "Asset",
+            "assetPlaceholder": "Select an asset to sell",
+            "amountLabel": "Amount (Asset)",
+            "amountPlaceholder": "e.g., 0.5",
+            "approximate": "You will receive approx. ${usd}",
+            "sellButton": "Sell Now",
+            "toastInvalidTitle": "Invalid Input",
+            "toastInvalidDescription": "Please select an asset and enter a valid amount.",
+            "toastInsufficientTitle": "Insufficient Balance",
+            "toastInsufficientDescription": "You only have {amount} {symbol} to sell.",
+            "toastSuccessTitle": "Sale Successful",
+            "toastSuccessDescription": "You have successfully sold {amount} {symbol} for ${usd}. The funds will be transferred to your bank account."
+        },
         "autoSave": "Auto-Save",
         "growth": "+2.1% from last month"
     },
