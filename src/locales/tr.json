@@ -134,5 +134,32 @@
             "price": "Fiyat",
             "change": "24s Değişim"
         }
+    },
+    "profilePage": {
+        "title": "Profil",
+        "cardTitle": "Kişisel Bilgiler",
+        "cardDescription": "Kişisel bilgilerinizi buradan güncelleyin.",
+        "nameLabel": "Tam Ad",
+        "emailLabel": "E-posta Adresi",
+        "changePicture": "Resmi Değiştir",
+        "saveButton": "Değişiklikleri Kaydet"
+    },
+    "settingsPage": {
+        "title": "Ayarlar",
+        "account": {
+            "title": "Hesap Ayarları",
+            "description": "Hesap ayarlarınızı ve şifrenizi yönetin.",
+            "currentPassword": "Mevcut Şifre",
+            "newPassword": "Yeni Şifre",
+            "saveButton": "Şifreyi Kaydet"
+        },
+        "notifications": {
+            "title": "Bildirimler",
+            "description": "Bildirim tercihlerinizi yönetin.",
+            "priceAlerts": "Fiyat Uyarıları",
+            "autoSaveUpdates": "Otomatik Tasarruf Güncellemeleri",
+            "newsletter": "Bülten",
+            "saveButton": "Tercihleri Kaydet"
+        }
     }
 }

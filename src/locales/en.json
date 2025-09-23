@@ -134,5 +134,32 @@
             "price": "Price",
             "change": "24h Change"
         }
+    },
+    "profilePage": {
+        "title": "Profile",
+        "cardTitle": "Personal Information",
+        "cardDescription": "Update your personal details here.",
+        "nameLabel": "Full Name",
+        "emailLabel": "Email Address",
+        "changePicture": "Change Picture",
+        "saveButton": "Save Changes"
+    },
+    "settingsPage": {
+        "title": "Settings",
+        "account": {
+            "title": "Account Settings",
+            "description": "Manage your account settings and password.",
+            "currentPassword": "Current Password",
+            "newPassword": "New Password",
+            "saveButton": "Save Password"
+        },
+        "notifications": {
+            "title": "Notifications",
+            "description": "Manage your notification preferences.",
+            "priceAlerts": "Price Alerts",
+            "autoSaveUpdates": "Auto-Save Updates",
+            "newsletter": "Newsletter",
+            "saveButton": "Save Preferences"
+        }
     }
 }

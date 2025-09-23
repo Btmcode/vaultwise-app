@@ -1,0 +1,71 @@
+import { getDictionary } from '@/app/dictionaries';
+import { Header } from '@/components/header';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Switch } from '@/components/ui/switch';
+
+
+export default async function SettingsPage({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
+  const dict = await getDictionary(lang);
+  const settingsDict = dict.settingsPage;
+
+  return (
+    <div className="flex min-h-screen w-full flex-col bg-background">
+      <Header lang={lang} dict={dict.header} />
+      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <div className="mx-auto grid w-full max-w-4xl gap-2">
+          <h1 className="text-3xl font-semibold">{settingsDict.title}</h1>
+        </div>
+        <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
+            <div className="grid gap-6">
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{settingsDict.account.title}</CardTitle>
+                        <CardDescription>{settingsDict.account.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-4">
+                         <div className="grid gap-2">
+                            <label htmlFor="current-password">{settingsDict.account.currentPassword}</label>
+                            <Input id="current-password" type="password" />
+                        </div>
+                         <div className="grid gap-2">
+                            <label htmlFor="new-password">{settingsDict.account.newPassword}</label>
+                            <Input id="new-password" type="password" />
+                        </div>
+                    </CardContent>
+                    <CardFooter className="border-t px-6 py-4">
+                        <Button>{settingsDict.account.saveButton}</Button>
+                    </CardFooter>
+                </Card>
+
+                 <Card>
+                    <CardHeader>
+                        <CardTitle>{settingsDict.notifications.title}</CardTitle>
+                        <CardDescription>{settingsDict.notifications.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent className="grid gap-4">
+                        <div className="flex items-center space-x-2">
+                            <Switch id="price-alerts" defaultChecked />
+                            <label htmlFor="price-alerts">{settingsDict.notifications.priceAlerts}</label>
+                        </div>
+                         <div className="flex items-center space-x-2">
+                            <Switch id="auto-save-updates" />
+                            <label htmlFor="auto-save-updates">{settingsDict.notifications.autoSaveUpdates}</label>
+                        </div>
+                         <div className="flex items-center space-x-2">
+                            <Switch id="newsletter" defaultChecked />
+                            <label htmlFor="newsletter">{settingsDict.notifications.newsletter}</label>
+                        </div>
+                    </CardContent>
+                    <CardFooter className="border-t px-6 py-4">
+                        <Button>{settingsDict.notifications.saveButton}</Button>
+                    </CardFooter>
+                </Card>
+            </div>
+        </div>
+      </main>
+    </div>
+  );
+}

@@ -63,13 +63,17 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{dict.myAccount}</DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <User className="mr-2 h-4 w-4" />
-                <span>{dict.profile}</span>
+              <DropdownMenuItem asChild>
+                <Link href={`/${lang}/profile`} className="cursor-pointer">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>{dict.profile}</span>
+                </Link>
               </DropdownMenuItem>
-              <DropdownMenuItem>
-                <Settings className="mr-2 h-4 w-4" />
-                <span>{dict.settings}</span>
+              <DropdownMenuItem asChild>
+                <Link href={`/${lang}/settings`} className="cursor-pointer">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>{dict.settings}</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem>
