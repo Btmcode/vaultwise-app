@@ -63,7 +63,7 @@ export function BuyDialog({ dict }: { dict: any }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="buy-button">{buyDialogDict.shortTitle}</Button>
+        <Button size="sm" className="bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -110,7 +110,7 @@ export function BuyDialog({ dict }: { dict: any }) {
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleBuy} className="buy-button">{buyDialogDict.buyButton}</Button>
+          <Button onClick={handleBuy} className="bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.buyButton}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

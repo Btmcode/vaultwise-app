@@ -71,7 +71,7 @@ export function SellDialog({ dict }: { dict: any }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" className="sell-button">{sellDialogDict.shortTitle}</Button>
+        <Button variant="secondary" size="sm" className="hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
@@ -118,7 +118,7 @@ export function SellDialog({ dict }: { dict: any }) {
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleSell} className="sell-button">{sellDialogDict.sellButton}</Button>
+          <Button onClick={handleSell} variant="secondary" className="hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.sellButton}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
