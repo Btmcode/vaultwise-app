@@ -1,8 +1,11 @@
+import en from '@/locales/en.json';
+import tr from '@/locales/tr.json';
 
 const dictionaries = {
-  en: () => import('@/locales/en.json').then(module => module.default),
-  tr: () => import('@/locales/tr.json').then(module => module.default),
+  en,
+  tr,
 };
 
-export const getDictionary = (locale: 'tr' | 'en') =>
-  dictionaries[locale]();
+export const getDictionary = (locale: 'tr' | 'en') => {
+  return dictionaries[locale] || dictionaries.tr;
+};

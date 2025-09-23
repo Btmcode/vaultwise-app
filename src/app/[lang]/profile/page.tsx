@@ -1,3 +1,7 @@
+
+"use client";
+
+import { useParams } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -6,8 +10,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 
-export default async function ProfilePage({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = await getDictionary(lang);
+export default function ProfilePage() {
+  const params = useParams();
+  const lang = params.lang as 'tr' | 'en';
+  const dict = getDictionary(lang);
+  
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
   const profileDict = dict.profilePage;
 
