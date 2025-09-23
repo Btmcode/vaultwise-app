@@ -46,11 +46,11 @@ export default function ProfilePage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                      <div className="grid gap-2">
                         <label htmlFor="name">{profileDict.nameLabel}</label>
-                        <Input id="name" defaultValue="Ali Veli" />
+                        <Input id="name" name="name" defaultValue="Ali Veli" autoComplete="name" />
                     </div>
                     <div className="grid gap-2">
                         <label htmlFor="email">{profileDict.emailLabel}</label>
-                        <Input id="email" type="email" defaultValue="ali.veli@example.com" />
+                        <Input id="email" name="email" type="email" defaultValue="ali.veli@example.com" autoComplete="email" />
                     </div>
                   </div>
                 </form>

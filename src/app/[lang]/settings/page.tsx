@@ -45,7 +45,7 @@ export default function SettingsPage() {
                          <div className="grid gap-2">
                             <label htmlFor="current-password">{settingsDict.account.currentPassword}</label>
                             <div className="relative">
-                                <Input id="current-password" type={showCurrentPassword ? "text" : "password"} />
+                                <Input id="current-password" name="current-password" type={showCurrentPassword ? "text" : "password"} autoComplete="current-password" />
                                 <Button
                                     type="button"
                                     variant="ghost"
@@ -60,7 +60,7 @@ export default function SettingsPage() {
                          <div className="grid gap-2">
                             <label htmlFor="new-password">{settingsDict.account.newPassword}</label>
                             <div className="relative">
-                                <Input id="new-password" type={showNewPassword ? "text" : "password"} />
+                                <Input id="new-password" name="new-password" type={showNewPassword ? "text" : "password"} autoComplete="new-password"/>
                                  <Button
                                     type="button"
                                     variant="ghost"
@@ -75,7 +75,7 @@ export default function SettingsPage() {
                          <div className="grid gap-2">
                             <label htmlFor="confirm-new-password">{settingsDict.account.confirmNewPassword}</label>
                             <div className="relative">
-                                <Input id="confirm-new-password" type={showConfirmNewPassword ? "text" : "password"} />
+                                <Input id="confirm-new-password" name="confirm-new-password" type={showConfirmNewPassword ? "text" : "password"} autoComplete="new-password" />
                                  <Button
                                     type="button"
                                     variant="ghost"
