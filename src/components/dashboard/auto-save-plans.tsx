@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -8,9 +9,9 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { autoSavePlans } from "@/lib/data";
+import { autoSavePlans as initialAutoSavePlans } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
-import type { AssetSymbol } from "@/lib/types";
+import type { AssetSymbol, AutoSavePlan } from "@/lib/types";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
@@ -31,12 +32,15 @@ const formatCurrency = (value: number) => {
 
 export function AutoSavePlans({ dict }: { dict: any }) {
   const { toast } = useToast();
+  const [autoSavePlans, setAutoSavePlans] = useState<AutoSavePlan[]>(initialAutoSavePlans);
   const autoSavePlansDict = dict.autoSavePlans;
   const assetNames = dict.assetNames;
   
   const handleStopPlan = (planId: string) => {
     // In a real app, you would call a server action to update the database.
-    // For this simulation, we'll just show a toast notification.
+    // For this simulation, we'll filter the plan from the local state.
+    setAutoSavePlans(currentPlans => currentPlans.filter(plan => plan.id !== planId));
+    
     toast({
       title: autoSavePlansDict.toast.title,
       description: autoSavePlansDict.toast.description,
@@ -44,7 +48,19 @@ export function AutoSavePlans({ dict }: { dict: any }) {
   };
 
   if (!autoSavePlans || autoSavePlans.length === 0) {
-    return null;
+    return (
+      <>
+        <CardHeader>
+          <CardTitle>{autoSavePlansDict.title}</CardTitle>
+          <CardDescription>{autoSavePlansDict.description}</CardDescription>
+        </CardHeader>
+        <CardContent>
+            <div className="text-center text-muted-foreground py-4">
+                No active auto-save plans.
+            </div>
+        </CardContent>
+      </>
+    );
   }
 
   return (
