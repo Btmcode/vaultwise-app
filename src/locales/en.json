@@ -17,6 +17,47 @@
         "settings": "Settings",
         "logout": "Logout"
     },
+    "loginPage": {
+        "title": "Login to your Account",
+        "description": "Enter your email below to login to your account.",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "buttonText": "Login",
+        "signupText": "Don't have an account?",
+        "signupLink": "Sign up",
+        "toast": {
+            "success": {
+                "title": "Login Successful",
+                "description": "Welcome back!"
+            },
+            "error": {
+                "title": "Login Failed",
+                "invalidCredentials": "Invalid email or password. Please try again.",
+                "default": "An unexpected error occurred. Please try again later."
+            }
+        }
+    },
+    "signupPage": {
+        "title": "Create an Account",
+        "description": "Enter your information to create an account.",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "buttonText": "Create Account",
+        "loginText": "Already have an account?",
+        "loginLink": "Login",
+        "toast": {
+            "success": {
+                "title": "Account Created",
+                "description": "Welcome! You have been successfully signed up."
+            },
+            "error": {
+                "title": "Signup Failed",
+                "emailInUse": "This email address is already in use.",
+                "passwordLength": "Password must be at least 6 characters long.",
+                "default": "An unexpected error occurred. Please try again later."
+            }
+        }
+    },
     "portfolioSummary": {
         "totalBalance": "Total Balance",
         "buyDialog": {

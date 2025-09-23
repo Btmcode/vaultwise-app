@@ -17,6 +17,47 @@
         "settings": "Ayarlar",
         "logout": "Çıkış Yap"
     },
+    "loginPage": {
+        "title": "Hesabınıza Giriş Yapın",
+        "description": "Hesabınıza giriş yapmak için e-postanızı girin.",
+        "emailLabel": "E-posta",
+        "passwordLabel": "Şifre",
+        "buttonText": "Giriş Yap",
+        "signupText": "Hesabınız yok mu?",
+        "signupLink": "Kayıt Ol",
+        "toast": {
+            "success": {
+                "title": "Giriş Başarılı",
+                "description": "Tekrar hoş geldiniz!"
+            },
+            "error": {
+                "title": "Giriş Başarısız",
+                "invalidCredentials": "Geçersiz e-posta veya şifre. Lütfen tekrar deneyin.",
+                "default": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+            }
+        }
+    },
+    "signupPage": {
+        "title": "Hesap Oluştur",
+        "description": "Bir hesap oluşturmak için bilgilerinizi girin.",
+        "emailLabel": "E-posta",
+        "passwordLabel": "Şifre",
+        "buttonText": "Hesap Oluştur",
+        "loginText": "Zaten bir hesabınız var mı?",
+        "loginLink": "Giriş Yap",
+        "toast": {
+            "success": {
+                "title": "Hesap Oluşturuldu",
+                "description": "Hoş geldiniz! Başarıyla kaydoldunuz."
+            },
+            "error": {
+                "title": "Kayıt Başarısız",
+                "emailInUse": "Bu e-posta adresi zaten kullanılıyor.",
+                "passwordLength": "Şifre en az 6 karakter uzunluğunda olmalıdır.",
+                "default": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+            }
+        }
+    },
     "portfolioSummary": {
         "totalBalance": "Toplam Bakiye",
         "buyDialog": {
