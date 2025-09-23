@@ -77,11 +77,11 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
                 {userAvatar && (
                   <Image
                     src={userAvatar.imageUrl}
-                    width={40}
-                    height={40}
+                    width={36}
+                    height={36}
                     alt={userAvatar.description}
                     data-ai-hint={userAvatar.imageHint}
-                    className="rounded-full"
+                    className="rounded-full object-cover"
                   />
                 )}
                 <span className="sr-only">Toggle user menu</span>

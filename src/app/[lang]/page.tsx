@@ -15,11 +15,11 @@ import { WorstPerformer } from "@/components/dashboard/worst-performer";
 import { AutoSavePlans } from "@/components/dashboard/auto-save-plans";
 
 
-export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = await getDictionary(lang);
+export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }) {
+  const dict = getDictionary(params.lang);
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <Header lang={lang} dict={dict.header} />
+      <Header lang={params.lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="w-full">
           <Suspense fallback={<Skeleton className="h-24" />}>
