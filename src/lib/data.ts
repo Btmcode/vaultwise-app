@@ -81,26 +81,58 @@ export const transactions: Transaction[] = [
   },
 ];
 
-const generateChartData = (days: number, baseValue: number, volatility: number) => {
+const generateChartData = (period: 'day' | 'week' | 'month' | 'year', count: number, baseValue: number, volatility: number) => {
   const data = [];
   let value = baseValue;
-  for (let i = days - 1; i >= 0; i--) {
-    const date = new Date();
-    date.setDate(date.getDate() - i);
+  const now = new Date();
+
+  for (let i = count - 1; i >= 0; i--) {
+    const date = new Date(now);
+    if (period === 'day') {
+      date.setDate(now.getDate() - i);
+    } else if (period === 'week') {
+      date.setDate(now.getDate() - (i * 7));
+    } else if (period === 'month') {
+        date.setMonth(now.getMonth() - i);
+    } else if (period === 'year') {
+        date.setFullYear(now.getFullYear() - i);
+    }
+    
     value *= 1 + (Math.random() - 0.5) * volatility;
     data.push({
-      date: date.toLocaleDateString("en-US", { month: "short", day: "numeric" }),
+      date: date.toISOString(),
       value: parseFloat(value.toFixed(2)),
     });
   }
   return data;
 };
 
+const generateLiveChartData = (minutes: number, baseValue: number, volatility: number) => {
+  const data = [];
+  let value = baseValue;
+  const now = new Date();
+  for (let i = minutes - 1; i >= 0; i--) {
+    const date = new Date(now);
+    date.setMinutes(now.getMinutes() - i);
+    value *= 1 + (Math.random() - 0.5) * volatility;
+    data.push({
+      date: date.toISOString(),
+      value: parseFloat(value.toFixed(2)),
+    });
+  }
+  return data;
+}
+
 
 export const chartData: ChartData = {
-  "7d": generateChartData(7, 65000, 0.02),
-  "30d": generateChartData(30, 68000, 0.03),
-  "1y": generateChartData(365, 45000, 0.05).filter((_, i) => i % 7 === 0).map(d => ({ ...d, date: new Date(new Date().setDate(new Date().getDate() - (365 - d.value / 45000 * 365))).toLocaleDateString("en-US", { month: "short" }) })),
+  "live": generateLiveChartData(60, 68000, 0.005),
+  "1d": generateChartData('day', 24, 68200, 0.01),
+  "1w": generateChartData('day', 7, 67500, 0.02),
+  "1m": generateChartData('day', 30, 69000, 0.03),
+  "3m": generateChartData('week', 12, 65000, 0.04),
+  "6m": generateChartData('week', 26, 62000, 0.045),
+  "1y": generateChartData('month', 12, 45000, 0.05),
+  "5y": generateChartData('month', 60, 20000, 0.08),
 };
 
 export const totalPortfolioValue = portfolioAssets.reduce((sum, asset) => sum + asset.valueUsd, 0);

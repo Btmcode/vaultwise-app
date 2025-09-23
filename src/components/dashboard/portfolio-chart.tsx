@@ -14,12 +14,12 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { chartData, totalPortfolioValue } from "@/lib/data";
 import type { ChartData } from "@/lib/types";
 
 export function PortfolioChart({ dict }: { dict: any }) {
-  const [timeRange, setTimeRange] = useState<keyof ChartData>("7d");
+  const [timeRange, setTimeRange] = useState<keyof ChartData>("1w");
   
   const currentData = chartData[timeRange];
   const chartConfig = {
@@ -44,14 +44,19 @@ export function PortfolioChart({ dict }: { dict: any }) {
           </CardDescription>
         </div>
         <Tabs
-          defaultValue="7d"
-          className="w-[200px]"
+          defaultValue="1w"
+          className="w-auto"
           onValueChange={(value) => setTimeRange(value as keyof ChartData)}
         >
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="7d">{dict.tabs['7d']}</TabsTrigger>
-            <TabsTrigger value="30d">{dict.tabs['30d']}</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-8">
+            <TabsTrigger value="live">{dict.tabs['live']}</TabsTrigger>
+            <TabsTrigger value="1d">{dict.tabs['1d']}</TabsTrigger>
+            <TabsTrigger value="1w">{dict.tabs['1w']}</TabsTrigger>
+            <TabsTrigger value="1m">{dict.tabs['1m']}</TabsTrigger>
+            <TabsTrigger value="3m">{dict.tabs['3m']}</TabsTrigger>
+            <TabsTrigger value="6m">{dict.tabs['6m']}</TabsTrigger>
             <TabsTrigger value="1y">{dict.tabs['1y']}</TabsTrigger>
+            <TabsTrigger value="5y">{dict.tabs['5y']}</TabsTrigger>
           </TabsList>
         </Tabs>
       </CardHeader>
@@ -81,7 +86,10 @@ export function PortfolioChart({ dict }: { dict: any }) {
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => {
+                if(timeRange === '1d' || timeRange === 'live') return new Date(value).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+                return new Date(value).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+              }}
             />
             <YAxis
               tickLine={false}

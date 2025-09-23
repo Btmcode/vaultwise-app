@@ -30,7 +30,12 @@ export type ChartDataPoint = {
 };
 
 export type ChartData = {
-  "7d": ChartDataPoint[];
-  "30d": ChartDataPoint[];
+  "live": ChartDataPoint[];
+  "1d": ChartDataPoint[];
+  "1w": ChartDataPoint[];
+  "1m": ChartDataPoint[];
+  "3m": ChartDataPoint[];
+  "6m": ChartDataPoint[];
   "1y": ChartDataPoint[];
+  "5y": ChartDataPoint[];
 };

@@ -94,9 +94,14 @@
         "title": "Portföy Değeri",
         "description": "Portföy performansınızın bir özeti.",
         "tabs": {
-            "7d": "7g",
-            "30d": "30g",
-            "1y": "1y"
+            "live": "Canlı",
+            "1d": "1G",
+            "1w": "1H",
+            "1m": "1A",
+            "3m": "3A",
+            "6m": "6A",
+            "1y": "1Y",
+            "5y": "5Y"
         }
     },
     "recentTransactions": {

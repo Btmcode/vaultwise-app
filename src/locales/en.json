@@ -94,9 +94,14 @@
         "title": "Portfolio Value",
         "description": "A summary of your portfolio's performance.",
         "tabs": {
-            "7d": "7d",
-            "30d": "30d",
-            "1y": "1y"
+            "live": "Live",
+            "1d": "1D",
+            "1w": "1W",
+            "1m": "1M",
+            "3m": "3M",
+            "6m": "6M",
+            "1y": "1Y",
+            "5y": "5Y"
         }
     },
     "recentTransactions": {
