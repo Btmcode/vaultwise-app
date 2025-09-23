@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -143,7 +144,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
           </TooltipContent>
         </Tooltip>
       </TooltipProvider>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
             {step === 1 ? autoSaveDialogDict.createTitle : autoSaveDialogDict.suggestionTitle}

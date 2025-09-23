@@ -116,6 +116,9 @@
     "assetList": {
         "title": "Varlıklarım",
         "description": "Mevcut varlıklarınıza genel bir bakış.",
+        "searchPlaceholder": "İsme veya sembole göre ara...",
+        "hideLowBalances": "Düşük bakiyeleri gizle",
+        "noResults": "Kriterlerinize uygun varlık bulunamadı.",
         "table": {
             "asset": "Varlık",
             "balance": "Bakiye",

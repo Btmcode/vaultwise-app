@@ -116,6 +116,9 @@
     "assetList": {
         "title": "My Assets",
         "description": "An overview of your current holdings.",
+        "searchPlaceholder": "Search by name or symbol...",
+        "hideLowBalances": "Hide low balances",
+        "noResults": "No assets found matching your criteria.",
         "table": {
             "asset": "Asset",
             "balance": "Balance",

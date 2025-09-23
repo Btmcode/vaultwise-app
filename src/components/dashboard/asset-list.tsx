@@ -1,4 +1,7 @@
 
+"use client";
+
+import { useState, useMemo } from 'react';
 import {
   Card,
   CardHeader,
@@ -10,6 +13,12 @@ import { assets, portfolioAssets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
+import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { BuyDialog } from './buy-dialog';
+import { SellDialog } from './sell-dialog';
 
 const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAU: GoldIcon,
@@ -31,16 +40,52 @@ const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
     return `${amount.toLocaleString()} ${unit}`;
 }
 
-export function AssetList({ dict, assetNames }: { dict: any, assetNames: any }) {
+const HIDE_THRESHOLD = 1.00; // Hide assets with value less than $1.00
+
+export function AssetList({ dict }: { dict: any }) {
   const assetListDict = dict.assetList;
+  const assetNames = dict.assetNames;
+
+  const [searchTerm, setSearchTerm] = useState('');
+  const [hideLowBalances, setHideLowBalances] = useState(false);
+
+  const filteredAssets = useMemo(() => {
+    return portfolioAssets
+      .filter(pa => !hideLowBalances || pa.valueUsd >= HIDE_THRESHOLD)
+      .filter(pa => {
+        const assetInfo = assets[pa.assetSymbol];
+        const assetName = assetNames[assetInfo.symbol] || '';
+        const symbol = assetInfo.symbol;
+        return assetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+               symbol.toLowerCase().includes(searchTerm.toLowerCase());
+      });
+  }, [portfolioAssets, hideLowBalances, searchTerm, assetNames]);
+
+
   return (
     <>
       <CardHeader>
         <CardTitle>{assetListDict.title}</CardTitle>
         <CardDescription>{assetListDict.description}</CardDescription>
       </CardHeader>
+      <div className="flex flex-col sm:flex-row items-center gap-4 px-6 pb-4">
+          <Input
+            placeholder={assetListDict.searchPlaceholder}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full sm:w-1/3"
+          />
+          <div className="flex items-center space-x-2">
+            <Switch
+                id="hide-low-balances"
+                checked={hideLowBalances}
+                onCheckedChange={setHideLowBalances}
+            />
+            <Label htmlFor="hide-low-balances">{assetListDict.hideLowBalances}</Label>
+          </div>
+      </div>
       <CardContent className="grid gap-6">
-        {portfolioAssets.map((pa, index) => {
+        {filteredAssets.map((pa, index) => {
           const assetInfo = assets[pa.assetSymbol];
           const Icon = iconMap[pa.assetSymbol];
           return (
@@ -72,11 +117,20 @@ export function AssetList({ dict, assetNames }: { dict: any, assetNames: any }) 
                     <p className="font-semibold text-lg">{formatCurrency(pa.valueUsd)}</p>
                   </div>
                 </div>
+                <div className="flex gap-2 justify-end w-full md:w-auto">
+                   <BuyDialog dict={dict} />
+                   <SellDialog dict={dict} />
+                </div>
               </div>
-              {index < portfolioAssets.length - 1 && <Separator className="mt-6" />}
+              {index < filteredAssets.length - 1 && <Separator className="mt-6" />}
             </div>
           );
         })}
+        {filteredAssets.length === 0 && (
+            <div className="text-center text-muted-foreground py-8">
+                {assetListDict.noResults}
+            </div>
+        )}
       </CardContent>
     </>
   );
