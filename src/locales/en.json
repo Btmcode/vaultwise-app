@@ -21,6 +21,7 @@
         "totalBalance": "Total Balance",
         "buyDialog": {
             "title": "Buy Asset",
+            "shortTitle": "Buy",
             "description": "Select an asset and enter the amount you want to buy.",
             "assetLabel": "Asset",
             "assetPlaceholder": "Select an asset",
@@ -35,6 +36,7 @@
         },
         "sellDialog": {
             "title": "Sell Asset",
+            "shortTitle": "Sell",
             "description": "Select an asset from your portfolio and enter the amount you want to sell.",
             "assetLabel": "Asset",
             "assetPlaceholder": "Select an asset to sell",

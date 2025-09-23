@@ -39,6 +39,13 @@ import { assets } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import type { AutomatedSavingsGoalOutput } from "@/ai/flows/automated-savings-goal-suggestions";
 import { getDictionary } from "@/app/dictionaries";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
 
 const formSchema = z.object({
   income: z.coerce.number().min(1, "Please enter your monthly income."),
@@ -122,12 +129,20 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" size="sm">
-          <Wand2 className="mr-2 h-4 w-4" />
-          {autoSaveDialogDict.title}
-        </Button>
-      </DialogTrigger>
+       <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DialogTrigger asChild>
+              <Button variant="outline" size="icon">
+                <Wand2 />
+              </Button>
+            </DialogTrigger>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>{autoSaveDialogDict.title}</p>
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>

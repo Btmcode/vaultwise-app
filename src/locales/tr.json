@@ -21,6 +21,7 @@
         "totalBalance": "Toplam Bakiye",
         "buyDialog": {
             "title": "Varlık Satın Al",
+            "shortTitle": "Al",
             "description": "Bir varlık seçin ve ne kadar almak istediğinizi girin.",
             "assetLabel": "Varlık",
             "assetPlaceholder": "Bir varlık seçin",
@@ -35,6 +36,7 @@
         },
         "sellDialog": {
             "title": "Varlık Sat",
+            "shortTitle": "Sat",
             "description": "Portföyünüzden bir varlık seçin ve satmak istediğiniz tutarı girin.",
             "assetLabel": "Varlık",
             "assetPlaceholder": "Satmak için bir varlık seçin",
