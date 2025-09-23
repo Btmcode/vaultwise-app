@@ -8,6 +8,7 @@ import { assets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol } from "@/lib/types";
 import { cn } from "@/lib/utils";
+import { StrictModeDroppable } from "@/components/strict-mode-droppable";
 
 const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAU: GoldIcon,
@@ -49,7 +50,7 @@ export function LivePrices({ dict }: { dict: any }) {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="live-prices" direction="horizontal">
+      <StrictModeDroppable droppableId="live-prices" direction="horizontal">
         {(provided) => (
           <div
             {...provided.droppableProps}
@@ -113,7 +114,7 @@ export function LivePrices({ dict }: { dict: any }) {
             {provided.placeholder}
           </div>
         )}
-      </Droppable>
+      </StrictModeDroppable>
     </DragDropContext>
   );
 }
