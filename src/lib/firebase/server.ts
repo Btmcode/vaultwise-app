@@ -1,15 +1,22 @@
-import { getApp, getApps, initializeApp } from 'firebase-admin/app';
+import { getApp, getApps, initializeApp, type App } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
 import { credential } from 'firebase-admin';
 
-// Bu fonksiyon, sunucu tarafında Firebase Admin SDK'yı başlatır.
-// Middleware gibi sunucu ortamlarında kullanılır.
-const app = !getApps().length
-  ? initializeApp({
-      credential: credential.applicationDefault(),
-    })
-  : getApp();
+// This function initializes and returns the Firebase Admin app instance.
+// It ensures that the app is initialized only once.
+function getAdminApp(): App {
+  if (getApps().length > 0) {
+    return getApp();
+  }
 
-const auth = () => getAuth(app);
+  // NOTE: This relies on GOOGLE_APPLICATION_CREDENTIALS env var to be set.
+  // In a real production environment, you would manage service account keys securely.
+  return initializeApp({
+    credential: credential.applicationDefault(),
+  });
+}
 
-export { app, auth };
+const adminApp = getAdminApp();
+const adminAuth = getAuth(adminApp);
+
+export { adminApp as app, adminAuth as auth };

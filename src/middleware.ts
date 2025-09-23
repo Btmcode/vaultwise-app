@@ -10,7 +10,9 @@ const i18n = {
 const PUBLIC_FILE = /\.(.*)$/;
 const AUTH_ROUTES = ['/login', '/signup'];
 
-// This function can be marked `async` if using `await` inside
+// This middleware function is simplified to only handle routing and cookie checks,
+// without importing any server-side Node.js modules like 'firebase-admin'.
+// This resolves the "Edge runtime does not support Node.js 'path' module" error.
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
@@ -24,7 +26,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Handle i18n
+  // Handle i18n locale redirection
   const pathnameHasLocale = i18n.locales.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
@@ -52,14 +54,11 @@ export function middleware(request: NextRequest) {
      url.pathname = `/${locale}/`;
      return NextResponse.redirect(url);
   }
-  
-  // NOTE: Full session verification with firebase-admin was removed to solve the build issue.
-  // A more robust solution might involve an API call from the middleware if full verification is needed on every request.
 
   return NextResponse.next();
 }
 
-// See "Matching Paths" below to learn more
+// The config object specifies which routes the middleware should run on.
 export const config = {
   matcher: [
     '/((?!api|_next/static|_next/image|favicon.ico|images|.*\\.png$).*)',
