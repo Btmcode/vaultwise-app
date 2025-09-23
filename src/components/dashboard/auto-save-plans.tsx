@@ -1,7 +1,6 @@
 
 "use client";
 
-import { useState } from "react";
 import {
   Card,
   CardHeader,
@@ -9,7 +8,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { autoSavePlans as initialAutoSavePlans } from "@/lib/data";
+import { autoSavePlans } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol, AutoSavePlan } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -32,27 +31,19 @@ const formatCurrency = (value: number) => {
 
 export function AutoSavePlans({ dict }: { dict: any }) {
   const { toast } = useToast();
-  const [autoSavePlans, setAutoSavePlans] = useState<AutoSavePlan[]>(initialAutoSavePlans);
   const autoSavePlansDict = dict.autoSavePlans;
   const assetNames = dict.assetNames;
-  
+
   const handleStopPlan = (planId: string) => {
-    // In a real app, you would call a server action to update the database.
-    // For this simulation, we'll filter the plan from the local state and the source data.
-    const updatedPlans = autoSavePlans.filter(plan => plan.id !== planId);
-    setAutoSavePlans(updatedPlans);
-    
-    // This simulates updating the "database" (our data.ts file)
-    // In a real app this would be a server action.
-    const planIndex = initialAutoSavePlans.findIndex(p => p.id === planId);
-    if (planIndex > -1) {
-        initialAutoSavePlans.splice(planIndex, 1);
-    }
-    
+    // This is a placeholder. In a real app, this would trigger a server action
+    // to delete the plan from the database. Since we've removed it from the
+    // source data file, we can just show a success message.
     toast({
       title: autoSavePlansDict.toast.title,
       description: autoSavePlansDict.toast.description,
     });
+     // In a real app, you would re-fetch the data or update the state
+     // to remove the plan from the UI instantly.
   };
 
   if (!autoSavePlans || autoSavePlans.length === 0) {

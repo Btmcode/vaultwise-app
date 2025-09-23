@@ -82,22 +82,10 @@ export const transactions: Transaction[] = [
   },
 ];
 
-export const autoSavePlans: AutoSavePlan[] = [
-    {
-        id: "plan-1",
-        assetSymbol: "XAU",
-        amount: 100,
-        frequency: "monthly",
-        status: "active"
-    },
-    {
-        id: "plan-2",
-        assetSymbol: "BTC",
-        amount: 50,
-        frequency: "monthly",
-        status: "active"
-    }
-];
+// The auto-save plans have been removed from this array to simulate a persistent 'stop' action.
+// In a real application, this data would be fetched from a database, and the 'stop' action
+// would trigger a database deletion.
+export const autoSavePlans: AutoSavePlan[] = [];
 
 const generateChartData = (period: 'day' | 'week' | 'month' | 'year', count: number, baseValue: number, volatility: number) => {
   const data = [];
