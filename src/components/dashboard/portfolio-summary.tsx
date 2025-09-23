@@ -29,7 +29,7 @@ export function PortfolioSummary({ dict }: { dict: any }) {
           {dict.portfolioSummary.growth}
         </p>
       </CardContent>
-      <CardFooter className="flex gap-2">
+      <CardFooter className="flex flex-wrap gap-2">
         <BuyDialog dict={dict} />
         <SellDialog dict={dict} />
         <AutoSaveDialog dict={dict} />
