@@ -15,10 +15,10 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header lang={lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="grid gap-4 md:gap-8">
-            <Suspense fallback={<Skeleton className="h-96" />}>
-              <LivePrices dict={dict} />
-            </Suspense>
+        <div className="w-full">
+          <Suspense fallback={<Skeleton className="h-24" />}>
+            <LivePrices dict={dict} />
+          </Suspense>
         </div>
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <Suspense fallback={<Skeleton className="h-48" />}>

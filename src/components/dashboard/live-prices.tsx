@@ -1,18 +1,12 @@
+"use client"
+import * as React from "react"
+import Autoplay from "embla-carousel-autoplay"
+
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableCell,
-} from "@/components/ui/table";
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel"
 import { assets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol } from "@/lib/types";
@@ -34,43 +28,36 @@ const formatCurrency = (value: number) => {
 
 export function LivePrices({ dict }: { dict: any }) {
   const assetValues = Object.values(assets);
-  const livePricesDict = dict.livePrices;
+  const plugin = React.useRef(
+    Autoplay({ delay: 2000, stopOnInteraction: true })
+  )
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{livePricesDict.title}</CardTitle>
-        <CardDescription>{livePricesDict.description}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[80px]">{livePricesDict.table.asset}</TableHead>
-              <TableHead className="text-right">{livePricesDict.table.price}</TableHead>
-              <TableHead className="text-right">{livePricesDict.table.change}</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {assetValues.map((asset) => {
-              const Icon = iconMap[asset.symbol];
-              return (
-                <TableRow key={asset.symbol}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <div className="bg-muted p-2 rounded-full">
-                         <Icon className="h-6 w-6" />
-                      </div>
-                      <div>
-                        <p className="font-medium">{dict.assetNames[asset.symbol]}</p>
-                        <p className="text-sm text-muted-foreground">{asset.symbol}</p>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    {formatCurrency(asset.price)}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div
+    <Carousel
+      plugins={[plugin.current]}
+      className="w-full"
+      onMouseEnter={plugin.current.stop}
+      onMouseLeave={plugin.current.reset}
+      opts={{
+        align: "start",
+        loop: true,
+      }}
+    >
+      <CarouselContent>
+        {assetValues.map((asset) => {
+          const Icon = iconMap[asset.symbol];
+          return (
+            <CarouselItem key={asset.symbol} className="basis-1/3 md:basis-1/4 lg:basis-1/6">
+              <div className="p-1">
+                <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-card border">
+                  <div className="bg-muted p-2 rounded-full">
+                     <Icon className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <p className="font-medium text-sm">{dict.assetNames[asset.symbol]}</p>
+                    <p className="text-xs text-muted-foreground">{formatCurrency(asset.price)}</p>
+                  </div>
+                   <div
                       className={`text-xs font-medium ${
                         asset.change24h > 0
                           ? "text-green-500"
@@ -80,13 +67,12 @@ export function LivePrices({ dict }: { dict: any }) {
                       {asset.change24h > 0 ? "+" : ""}
                       {asset.change24h.toFixed(2)}%
                     </div>
-                  </TableCell>
-                </TableRow>
-              );
-            })}
-          </TableBody>
-        </Table>
-      </CardContent>
-    </Card>
+                </div>
+              </div>
+            </CarouselItem>
+          )
+        })}
+      </CarouselContent>
+    </Carousel>
   );
 }
