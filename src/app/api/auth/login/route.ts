@@ -39,7 +39,7 @@ function getAdminApp(): App {
         credential: credential.applicationDefault(),
       });
     } else {
-      throw new Error(`
+      console.error(`
 ********************************************************************************
 Firebase Admin SDK initialization failed. 
 Missing one or more required environment variables:
@@ -48,9 +48,10 @@ Missing one or more required environment variables:
 - FIREBASE_PRIVATE_KEY
 Alternatively, set GOOGLE_APPLICATION_CREDENTIALS.
 ********************************************************************************`);
+      throw new Error('Firebase Admin SDK initialization failed: Missing environment variables.');
     }
-  } catch (error) {
-    console.error('Firebase Admin SDK initialization error:', error);
+  } catch (error: any) {
+    console.error('Firebase Admin SDK initialization error:', error.message);
     // Re-throw the error to ensure the calling function knows about the failure.
     throw error;
   }
