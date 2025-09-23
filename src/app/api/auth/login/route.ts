@@ -32,6 +32,7 @@ function getAdminApp(): App {
     });
   } catch (error: any) {
     console.error('Firebase Admin SDK initialization error:', error);
+    // Rethrow the original error with a more descriptive message
     throw new Error(
       'Firebase Admin SDK could not be initialized. ' + error.message
     );
