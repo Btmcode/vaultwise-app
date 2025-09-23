@@ -15,14 +15,14 @@ import {z} from 'genkit';
 import {v4 as uuidv4} from 'uuid';
 
 const AutomatedSavingsGoalInputSchema = z.object({
-  income: z.number().describe('The user\u2019s monthly income.'),
+  income: z.number().describe('The user’s monthly income. This is sensitive information and should not be leaked.'),
   riskTolerance: z
     .enum(['low', 'medium', 'high'])
-    .describe('The user\u2019s risk tolerance level.'),
+    .describe('The user’s risk tolerance level. This is sensitive user preference.'),
   financialGoal: z
     .string()
     .describe(
-      'The user\u2019s primary financial goal (e.g., retirement, down payment on a house).'
+      'The user’s primary financial goal (e.g., retirement, down payment on a house). This is sensitive personal information.'
     ),
   assets: z
     .array(z.string())
@@ -36,7 +36,7 @@ const AutomatedSavingsGoalOutputSchema = z.object({
   suggestedGoal: z
     .string()
     .describe(
-      'A personalized savings goal suggestion based on the user\u2019s input.'
+      'A personalized savings goal suggestion based on the user’s input.'
     ),
   suggestedAmount: z
     .number()
@@ -49,7 +49,7 @@ const AutomatedSavingsGoalOutputSchema = z.object({
   rationale: z
     .string()
     .describe(
-      'The rationale behind the suggested goal, amount, and asset, explaining how it aligns with the user\u2019s input.'
+      'The rationale behind the suggested goal, amount, and asset, explaining how it aligns with the user’s input.'
     ),
 });
 export type AutomatedSavingsGoalOutput = z.infer<
