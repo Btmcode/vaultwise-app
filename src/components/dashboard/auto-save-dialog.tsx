@@ -50,8 +50,6 @@ const formSchema = z.object({
   }),
 });
 
-const availableAssets = Object.values(assets);
-
 export function AutoSaveDialog({ dict }: { dict: any }) {
   const [isOpen, setIsOpen] = useState(false);
   const [step, setStep] = useState(1);
@@ -69,10 +67,18 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
     },
   });
 
+  const availableAssets = Object.values(assets);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
     try {
-      const result = await getAutomatedSavingsGoal(values);
+      const result = await getAutomatedSavingsGoal({
+        ...values,
+        assets: values.assets.map(assetName => {
+          const assetKey = Object.keys(dict.assetNames).find(key => dict.assetNames[key] === assetName);
+          return assetKey || assetName;
+        })
+      });
       setSuggestion(result);
       setStep(2);
     } catch (error) {
@@ -102,6 +108,13 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
         setSuggestion(null);
     }, 300);
   }
+
+  const getAssetName = (symbol: string) => {
+    return dict.assetNames[symbol] || symbol;
+  }
+
+  const suggestedAssetName = suggestion?.suggestedAsset ? getAssetName(suggestion.suggestedAsset) : '';
+
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -199,7 +212,9 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
                     <div className="mb-4">
                       <FormLabel>{dict.assetsLabel}</FormLabel>
                     </div>
-                    {availableAssets.map((item) => (
+                    {availableAssets.map((item) => {
+                      const assetName = getAssetName(item.symbol);
+                      return (
                       <FormField
                         key={item.symbol}
                         control={form.control}
@@ -212,29 +227,29 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
                             >
                               <FormControl>
                                 <Checkbox
-                                  checked={field.value?.includes(item.name)}
+                                  checked={field.value?.includes(assetName)}
                                   onCheckedChange={(checked) => {
                                     return checked
                                       ? field.onChange([
                                           ...field.value,
-                                          item.name,
+                                          assetName,
                                         ])
                                       : field.onChange(
                                           field.value?.filter(
-                                            (value) => value !== item.name
+                                            (value) => value !== assetName
                                           )
                                         );
                                   }}
                                 />
                               </FormControl>
                               <FormLabel className="font-normal">
-                                {item.name}
+                                {assetName}
                               </FormLabel>
                             </FormItem>
                           );
                         }}
                       />
-                    ))}
+                    )})}
                     <FormMessage />
                   </FormItem>
                 )}
@@ -260,7 +275,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
                   dangerouslySetInnerHTML={{
                     __html: dict.suggestionCardDescription
                       .replace('{amount}', suggestion.suggestedAmount)
-                      .replace('{asset}', suggestion.suggestedAsset),
+                      .replace('{asset}', suggestedAssetName),
                   }}
                 />
               </CardHeader>

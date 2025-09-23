@@ -4,6 +4,13 @@
         "title": "VaultWise",
         "description": "A modern multi-asset saving platform."
     },
+    "assetNames": {
+        "BTC": "Bitcoin",
+        "XAU": "Gold",
+        "XAG": "Silver",
+        "PAXG": "PAX Gold",
+        "XAUT": "Tether Gold"
+    },
     "header": {
         "myAccount": "My Account",
         "profile": "Profile",
@@ -60,7 +67,7 @@
         "transactionTypes": {
             "buy": "Buy",
             "sell": "Sell",
-            "auto-save": "Auto-Save"
+            "auto_save": "Auto-Save"
         }
     },
     "assetList": {

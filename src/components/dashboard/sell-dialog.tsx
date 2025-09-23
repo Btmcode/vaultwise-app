@@ -90,7 +90,7 @@ export function SellDialog({ dict }: { dict: any }) {
               <SelectContent>
                 {portfolioAssets.map((pa) => (
                   <SelectItem key={pa.assetSymbol} value={pa.assetSymbol}>
-                    {assets[pa.assetSymbol].name} ({pa.amount})
+                    {dict.assetNames[pa.assetSymbol]} ({pa.amount})
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -55,6 +55,8 @@ export function BuyDialog({ dict }: { dict: any }) {
     setAmountUsd("");
   };
 
+  const assetValues = Object.values(assets);
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
@@ -77,9 +79,9 @@ export function BuyDialog({ dict }: { dict: any }) {
                 <SelectValue placeholder={dict.assetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                {Object.values(assets).map((a) => (
+                {assetValues.map((a) => (
                   <SelectItem key={a.symbol} value={a.symbol}>
-                    {a.name}
+                    {dict.assetNames[a.symbol]}
                   </SelectItem>
                 ))}
               </SelectContent>

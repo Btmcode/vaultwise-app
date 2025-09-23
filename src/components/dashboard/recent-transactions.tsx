@@ -54,7 +54,7 @@ export function RecentTransactions({ dict }: { dict: any }) {
               </div>
               <div className="grid gap-1 flex-1">
                 <p className="text-sm font-medium leading-none">
-                  {assetInfo.name}
+                  {dict.assetNames[assetInfo.symbol]}
                 </p>
                 <p className="text-sm text-muted-foreground">
                   {tx.date.toLocaleDateString()}

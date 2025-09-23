@@ -1,33 +1,28 @@
 import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol } from "@/lib/types";
 
-export const assets: Record<AssetSymbol, Asset> = {
+export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
   BTC: {
     symbol: "BTC",
-    name: "Bitcoin",
     price: 68123.45,
     change24h: 2.5,
   },
   XAU: {
     symbol: "XAU",
-    name: "Gold",
     price: 2320.78,
     change24h: -0.8,
   },
   XAG: {
     symbol: "XAG",
-    name: "Silver",
     price: 29.55,
     change24h: -1.2,
   },
   PAXG: {
     symbol: "PAXG",
-    name: "PAX Gold",
     price: 2319.99,
     change24h: -0.7,
   },
   XAUT: {
     symbol: "XAUT",
-    name: "Tether Gold",
     price: 2321.1,
     change24h: -0.75,
   },

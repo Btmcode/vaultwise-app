@@ -67,7 +67,7 @@ export function AssetList({ dict }: { dict: any }) {
                          <Icon className="h-6 w-6" />
                       </div>
                       <div>
-                        <p className="font-medium">{assetInfo.name}</p>
+                        <p className="font-medium">{dict.assetNames[assetInfo.symbol]}</p>
                         <p className="text-sm text-muted-foreground">{assetInfo.symbol}</p>
                       </div>
                     </div>

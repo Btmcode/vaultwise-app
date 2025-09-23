@@ -4,6 +4,13 @@
         "title": "VaultWise",
         "description": "Modern, çok varlıklı bir tasarruf platformu."
     },
+    "assetNames": {
+        "BTC": "Bitcoin",
+        "XAU": "Altın",
+        "XAG": "Gümüş",
+        "PAXG": "PAX Gold",
+        "XAUT": "Tether Gold"
+    },
     "header": {
         "myAccount": "Hesabım",
         "profile": "Profil",
@@ -60,7 +67,7 @@
         "transactionTypes": {
             "buy": "Alış",
             "sell": "Satış",
-            "auto-save": "Oto-Tasarruf"
+            "auto_save": "Oto-Tasarruf"
         }
     },
     "assetList": {

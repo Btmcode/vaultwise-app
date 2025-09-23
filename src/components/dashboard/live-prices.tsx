@@ -33,6 +33,7 @@ const formatCurrency = (value: number) => {
 };
 
 export function LivePrices({ dict }: { dict: any }) {
+  const assetValues = Object.values(assets);
   return (
     <Card>
       <CardHeader>
@@ -49,7 +50,7 @@ export function LivePrices({ dict }: { dict: any }) {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {Object.values(assets).map((asset) => {
+            {assetValues.map((asset) => {
               const Icon = iconMap[asset.symbol];
               return (
                 <TableRow key={asset.symbol}>
@@ -59,7 +60,7 @@ export function LivePrices({ dict }: { dict: any }) {
                          <Icon className="h-6 w-6" />
                       </div>
                       <div>
-                        <p className="font-medium">{asset.name}</p>
+                        <p className="font-medium">{dict.assetNames[asset.symbol]}</p>
                         <p className="text-sm text-muted-foreground">{asset.symbol}</p>
                       </div>
                     </div>
