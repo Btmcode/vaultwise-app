@@ -37,7 +37,7 @@ const formatCurrency = (value: number) => {
 
 const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
     const unit = symbol === 'XAU' || symbol === 'XAG' ? 'oz' : symbol;
-    return `${amount.toLocaleString()} ${unit}`;
+    return `${amount.toLocaleString('en-US')} ${unit}`;
 }
 
 const HIDE_THRESHOLD = 1.00; // Hide assets with value less than $1.00
