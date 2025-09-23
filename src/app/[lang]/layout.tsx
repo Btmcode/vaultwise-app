@@ -1,14 +1,16 @@
+
 import type { Metadata } from 'next';
 import { getDictionary } from '@/app/dictionaries';
 import '../globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
-export async function generateMetadata({
-  params,
-}: {
+type LayoutProps = {
   params: { lang: 'tr' | 'en' };
-}): Promise<Metadata> {
+};
+
+export async function generateMetadata(props: LayoutProps): Promise<Metadata> {
+  const { params } = await props;
   const dict = await getDictionary(params.lang);
   return {
     title: dict.metadata.title,
@@ -16,7 +18,7 @@ export async function generateMetadata({
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: Readonly<{
