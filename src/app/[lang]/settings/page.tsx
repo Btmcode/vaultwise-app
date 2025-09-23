@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
 import { Button } from '@/components/ui/button';
@@ -17,9 +17,9 @@ export default function SettingsPage({ params: { lang } }: { params: { lang: 'tr
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
-  useState(() => {
+  useEffect(() => {
     getDictionary(lang).then(setDict);
-  });
+  }, [lang]);
 
   if (!dict) {
     return null; // or a loading skeleton
