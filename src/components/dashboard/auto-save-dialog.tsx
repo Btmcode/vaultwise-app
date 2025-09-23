@@ -129,11 +129,11 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-       <TooltipProvider>
+      <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
             <DialogTrigger asChild>
-              <Button variant="outline" size="icon">
+              <Button variant="outline" size="sm">
                 <Wand2 />
               </Button>
             </DialogTrigger>
