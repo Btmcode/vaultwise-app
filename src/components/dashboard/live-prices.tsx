@@ -26,12 +26,8 @@ const formatCurrency = (value: number) => {
 };
 
 export function LivePrices({ dict }: { dict: any }) {
-  const [assetOrder, setAssetOrder] = React.useState<AssetSymbol[]>([]);
+  const [assetOrder, setAssetOrder] = React.useState<AssetSymbol[]>(Object.keys(assets) as AssetSymbol[]);
   const [cardWidth, setCardWidth] = React.useState(200);
-
-  React.useEffect(() => {
-    setAssetOrder(Object.keys(assets) as AssetSymbol[]);
-  }, []);
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
