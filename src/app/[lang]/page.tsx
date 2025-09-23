@@ -20,6 +20,11 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
             <PortfolioSummary dict={dict} />
           </Suspense>
         </div>
+        <div className="grid gap-4 md:gap-8">
+            <Suspense fallback={<Skeleton className="h-96" />}>
+              <LivePrices dict={dict} />
+            </Suspense>
+        </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
           <Card className="xl:col-span-2">
             <Suspense fallback={<Skeleton className="h-[350px]" />}>
@@ -31,11 +36,6 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
               <RecentTransactions dict={dict} />
             </Suspense>
           </Card>
-        </div>
-        <div className="grid gap-4 md:gap-8">
-            <Suspense fallback={<Skeleton className="h-96" />}>
-              <LivePrices dict={dict} />
-            </Suspense>
         </div>
         <div className="grid gap-4 md:gap-8">
           <Card>
