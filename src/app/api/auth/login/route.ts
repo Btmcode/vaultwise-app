@@ -57,19 +57,28 @@ export async function POST(request: NextRequest) {
       expiresIn,
     });
     
-    const requestUrl = new URL(request.url);
-    const isLocalhost = requestUrl.hostname === 'localhost';
+    const isDevelopment = process.env.NODE_ENV === 'development';
 
-    // For production, use the root domain. For localhost, don't set the domain.
-    const domain = isLocalhost ? undefined : requestUrl.hostname.split('.').slice(-2).join('.');
-
-    cookies().set('firebase-session', sessionCookie, {
-      httpOnly: true,
-      secure: !isLocalhost,
-      maxAge: expiresIn,
-      path: '/',
-      domain: domain,
-    });
+    if (isDevelopment) {
+      // For development (e.g., localhost), use a session cookie without domain or maxAge.
+      // This makes it a session cookie that's cleared when the browser closes.
+      cookies().set('firebase-session', sessionCookie, {
+        httpOnly: true,
+        secure: false, // localhost is not secure
+        path: '/',
+      });
+    } else {
+       // For production, use the root domain and set maxAge for persistence.
+      const requestUrl = new URL(request.url);
+      const domain = requestUrl.hostname.split('.').slice(-2).join('.');
+      cookies().set('firebase-session', sessionCookie, {
+        httpOnly: true,
+        secure: true,
+        maxAge: expiresIn,
+        path: '/',
+        domain: domain,
+      });
+    }
 
     return NextResponse.json({status: 'success'}, {status: 200});
   } catch (error: any) {
