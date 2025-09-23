@@ -1,6 +1,10 @@
 import {NextRequest, NextResponse} from 'next/server';
 import {auth} from '@/lib/firebase/server';
 import {cookies} from 'next/headers';
+import { config } from 'dotenv';
+
+// Load environment variables from .env file
+config();
 
 // Bu API rotası, istemciden gelen Firebase ID token'ını
 // alır ve bunu güvenli, httpOnly bir session cookie'ye dönüştürür.

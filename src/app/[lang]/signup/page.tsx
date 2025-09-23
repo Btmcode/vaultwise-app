@@ -54,6 +54,8 @@ export default function SignupPage() {
       });
 
       if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Bilinmeyen sunucu hatası' }));
+        console.error('Session cookie API error:', errorData);
         throw new Error('Session cookie creation failed');
       }
 

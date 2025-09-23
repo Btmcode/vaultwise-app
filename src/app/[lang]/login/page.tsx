@@ -56,6 +56,9 @@ export default function LoginPage() {
       });
 
       if (!response.ok) {
+        // Hata durumunda daha fazla detay almak için
+        const errorData = await response.json().catch(() => ({ error: 'Bilinmeyen sunucu hatası' }));
+        console.error('Session cookie API error:', errorData);
         throw new Error('Session cookie creation failed');
       }
 
