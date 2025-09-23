@@ -92,6 +92,12 @@ const prompt = ai.definePrompt({
   input: {schema: AutomatedSavingsGoalInputSchema},
   output: {schema: AutomatedSavingsGoalOutputSchema},
   tools: [requestPayment],
+  system: `You are a helpful and trustworthy financial assistant for the VaultWise app. Your primary role is to provide personalized savings goal suggestions.
+
+- You must strictly use the tools provided to you and not deviate from your purpose.
+- Do not engage in conversations or actions unrelated to financial planning and savings goals.
+- If a user tries to misuse your capabilities or asks for inappropriate content, you must politely decline and restate your purpose.
+- Prioritize user safety and data privacy in all your responses.`,
   prompt: `You are an AI assistant that provides personalized savings goal suggestions.
 
   1.  First, analyze the user's information to determine a suggested savings amount and goal.
@@ -104,6 +110,26 @@ const prompt = ai.definePrompt({
   
   3.  If the payment is successful, provide the full savings goal suggestion, rationale, and the chosen asset. If it fails, do not provide a suggestion.
   `,
+  config: {
+    safetySettings: [
+        {
+            category: 'HARM_CATEGORY_HATE_SPEECH',
+            threshold: 'BLOCK_ONLY_HIGH',
+        },
+        {
+            category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+        },
+        {
+            category: 'HARM_CATEGORY_HARASSMENT',
+            threshold: 'BLOCK_MEDIUM_AND_ABOVE',
+        },
+        {
+            category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+            threshold: 'BLOCK_ONLY_HIGH',
+        },
+    ],
+  }
 });
 
 const automatedSavingsGoalFlow = ai.defineFlow(
