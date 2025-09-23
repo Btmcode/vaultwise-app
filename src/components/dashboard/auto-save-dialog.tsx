@@ -39,7 +39,6 @@ import { Loader2, Wand2 } from "lucide-react";
 import { assets } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import type { AutomatedSavingsGoalOutput } from "@/ai/flows/automated-savings-goal-suggestions";
-import { getDictionary } from "@/app/dictionaries";
 import {
   Tooltip,
   TooltipContent,
@@ -47,6 +46,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useParams } from "next/navigation";
+import { addAutoSavePlan } from "@/lib/data";
 
 
 const formSchema = z.object({
@@ -112,11 +112,22 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   }
 
   function handleAccept() {
+    if (!suggestion) return;
+
+    // Add the new plan to our "database"
+    addAutoSavePlan({
+        assetSymbol: suggestion.suggestedAsset as any,
+        amount: suggestion.suggestedAmount,
+    });
+
     toast({
       title: autoSaveDialogDict.toastSuccessTitle,
       description: autoSaveDialogDict.toastSuccessDescription.replace('{asset}', suggestion?.suggestedAsset),
     });
+    
+    // Reset the dialog and reload the page to show the new plan
     resetAndClose();
+    window.location.reload();
   }
 
   function resetAndClose() {

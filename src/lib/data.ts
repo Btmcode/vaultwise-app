@@ -1,5 +1,7 @@
 
 import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol, AutoSavePlan } from "@/lib/types";
+import { v4 as uuidv4 } from 'uuid';
+
 
 export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
   BTC: {
@@ -82,10 +84,41 @@ export const transactions: Transaction[] = [
   },
 ];
 
-// The auto-save plans have been removed from this array to simulate a persistent 'stop' action.
-// In a real application, this data would be fetched from a database, and the 'stop' action
-// would trigger a database deletion.
-export const autoSavePlans: AutoSavePlan[] = [];
+
+// This is now our "database" for auto-save plans.
+// We use 'let' to make it mutable.
+let autoSavePlans: AutoSavePlan[] = [
+    {
+      id: "plan-1",
+      assetSymbol: "XAU",
+      amount: 100,
+      frequency: "monthly",
+      status: "active",
+    }
+];
+
+// Function to add a new plan (simulates a DB write)
+export const addAutoSavePlan = (plan: Omit<AutoSavePlan, 'id' | 'status' | 'frequency'>) => {
+  const newPlan: AutoSavePlan = {
+    ...plan,
+    id: uuidv4(),
+    status: 'active',
+    frequency: 'monthly', // Defaulting to monthly for simplicity
+  };
+  autoSavePlans.push(newPlan);
+  return newPlan;
+};
+
+// Function to remove a plan (simulates a DB delete)
+export const removeAutoSavePlan = (planId: string) => {
+  autoSavePlans = autoSavePlans.filter(p => p.id !== planId);
+};
+
+// Getter to read the current plans
+export const getAutoSavePlans = () => {
+    return autoSavePlans;
+};
+
 
 const generateChartData = (period: 'day' | 'week' | 'month' | 'year', count: number, baseValue: number, volatility: number) => {
   const data = [];

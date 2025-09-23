@@ -8,7 +8,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { autoSavePlans } from "@/lib/data";
+import { getAutoSavePlans, removeAutoSavePlan } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol, AutoSavePlan } from "@/lib/types";
 import { Button } from "@/components/ui/button";
@@ -34,19 +34,23 @@ export function AutoSavePlans({ dict }: { dict: any }) {
   const autoSavePlansDict = dict.autoSavePlans;
   const assetNames = dict.assetNames;
 
+  // Read plans directly from our data source getter
+  const currentPlans = getAutoSavePlans();
+
   const handleStopPlan = (planId: string) => {
-    // This is a placeholder. In a real app, this would trigger a server action
-    // to delete the plan from the database. Since we've removed it from the
-    // source data file, we can just show a success message.
+    // Permanently remove the plan from our "database"
+    removeAutoSavePlan(planId);
+    
     toast({
       title: autoSavePlansDict.toast.title,
       description: autoSavePlansDict.toast.description,
     });
-     // In a real app, you would re-fetch the data or update the state
-     // to remove the plan from the UI instantly.
+
+    // Reload the page to reflect the change permanently
+    window.location.reload();
   };
 
-  if (!autoSavePlans || autoSavePlans.length === 0) {
+  if (!currentPlans || currentPlans.length === 0) {
     return (
       <>
         <CardHeader>
@@ -69,7 +73,7 @@ export function AutoSavePlans({ dict }: { dict: any }) {
         <CardDescription>{autoSavePlansDict.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
-        {autoSavePlans.map((plan) => {
+        {currentPlans.map((plan) => {
           const Icon = iconMap[plan.assetSymbol];
           return (
             <div key={plan.id} className="flex flex-col md:flex-row items-start md:items-center gap-4">
