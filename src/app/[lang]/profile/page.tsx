@@ -4,7 +4,7 @@
 import { useParams } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -37,9 +37,9 @@ export default function ProfilePage() {
                   <div className="flex items-center gap-4">
                     {userAvatar && (
                         <Avatar className="h-20 w-20">
-                        <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} />
-                        <AvatarFallback>AV</AvatarFallback>
-                    </Avatar>
+                          <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} className="object-cover" />
+                          <AvatarFallback>AV</AvatarFallback>
+                        </Avatar>
                     )}
                     <Button variant="outline">{profileDict.changePicture}</Button>
                   </div>
