@@ -1,7 +1,7 @@
 
 "use client"
 import * as React from "react"
-import { DragDropContext, Droppable, Draggable, DropResult } from 'react-beautiful-dnd';
+import { DragDropContext, Draggable, DropResult } from 'react-beautiful-dnd';
 import { Resizable } from 're-resizable';
 
 import { assets } from "@/lib/data";
@@ -26,8 +26,12 @@ const formatCurrency = (value: number) => {
 };
 
 export function LivePrices({ dict }: { dict: any }) {
-  const [assetOrder, setAssetOrder] = React.useState(Object.keys(assets) as AssetSymbol[]);
+  const [assetOrder, setAssetOrder] = React.useState<AssetSymbol[]>([]);
   const [cardWidth, setCardWidth] = React.useState(200);
+
+  React.useEffect(() => {
+    setAssetOrder(Object.keys(assets) as AssetSymbol[]);
+  }, []);
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -38,7 +42,7 @@ export function LivePrices({ dict }: { dict: any }) {
 
     setAssetOrder(items);
   };
-
+  
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <StrictModeDroppable droppableId="live-prices" direction="horizontal">
