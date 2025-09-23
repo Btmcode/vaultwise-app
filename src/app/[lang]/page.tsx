@@ -3,6 +3,7 @@ import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
 import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
 import { AssetList } from "@/components/dashboard/asset-list";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
+import { LivePrices } from "@/components/dashboard/live-prices";
 import { Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -30,6 +31,11 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
               <RecentTransactions dict={dict.recentTransactions} />
             </Suspense>
           </Card>
+        </div>
+        <div className="grid gap-4 md:gap-8">
+            <Suspense fallback={<Skeleton className="h-96" />}>
+              <LivePrices dict={dict.livePrices} />
+            </Suspense>
         </div>
         <div className="grid gap-4 md:gap-8">
           <Card>

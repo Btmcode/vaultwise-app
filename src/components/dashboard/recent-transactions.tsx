@@ -30,6 +30,10 @@ const getBadgeVariant = (type: TransactionType) => {
   }
 };
 
+const getTransactionTypeKey = (type: TransactionType) => {
+    return type.toLowerCase().replace('-', '_') as keyof typeof dict.transactionTypes;
+}
+
 
 export function RecentTransactions({ dict }: { dict: any }) {
   return (
@@ -42,6 +46,7 @@ export function RecentTransactions({ dict }: { dict: any }) {
         {transactions.map((tx) => {
           const assetInfo = assets[tx.assetSymbol];
           const Icon = iconMap[tx.assetSymbol];
+          const transactionTypeKey = tx.type.toLowerCase().replace('-','_');
           return (
             <div key={tx.id} className="flex items-center gap-4">
               <div className="bg-muted p-2 rounded-full">
@@ -63,7 +68,7 @@ export function RecentTransactions({ dict }: { dict: any }) {
                   }).format(tx.amountUsd)}
                 </p>
                 <Badge variant={getBadgeVariant(tx.type)} className="text-xs">
-                  {dict.transactionTypes[tx.type]}
+                  {dict.transactionTypes[transactionTypeKey]}
                 </Badge>
               </div>
             </div>

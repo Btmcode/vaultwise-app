@@ -58,9 +58,9 @@
         "title": "Son Etkinlik",
         "description": "Son birkaç işleminiz.",
         "transactionTypes": {
-            "Buy": "Alış",
-            "Sell": "Satış",
-            "Auto-Save": "Oto-Tasarruf"
+            "buy": "Alış",
+            "sell": "Satış",
+            "auto-save": "Oto-Tasarruf"
         }
     },
     "assetList": {
@@ -71,6 +71,15 @@
             "balance": "Bakiye",
             "price": "Fiyat",
             "value": "Değer"
+        }
+    },
+    "livePrices": {
+        "title": "Canlı Fiyatlar",
+        "description": "Mevcut varlıkların anlık fiyatları.",
+        "table": {
+            "asset": "Varlık",
+            "price": "Fiyat",
+            "change": "24s Değişim"
         }
     },
     "autoSaveDialog": {

@@ -58,9 +58,9 @@
         "title": "Recent Activity",
         "description": "Your last few transactions.",
         "transactionTypes": {
-            "Buy": "Buy",
-            "Sell": "Sell",
-            "Auto-Save": "Auto-Save"
+            "buy": "Buy",
+            "sell": "Sell",
+            "auto-save": "Auto-Save"
         }
     },
     "assetList": {
@@ -71,6 +71,15 @@
             "balance": "Balance",
             "price": "Price",
             "value": "Value"
+        }
+    },
+    "livePrices": {
+        "title": "Live Prices",
+        "description": "Real-time prices of available assets.",
+        "table": {
+            "asset": "Asset",
+            "price": "Price",
+            "change": "24h Change"
         }
     },
     "autoSaveDialog": {
