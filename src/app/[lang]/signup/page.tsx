@@ -45,7 +45,7 @@ export default function SignupPage() {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const idToken = await userCredential.user.getIdToken();
 
-      await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -53,11 +53,16 @@ export default function SignupPage() {
         },
       });
 
+      if (!response.ok) {
+        throw new Error('Session cookie creation failed');
+      }
+
       toast({
         title: signupDict.toast.success.title,
         description: signupDict.toast.success.description,
       });
-      router.push(`/${lang}`);
+      // race condition'ı önlemek ve middleware'in yeni cookie'yi görmesini sağlamak için tam sayfa yenilemesi yap
+      window.location.href = `/${lang}`;
     } catch (error: any) {
       console.error('Signup error:', error);
       

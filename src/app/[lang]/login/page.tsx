@@ -37,7 +37,7 @@ export default function LoginPage() {
       const idToken = await userCredential.user.getIdToken();
 
       // Sunucuya ID token'ı göndererek session cookie oluşturmasını sağla
-      await fetch('/api/auth/login', {
+      const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,11 +45,16 @@ export default function LoginPage() {
         },
       });
 
+      if (!response.ok) {
+        throw new Error('Session cookie creation failed');
+      }
+
       toast({
         title: loginDict.toast.success.title,
         description: loginDict.toast.success.description,
       });
-      router.push(`/${lang}`);
+      // race condition'ı önlemek ve middleware'in yeni cookie'yi görmesini sağlamak için tam sayfa yenilemesi yap
+      window.location.href = `/${lang}`;
     } catch (error: any) {
       console.error('Login error:', error);
       

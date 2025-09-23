@@ -40,8 +40,8 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
         title: "Success",
         description: "You have been logged out.",
       });
-      router.push(`/${lang}/login`);
-       router.refresh();
+       // race condition'ı önlemek ve middleware'in cookie'nin silindiğini görmesini sağlamak için tam sayfa yenilemesi yap
+      window.location.href = `/${lang}/login`;
     } catch (error) {
       console.error("Logout Error:", error);
       toast({
