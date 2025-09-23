@@ -38,8 +38,16 @@ export function AutoSavePlans({ dict }: { dict: any }) {
   
   const handleStopPlan = (planId: string) => {
     // In a real app, you would call a server action to update the database.
-    // For this simulation, we'll filter the plan from the local state.
-    setAutoSavePlans(currentPlans => currentPlans.filter(plan => plan.id !== planId));
+    // For this simulation, we'll filter the plan from the local state and the source data.
+    const updatedPlans = autoSavePlans.filter(plan => plan.id !== planId);
+    setAutoSavePlans(updatedPlans);
+    
+    // This simulates updating the "database" (our data.ts file)
+    // In a real app this would be a server action.
+    const planIndex = initialAutoSavePlans.findIndex(p => p.id === planId);
+    if (planIndex > -1) {
+        initialAutoSavePlans.splice(planIndex, 1);
+    }
     
     toast({
       title: autoSavePlansDict.toast.title,
