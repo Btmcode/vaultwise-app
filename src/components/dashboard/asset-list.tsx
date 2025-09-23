@@ -118,8 +118,8 @@ export function AssetList({ dict }: { dict: any }) {
                   </div>
                 </div>
                 <div className="flex gap-2 justify-end w-full md:w-auto">
-                   <Button variant="outline" size="sm" className="hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
-                   <Button variant="outline" size="sm" className="hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
+                   <BuyDialog dict={dict} />
+                   <SellDialog dict={dict} />
                 </div>
               </div>
               {index < filteredAssets.length - 1 && <Separator className="mt-6" />}
