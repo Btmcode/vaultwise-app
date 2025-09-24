@@ -34,18 +34,30 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
 
   const formatCurrency = React.useCallback((value: number, symbol: AssetSymbol) => {
     if (isNaN(value)) return lang === 'tr' ? "₺..." : "$...";
-    
+
     let displayValue = value;
     let currency = 'TRY';
     let locale = 'tr-TR';
-
-    if (lang === 'en') {
+    
+    // Priority rule: Check symbol for currency hints
+    if (symbol.includes('USD')) {
         currency = 'USD';
         locale = 'en-US';
-        // Convert all prices to USD for the English view
+    } else if (symbol.includes('EUR')) {
+        currency = 'EUR';
+        locale = 'de-DE'; // Using German locale for Euro formatting
+    } else if (symbol.includes('TL')) {
+        currency = 'TRY';
+        locale = 'tr-TR';
+    }
+    // General rule: Use language if no hint in symbol
+    else if (lang === 'en') {
+        currency = 'USD';
+        locale = 'en-US';
+        // Convert all other prices from TRY to USD for the English view
         displayValue = value / USD_TRY_RATE;
     }
-    
+
     return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: currency,
