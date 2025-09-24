@@ -1,9 +1,9 @@
 
+
 import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol, AutoSavePlan } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 
-
-export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
+export const assets: Record<string, Omit<Asset, 'name'>> = {
   BTC: {
     symbol: "BTC",
     price: 68123.45,
@@ -11,12 +11,14 @@ export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
   },
   XAU: {
     symbol: "XAU",
-    price: 2320.78,
+    buyPrice: 2450.12,
+    sellPrice: 2445.50,
     change24h: -0.8,
   },
   XAG: {
     symbol: "XAG",
-    price: 29.55,
+    buyPrice: 31.55,
+    sellPrice: 31.40,
     change24h: -1.2,
   },
   PAXG: {
@@ -29,14 +31,14 @@ export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
     price: 2321.1,
     change24h: -0.75,
   },
-  XAU_ONS: { symbol: "XAU_ONS", price: 2329.43, change24h: -0.78 },
-  XAU_USD_KG: { symbol: "XAU_USD_KG", price: 74932.8, change24h: -0.78 },
-  XAU_EUR_KG: { symbol: "XAU_EUR_KG", price: 69821.5, change24h: -0.78 },
-  XAG_ONS: { symbol: "XAG_ONS", price: 29.58, change24h: -1.5 },
-  XAG_TL: { symbol: "XAG_TL", price: 31.0, change24h: -1.5 },
-  XAG_USD: { symbol: "XAG_USD", price: 29.58, change24h: -1.5 },
-  XAG_EUR: { symbol: "XAG_EUR", price: 27.56, change24h: -1.5 },
-  USD_TRY: { symbol: "USD_TRY", price: 32.85, change24h: 0.1 },
+  XAU_ONS: { symbol: "XAU_ONS", buyPrice: 2329.43, sellPrice: 2328.00, change24h: -0.78 },
+  XAU_USD_KG: { symbol: "XAU_USD_KG", buyPrice: 74932.8, sellPrice: 74900.00, change24h: -0.78 },
+  XAU_EUR_KG: { symbol: "XAU_EUR_KG", buyPrice: 69821.5, sellPrice: 69800.00, change24h: -0.78 },
+  XAG_ONS: { symbol: "XAG_ONS", buyPrice: 29.58, sellPrice: 29.50, change24h: -1.5 },
+  XAG_TL: { symbol: "XAG_TL", buyPrice: 31.0, sellPrice: 30.90, change24h: -1.5 },
+  XAG_USD: { symbol: "XAG_USD", buyPrice: 29.58, sellPrice: 29.50, change24h: -1.5 },
+  XAG_EUR: { symbol: "XAG_EUR", buyPrice: 27.56, sellPrice: 27.50, change24h: -1.5 },
+  USD_TRY: { symbol: "USD_TRY", buyPrice: 32.85, sellPrice: 32.80, change24h: 0.1 },
 };
 
 export const portfolioAssets: PortfolioAsset[] = [
@@ -194,6 +196,12 @@ const generateLiveChartData = (minutes: number, baseValue: number, volatility: n
   return data;
 }
 
+const findLatestPrice = (asset: PortfolioAsset) => {
+    const assetData = assets[asset.assetSymbol];
+    if (!assetData) return 0;
+    return assetData.price || assetData.buyPrice || 0;
+}
+
 
 export const chartData: ChartData = {
   "live": generateLiveChartData(60, 68000, 0.005),
@@ -206,4 +214,4 @@ export const chartData: ChartData = {
   "5y": generateChartData('month', 60, 20000, 0.08),
 };
 
-export const totalPortfolioValue = portfolioAssets.reduce((sum, asset) => sum + asset.valueUsd, 0);
+export const totalPortfolioValue = portfolioAssets.reduce((sum, asset) => sum + (asset.amount * findLatestPrice(asset)), 0);

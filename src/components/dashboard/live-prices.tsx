@@ -1,12 +1,11 @@
 
 "use client"
 import * as React from "react"
-import { assets as initialAssets } from "@/lib/data";
+import { assets as initialAssetsData } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon, InfoIcon } from "@/components/icons";
 import type { Asset, AssetSymbol } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useParams } from "next/navigation";
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     BTC: BtcIcon,
@@ -25,10 +24,9 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
 };
 
 type LiveAssetData = Omit<Asset, 'name'>;
-const USD_TRY_RATE = 32.5;
 
 const assetOrder: string[] = [
-    "XAU",
+    "XAU", // HAS ALTIN
     "XAU_ONS",
     "XAU_USD_KG",
     "XAU_EUR_KG",
@@ -42,47 +40,32 @@ const assetOrder: string[] = [
     "USD_TRY"
 ];
 
-export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
+
+export function LivePrices({ assetNames }: { assetNames: any }) {
   const [liveAssets, setLiveAssets] = React.useState<Record<string, LiveAssetData>>({});
   const [isLoading, setIsLoading] = React.useState(true);
-  const params = useParams();
-  const lang = params.lang as 'tr' | 'en';
 
-  const formatCurrency = React.useCallback((value: number, symbol: AssetSymbol) => {
-    if (isNaN(value)) return lang === 'tr' ? "₺..." : "$...";
+  const formatCurrency = React.useCallback((value: number | undefined, symbol: string) => {
+    if (value === undefined || isNaN(value)) return "...";
 
-    let displayValue = value;
     let currency = 'TRY';
     let locale = 'tr-TR';
     
-    // Priority rule: check symbol for explicit currency
     if (symbol.includes('USD')) {
         currency = 'USD';
         locale = 'en-US';
     } else if (symbol.includes('EUR')) {
         currency = 'EUR';
-        locale = 'de-DE'; // Use German locale for Euro formatting
-    } else if (symbol === 'USD_TRY' || symbol.includes('TL')) {
-        currency = 'TRY';
-        locale = 'tr-TR';
-    } else if (lang === 'en') {
-        // Fallback for EN: Convert from TRY to USD if not BTC
-        // BTC from CoinMarketCap is already in USD
-        currency = 'USD';
-        locale = 'en-US';
-        if (symbol !== 'BTC' && symbol !== 'PAXG' && symbol !== 'XAUT') {
-            displayValue = value / USD_TRY_RATE;
-        }
+        locale = 'de-DE';
     }
-    // Default is TRY for 'tr' language
 
     return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: currency,
       maximumFractionDigits: symbol === 'USD_TRY' ? 4 : 2,
       minimumFractionDigits: 2,
-    }).format(displayValue);
-  }, [lang]);
+    }).format(value);
+  }, []);
 
   const fetchPrices = React.useCallback(async () => {
     try {
@@ -90,27 +73,24 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
-      const newPrices: Record<string, { price: number; change24h: number }> = await response.json();
+      const newPrices: Record<string, any> = await response.json();
       
        setLiveAssets(prevAssets => {
         const updatedAssets = { ...prevAssets };
         
-        // Merge fetched prices
         for (const symbol in newPrices) {
             if (Object.prototype.hasOwnProperty.call(newPrices, symbol)) {
                 updatedAssets[symbol] = {
-                    ...initialAssets[symbol as AssetSymbol], 
+                    ...initialAssetsData[symbol], 
                     ...updatedAssets[symbol], 
-                    price: newPrices[symbol].price,
-                    change24h: newPrices[symbol].change24h,
+                    ...newPrices[symbol]
                 };
             }
         }
         
-        // Ensure all initial assets are present, even if not fetched
-        for (const symbol in initialAssets) {
+        for (const symbol in initialAssetsData) {
             if (!updatedAssets[symbol]) {
-                updatedAssets[symbol] = initialAssets[symbol as AssetSymbol];
+                updatedAssets[symbol] = initialAssetsData[symbol as AssetSymbol];
             }
         }
         return updatedAssets;
@@ -132,36 +112,52 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   
   if (isLoading) {
     return (
-       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {Array.from({ length: 9 }).map((_, index) => (
-                <Skeleton key={index} className="h-[76px] w-full" />
+       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {assetOrder.map((symbol) => (
+                <Skeleton key={symbol} className="h-[88px] w-full" />
             ))}
        </div>
     )
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {assetOrder.map((symbol) => {
         const asset = liveAssets[symbol];
         if (!asset) return null;
         const Icon = iconMap[symbol] || InfoIcon;
+        const isCrypto = 'price' in asset;
+
         return (
           <div key={symbol} className="p-1">
-              <div className="flex items-center justify-start gap-3 p-4 rounded-lg bg-card border h-full">
-                  <Icon className="h-8 w-8 flex-shrink-0" />
-                  <div className="flex-grow">
-                  <p className="font-medium text-sm whitespace-nowrap">{assetNames[symbol]}</p>
-                  <p className="text-xs text-muted-foreground">{formatCurrency(asset.price, symbol as AssetSymbol)}</p>
-                  </div>
-                  <div
-                  className={cn(
-                      "text-xs font-medium",
-                      asset.change24h >= 0 ? "text-green-500" : "text-red-500"
-                  )}
-                  >
-                  {asset.change24h >= 0 ? "+" : ""}
-                  {asset.change24h.toFixed(2)}%
+              <div className="flex items-center justify-start gap-4 p-4 rounded-lg bg-card border h-full">
+                  <Icon className="h-10 w-10 flex-shrink-0" />
+                  <div className="flex-grow flex flex-col justify-center">
+                    <div className="flex items-center justify-between w-full">
+                        <p className="font-semibold text-base whitespace-nowrap">{assetNames[symbol]}</p>
+                         <div
+                            className={cn(
+                                "text-xs font-medium",
+                                asset.change24h >= 0 ? "text-green-500" : "text-red-500"
+                            )}
+                            >
+                            {asset.change24h >= 0 ? "+" : ""}
+                            {asset.change24h.toFixed(2)}%
+                        </div>
+                    </div>
+                    
+                    {isCrypto ? (
+                         <p className="text-sm text-muted-foreground">{formatCurrency(asset.price, symbol)}</p>
+                    ) : (
+                        <div className="text-xs text-muted-foreground grid grid-cols-2 gap-x-3">
+                            <div>
+                                <span className="font-medium">Alış: </span>{formatCurrency(asset.buyPrice, symbol)}
+                            </div>
+                            <div>
+                                <span className="font-medium">Satış: </span>{formatCurrency(asset.sellPrice, symbol)}
+                            </div>
+                        </div>
+                    )}
                   </div>
               </div>
           </div>
@@ -170,5 +166,3 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     </div>
   );
 }
-
-    

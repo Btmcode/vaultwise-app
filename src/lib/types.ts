@@ -5,7 +5,9 @@ export type AssetSymbol = "XAU" | "XAG" | "BTC" | "PAXG" | "XAUT" | "XAU_ONS" | 
 export type Asset = {
   symbol: AssetSymbol;
   name: string;
-  price: number;
+  price?: number; // For crypto
+  buyPrice?: number; // For metals/currency
+  sellPrice?: number; // For metals/currency
   change24h: number; // percentage
 };
 
