@@ -1,8 +1,5 @@
-
 "use client"
 import * as React from "react"
-import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-
 import { assets as initialAssets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, InfoIcon } from "@/components/icons";
 import type { Asset, AssetSymbol } from "@/lib/types";
@@ -25,7 +22,6 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG_EUR: SilverIcon,
 };
 
-
 type LiveAssetData = Omit<Asset, 'name'>;
 
 export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
@@ -37,7 +33,6 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   const formatCurrency = React.useCallback((value: number) => {
     if (isNaN(value)) return lang === 'tr' ? "₺..." : "$...";
     
-    // Bitcoin'i her zaman USD olarak göster, diğerlerini dile göre
     const currency = lang === 'tr' ? 'TRY' : 'USD';
     
     return new Intl.NumberFormat(lang === 'tr' ? 'tr-TR' : "en-US", {
@@ -76,67 +71,52 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   }, []);
 
   React.useEffect(() => {
-    fetchPrices(); // İlk yüklemede verileri çek
-    const interval = setInterval(fetchPrices, 30000); // Her 30 saniyede bir tekrar çek
+    fetchPrices();
+    const interval = setInterval(fetchPrices, 30000); 
 
-    return () => clearInterval(interval); // Bileşen kaldırıldığında interval'i temizle
+    return () => clearInterval(interval);
   }, [fetchPrices]);
 
   const assetOrder = Object.keys(liveAssets) as AssetSymbol[];
   
   if (isLoading) {
     return (
-       <div className="w-full overflow-hidden">
-         <div className="flex -ml-4 p-1">
+       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {Array.from({ length: 5 }).map((_, index) => (
-                <div key={index} className="basis-1/2 md:basis-1/3 lg:basis-1/5 pl-4">
-                    <Skeleton className="h-[76px] w-full" />
-                </div>
+                <Skeleton key={index} className="h-[76px] w-full" />
             ))}
-         </div>
        </div>
     )
   }
 
   return (
-    <div className="w-full">
-        <Carousel
-            opts={{
-                align: "start",
-            }}
-            className="w-full"
-        >
-            <CarouselContent>
-            {assetOrder.map((symbol) => {
-                const asset = liveAssets[symbol];
-                const Icon = iconMap[asset.symbol] || InfoIcon;
-                return (
-                <CarouselItem key={asset.symbol} className="basis-1/2 md:basis-1/3 lg:basis-1/5">
-                    <div className="p-1">
-                        <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-card border h-full">
-                            <div className="bg-muted p-2 rounded-full">
-                            <Icon className="h-6 w-6" />
-                            </div>
-                            <div className="flex-grow">
-                            <p className="font-medium text-sm whitespace-nowrap">{assetNames[asset.symbol]}</p>
-                            <p className="text-xs text-muted-foreground">{formatCurrency(asset.price)}</p>
-                            </div>
-                            <div
-                            className={cn(
-                                "text-xs font-medium",
-                                asset.change24h > 0 ? "text-green-500" : "text-red-500"
-                            )}
-                            >
-                            {asset.change24h > 0 ? "+" : ""}
-                            {asset.change24h.toFixed(2)}%
-                            </div>
-                        </div>
-                    </div>
-                </CarouselItem>
-                );
-            })}
-            </CarouselContent>
-        </Carousel>
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      {assetOrder.map((symbol) => {
+        const asset = liveAssets[symbol];
+        const Icon = iconMap[asset.symbol] || InfoIcon;
+        return (
+          <div key={asset.symbol} className="p-1">
+              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-card border h-full">
+                  <div className="bg-muted p-2 rounded-full">
+                  <Icon className="h-6 w-6" />
+                  </div>
+                  <div className="flex-grow">
+                  <p className="font-medium text-sm whitespace-nowrap">{assetNames[asset.symbol]}</p>
+                  <p className="text-xs text-muted-foreground">{formatCurrency(asset.price)}</p>
+                  </div>
+                  <div
+                  className={cn(
+                      "text-xs font-medium",
+                      asset.change24h > 0 ? "text-green-500" : "text-red-500"
+                  )}
+                  >
+                  {asset.change24h > 0 ? "+" : ""}
+                  {asset.change24h.toFixed(2)}%
+                  </div>
+              </div>
+          </div>
+        );
+      })}
     </div>
   );
 }

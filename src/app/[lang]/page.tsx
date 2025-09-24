@@ -23,7 +23,7 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="w-full">
           <Suspense fallback={<Skeleton className="h-24" />}>
-            <LivePrices dict={dict.livePrices} assetNames={dict.assetNames} />
+            <LivePrices dict={dict} assetNames={dict.assetNames} />
           </Suspense>
         </div>
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
