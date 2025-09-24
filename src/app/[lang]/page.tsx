@@ -13,6 +13,7 @@ import { AssetDistribution } from "@/components/dashboard/asset-distribution";
 import { TopPerformer } from "@/components/dashboard/top-performer";
 import { WorstPerformer } from "@/components/dashboard/worst-performer";
 import { AutoSavePlans } from "@/components/dashboard/auto-save-plans";
+import { PreciousMetalsTable } from "@/components/precious-metals-table";
 
 
 export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }) {
@@ -21,6 +22,9 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header lang={params.lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <div className="w-full">
+            <PreciousMetalsTable />
+        </div>
         <div className="w-full">
           <LivePrices dict={dict} assetNames={dict.assetNames} />
         </div>

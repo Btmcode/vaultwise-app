@@ -51,3 +51,10 @@ export type AutoSavePlan = {
   frequency: "daily" | "weekly" | "monthly";
   status: "active" | "paused" | "cancelled";
 };
+
+export type PreciousMetalItem = {
+    "Ürün": string;
+    "Değişim": number;
+    "Alış": number;
+    "Satış": number;
+};
