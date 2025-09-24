@@ -84,10 +84,9 @@ export const transactions: Transaction[] = [
   },
 ];
 
+const STORAGE_KEY = 'autoSavePlans';
 
-// This is now our "database" for auto-save plans.
-// We use 'let' to make it mutable.
-let autoSavePlans: AutoSavePlan[] = [
+const initialPlans: AutoSavePlan[] = [
     {
       id: "plan-1",
       assetSymbol: "XAU",
@@ -97,26 +96,50 @@ let autoSavePlans: AutoSavePlan[] = [
     }
 ];
 
+// Getter to read plans from localStorage
+export const getAutoSavePlans = (): AutoSavePlan[] => {
+  if (typeof window === 'undefined') {
+    return initialPlans;
+  }
+  try {
+    const plansJson = window.localStorage.getItem(STORAGE_KEY);
+    if (plansJson) {
+      return JSON.parse(plansJson);
+    } else {
+      // If no plans in storage, set initial plans and return them
+      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPlans));
+      return initialPlans;
+    }
+  } catch (error) {
+    console.error("Error reading from localStorage", error);
+    return initialPlans;
+  }
+};
+
 // Function to add a new plan (simulates a DB write)
-export const addAutoSavePlan = (plan: Omit<AutoSavePlan, 'id' | 'status' | 'frequency'>) => {
+export const addAutoSavePlan = (plan: Omit<AutoSavePlan, 'id' | 'status' | 'frequency'>): AutoSavePlan[] => {
+  const currentPlans = getAutoSavePlans();
   const newPlan: AutoSavePlan = {
     ...plan,
     id: uuidv4(),
     status: 'active',
     frequency: 'monthly', // Defaulting to monthly for simplicity
   };
-  autoSavePlans.push(newPlan);
-  return newPlan;
+  const updatedPlans = [...currentPlans, newPlan];
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPlans));
+  }
+  return updatedPlans;
 };
 
 // Function to remove a plan (simulates a DB delete)
-export const removeAutoSavePlan = (planId: string) => {
-  autoSavePlans = autoSavePlans.filter(p => p.id !== planId);
-};
-
-// Getter to read the current plans
-export const getAutoSavePlans = () => {
-    return autoSavePlans;
+export const removeAutoSavePlan = (planId: string): AutoSavePlan[] => {
+  const currentPlans = getAutoSavePlans();
+  const updatedPlans = currentPlans.filter(p => p.id !== planId);
+   if (typeof window !== 'undefined') {
+    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPlans));
+  }
+  return updatedPlans;
 };
 
 

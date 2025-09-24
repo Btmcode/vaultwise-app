@@ -114,7 +114,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   function handleAccept() {
     if (!suggestion) return;
 
-    // Add the new plan to our "database"
+    // Add the new plan to our "database" (localStorage)
     addAutoSavePlan({
         assetSymbol: suggestion.suggestedAsset as any,
         amount: suggestion.suggestedAmount,
@@ -127,11 +127,13 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
     
     // Reset the dialog and reload the page to show the new plan
     resetAndClose();
+    // Using window.location.reload() is a simple way to ensure the other component re-fetches from localStorage
     window.location.reload();
   }
 
   function resetAndClose() {
     setIsOpen(false);
+    // Add a small delay to allow the closing animation to finish before resetting state
     setTimeout(() => {
         form.reset();
         setStep(1);
@@ -147,7 +149,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
 
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={resetAndClose}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>

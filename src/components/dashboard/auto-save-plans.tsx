@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useState, useEffect } from "react";
 import {
   Card,
   CardHeader,
@@ -34,20 +35,25 @@ export function AutoSavePlans({ dict }: { dict: any }) {
   const autoSavePlansDict = dict.autoSavePlans;
   const assetNames = dict.assetNames;
 
-  // Read plans directly from our data source getter
-  const currentPlans = getAutoSavePlans();
+  const [currentPlans, setCurrentPlans] = useState<AutoSavePlan[]>([]);
+  
+  useEffect(() => {
+    // Load plans from localStorage when the component mounts
+    setCurrentPlans(getAutoSavePlans());
+  }, []);
+
 
   const handleStopPlan = (planId: string) => {
-    // Permanently remove the plan from our "database"
-    removeAutoSavePlan(planId);
+    // Permanently remove the plan from localStorage
+    const updatedPlans = removeAutoSavePlan(planId);
     
+    // Update the component's state to re-render the UI
+    setCurrentPlans(updatedPlans);
+
     toast({
       title: autoSavePlansDict.toast.title,
       description: autoSavePlansDict.toast.description,
     });
-
-    // Reload the page to reflect the change permanently
-    window.location.reload();
   };
 
   if (!currentPlans || currentPlans.length === 0) {
