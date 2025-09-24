@@ -170,3 +170,5 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     </div>
   );
 }
+
+    
