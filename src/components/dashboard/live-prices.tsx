@@ -127,6 +127,8 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
     return () => clearInterval(interval); // Cleanup on unmount
   }, [fetchPrices]);
   
+  const hasData = Object.keys(liveAssets).length > 0;
+
   if (isLoading) {
     return (
        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
@@ -137,13 +139,21 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
     )
   }
 
+  if (!hasData) {
+    return (
+        <div className="text-center text-muted-foreground py-8">
+            Could not load price data. Please try again later.
+        </div>
+    )
+  }
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
       {assetOrder.map((symbol) => {
         const asset = liveAssets[symbol];
         if (!asset) return null;
         const Icon = iconMap[symbol] || InfoIcon;
-        const isCrypto = 'price' in asset;
+        const isCrypto = 'price' in asset && asset.price !== undefined;
         const direction = priceDirections[symbol];
 
         return (
