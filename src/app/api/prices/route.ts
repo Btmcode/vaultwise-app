@@ -77,7 +77,7 @@ export async function GET() {
                 const price = data.quote.USD.price;
                 const change24h = data.quote.USD.percent_change_24h;
 
-                if (price && change24h) {
+                if (price && change24h !== undefined) { // change24h can be 0
                     prices[symbol] = {
                         price: parseFloat(price),
                         change24h: parseFloat(change24h),
@@ -104,6 +104,7 @@ export async function GET() {
     // Return fallback data in case of any error
     const fallbackPrices = {
         "XAU": { "buyPrice": 2450.12, "sellPrice": 2445.50, "change24h": -0.82 },
+        "XAG": { "buyPrice": 31.55, "sellPrice": 31.40, "change24h": -1.2 },
         "BTC": { "price": 68123.45, "change24h": 2.5 },
         "PAXG": { "price": 2319.99, "change24h": -0.7 },
         "XAUT": { "price": 2321.1, "change24h": -0.75 },
