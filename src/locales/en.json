@@ -9,7 +9,14 @@
         "XAU": "Gold",
         "XAG": "Silver",
         "PAXG": "PAX Gold",
-        "XAUT": "Tether Gold"
+        "XAUT": "Tether Gold",
+        "XAU_ONS": "Gold/Ounce",
+        "XAU_USD_KG": "Gold USD/Kg",
+        "XAU_EUR_KG": "Gold EUR/Kg",
+        "XAG_ONS": "Silver/Ounce",
+        "XAG_TL": "Silver/TL",
+        "XAG_USD": "Silver/USD",
+        "XAG_EUR": "Silver/EUR"
     },
     "header": {
         "myAccount": "My Account",

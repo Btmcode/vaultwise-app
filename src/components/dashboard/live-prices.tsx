@@ -5,7 +5,7 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carouse
 import Autoplay from "embla-carousel-autoplay";
 
 import { assets as initialAssets } from "@/lib/data";
-import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
+import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, InfoIcon } from "@/components/icons";
 import type { Asset, AssetSymbol } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,7 +15,14 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG: SilverIcon,
     BTC: BtcIcon,
     PAXG: PaxgIcon,
-    XAUT: XautIcon
+    XAUT: XautIcon,
+    XAU_ONS: GoldIcon,
+    XAU_USD_KG: GoldIcon,
+    XAU_EUR_KG: GoldIcon,
+    XAG_ONS: SilverIcon,
+    XAG_TL: SilverIcon,
+    XAG_USD: SilverIcon,
+    XAG_EUR: SilverIcon,
 };
 
 const formatCurrency = (value: number) => {
@@ -101,7 +108,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
             <CarouselContent>
             {assetOrder.map((symbol) => {
                 const asset = liveAssets[symbol];
-                const Icon = iconMap[asset.symbol];
+                const Icon = iconMap[asset.symbol] || InfoIcon;
                 return (
                 <CarouselItem key={asset.symbol} className="basis-1/2 md:basis-1/3 lg:basis-1/5">
                     <div className="p-1">

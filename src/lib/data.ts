@@ -29,6 +29,13 @@ export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
     price: 2321.1,
     change24h: -0.75,
   },
+  XAU_ONS: { symbol: "XAU_ONS", price: 2329.43, change24h: -0.78 },
+  XAU_USD_KG: { symbol: "XAU_USD_KG", price: 74932.8, change24h: -0.78 },
+  XAU_EUR_KG: { symbol: "XAU_EUR_KG", price: 69821.5, change24h: -0.78 },
+  XAG_ONS: { symbol: "XAG_ONS", price: 29.58, change24h: -1.5 },
+  XAG_TL: { symbol: "XAG_TL", price: 31.0, change24h: -1.5 },
+  XAG_USD: { symbol: "XAG_USD", price: 29.58, change24h: -1.5 },
+  XAG_EUR: { symbol: "XAG_EUR", price: 27.56, change24h: -1.5 },
 };
 
 export const portfolioAssets: PortfolioAsset[] = [
@@ -99,6 +106,7 @@ const initialPlans: AutoSavePlan[] = [
 // Getter to read plans from localStorage
 export const getAutoSavePlans = (): AutoSavePlan[] => {
   if (typeof window === 'undefined') {
+    // We are on the server, return initial plans
     return initialPlans;
   }
   try {

@@ -7,13 +7,26 @@ import * as cheerio from 'cheerio';
 const nameToSymbolMap: Record<string, string> = {
     'HAS ALTIN': 'XAU',
     'GÜMÜŞ': 'XAG',
-    'BITCOIN': 'BTC'
+    'BITCOIN': 'BTC',
+    'ALTIN/ONS': 'XAU_ONS',
+    'USD/KG': 'XAU_USD_KG',
+    'EUR/KG': 'XAU_EUR_KG',
+    'GÜMÜŞ/ONS': 'XAG_ONS',
+    'GÜMÜŞ/TL': 'XAG_TL',
+    'GÜMÜŞ/USD': 'XAG_USD',
+    'GÜMÜŞ/EUR': 'XAG_EUR',
 };
 
 export async function GET() {
+  const apiUrl = process.env.PRICE_API_URL;
+
+  if (!apiUrl) {
+      return NextResponse.json({ error: 'API URLsi yapılandırılmamış.' }, { status: 500 });
+  }
+
   try {
     // saglamoglualtin.com'dan veri çekmek için axios kullanılıyor.
-    const { data } = await axios.get("https://saglamoglualtin.com/", {
+    const { data } = await axios.get(apiUrl, {
       headers: {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
       }
@@ -24,7 +37,7 @@ export async function GET() {
 
     // Sitenin HTML yapısına göre doğru seçiciler kullanılıyor.
     // #tab-1 içindeki her bir .box elementi bir varlığı temsil ediyor.
-    $('#tab-1 .box').each((i, el) => {
+    $('#tab-1 .box, #tab-2 .box, #tab-3 .box').each((i, el) => {
       const name = $(el).find('.g-a').text().trim().toUpperCase();
       // Fiyat ve değişim verileri doğru sınıflardan alınıyor.
       const priceStr = $(el).find('.a-f').text().trim().replace('₺', '').replace('.', '').replace(',', '.');
@@ -33,9 +46,9 @@ export async function GET() {
       const symbol = nameToSymbolMap[name];
       if (symbol) {
         const price = parseFloat(priceStr);
-        const change24h = parseFloat(changeStr);
+        const change24h = parseFloat(changeStr) || 0; // Eğer değişim yoksa 0 ata
         // NaN kontrolü
-        if (!isNaN(price) && !isNaN(change24h)) {
+        if (!isNaN(price)) {
             prices[symbol] = {
                 price: price,
                 change24h: change24h
