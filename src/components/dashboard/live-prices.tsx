@@ -1,3 +1,4 @@
+
 "use client"
 import * as React from "react"
 import { assets as initialAssets } from "@/lib/data";
@@ -53,6 +54,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     let currency = 'TRY';
     let locale = 'tr-TR';
     
+    // Priority rule: check symbol for explicit currency
     if (symbol.includes('USD')) {
         currency = 'USD';
         locale = 'en-US';
@@ -62,15 +64,16 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     } else if (symbol.includes('TL')) {
         currency = 'TRY';
         locale = 'tr-TR';
-    }
-    else if (lang === 'en' && !symbol.startsWith('BTC')) {
+    } else if (lang === 'en') {
+        // Fallback for EN: Convert from TRY to USD if not BTC
+        // BTC from CoinMarketCap is already in USD
         currency = 'USD';
         locale = 'en-US';
-        displayValue = value / USD_TRY_RATE;
-    } else if (lang === 'en' && symbol.startsWith('BTC')){
-        currency = 'USD';
-        locale = 'en-US';
+        if (symbol !== 'BTC') {
+            displayValue = value / USD_TRY_RATE;
+        }
     }
+    // Default is TRY for 'tr' language
 
     return new Intl.NumberFormat(locale, {
       style: "currency",
@@ -94,8 +97,8 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
         for (const symbol in newPrices) {
             if (Object.prototype.hasOwnProperty.call(newPrices, symbol)) {
                 updatedAssets[symbol] = {
-                    ...initialAssets[symbol as AssetSymbol], // Ensure all asset properties are present
-                    ...updatedAssets[symbol], // Keep existing data if any
+                    ...initialAssets[symbol as AssetSymbol], 
+                    ...updatedAssets[symbol], 
                     price: newPrices[symbol].price,
                     change24h: newPrices[symbol].change24h,
                 };
@@ -127,8 +130,8 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   
   if (isLoading) {
     return (
-       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-            {Array.from({ length: 5 }).map((_, index) => (
+       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+            {Array.from({ length: 6 }).map((_, index) => (
                 <Skeleton key={index} className="h-[76px] w-full" />
             ))}
        </div>
@@ -136,15 +139,15 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
       {assetOrder.map((symbol) => {
         const asset = liveAssets[symbol];
         if (!asset) return null;
         const Icon = iconMap[symbol] || InfoIcon;
         return (
           <div key={symbol} className="p-1">
-              <div className="flex items-center justify-center gap-4 p-4 rounded-lg bg-card border h-full">
-                  <Icon className="h-8 w-8" />
+              <div className="flex items-center justify-start gap-3 p-4 rounded-lg bg-card border h-full">
+                  <Icon className="h-8 w-8 flex-shrink-0" />
                   <div className="flex-grow">
                   <p className="font-medium text-sm whitespace-nowrap">{assetNames[symbol]}</p>
                   <p className="text-xs text-muted-foreground">{formatCurrency(asset.price, symbol as AssetSymbol)}</p>
@@ -152,10 +155,10 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
                   <div
                   className={cn(
                       "text-xs font-medium",
-                      asset.change24h > 0 ? "text-green-500" : "text-red-500"
+                      asset.change24h >= 0 ? "text-green-500" : "text-red-500"
                   )}
                   >
-                  {asset.change24h > 0 ? "+" : ""}
+                  {asset.change24h >= 0 ? "+" : ""}
                   {asset.change24h.toFixed(2)}%
                   </div>
               </div>
