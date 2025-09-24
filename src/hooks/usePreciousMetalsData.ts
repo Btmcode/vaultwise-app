@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useEffect, useCallback } from 'react';
 import { doc, getDoc } from 'firebase/firestore';
@@ -48,16 +49,16 @@ export function usePreciousMetalsData(refreshInterval = 300000) { // 5 dakika
             const response = await fetch('/api/fetch-precious-metals');
             if (!response.ok) {
                 // The API route itself will handle errors and return manual data if needed
-                const errorData = await response.json();
+                const errorData = await response.json().catch(() => ({error: 'API response was not ok and not valid JSON'}));
                 throw new Error(errorData.error || 'API response was not ok');
             }
             
             const fetchedData = await response.json();
             
-            // The API route is now responsible for writing to Firestore.
+            // In a real app, the API route would be responsible for writing to Firestore.
             // The client-side hook just fetches the result.
-            setData(fetchedData.data);
-            setLastUpdated(fetchedData.time ? `${fetchedData.date} ${fetchedData.time}` : new Date().toLocaleString());
+            setData(fetchedData);
+            setLastUpdated(new Date().toLocaleString());
 
         } catch (e) {
             console.error('Data fetching error:', e);
