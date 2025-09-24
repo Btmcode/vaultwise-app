@@ -202,6 +202,23 @@
             "autoSaveUpdates": "Auto-Save Updates",
             "newsletter": "Newsletter",
             "saveButton": "Save Preferences"
+        },
+        "feedback": {
+            "title": "Submit Feedback",
+            "description": "Have a suggestion or found a bug? Let us know!",
+            "placeholder": "Type your feedback here...",
+            "submitButton": "Send Feedback",
+            "toast": {
+                "success": {
+                    "title": "Feedback Sent",
+                    "description": "Thank you for your feedback! We appreciate you helping us improve."
+                },
+                "error": {
+                    "title": "Submission Failed",
+                    "tooShort": "Please enter at least 10 characters for your feedback.",
+                    "general": "An error occurred while sending your feedback. Please try again."
+                }
+            }
         }
     },
     "autoSavePlans": {

@@ -202,6 +202,23 @@
             "autoSaveUpdates": "Otomatik Tasarruf Güncellemeleri",
             "newsletter": "Bülten",
             "saveButton": "Tercihleri Kaydet"
+        },
+        "feedback": {
+            "title": "Geri Bildirim Gönder",
+            "description": "Bir öneriniz mi var ya da bir hata mı buldunuz? Bize bildirin!",
+            "placeholder": "Geri bildiriminizi buraya yazın...",
+            "submitButton": "Geri Bildirimi Gönder",
+            "toast": {
+                "success": {
+                    "title": "Geri Bildirim Gönderildi",
+                    "description": "Geri bildiriminiz için teşekkür ederiz! Gelişmemize yardımcı olduğunuz için minnettarız."
+                },
+                "error": {
+                    "title": "Gönderim Başarısız",
+                    "tooShort": "Lütfen geri bildiriminiz için en az 10 karakter girin.",
+                    "general": "Geri bildiriminiz gönderilirken bir hata oluştu. Lütfen tekrar deneyin."
+                }
+            }
         }
     },
      "autoSavePlans": {

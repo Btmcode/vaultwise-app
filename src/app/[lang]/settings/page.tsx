@@ -9,7 +9,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { useToast } from "@/hooks/use-toast";
+import { analyzeFeedback } from "@/app/actions";
+import { Textarea } from '@/components/ui/textarea';
 
 
 export default function SettingsPage() {
@@ -20,12 +23,45 @@ export default function SettingsPage() {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+  const [feedbackText, setFeedbackText] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
 
   if (!dict) {
     return null; // or a loading skeleton
   }
 
   const settingsDict = dict.settingsPage;
+
+  const handleFeedbackSubmit = async () => {
+    if (feedbackText.trim().length < 10) {
+      toast({
+        variant: "destructive",
+        title: settingsDict.feedback.toast.error.title,
+        description: settingsDict.feedback.toast.error.tooShort,
+      });
+      return;
+    }
+    setIsSubmitting(true);
+    try {
+      await analyzeFeedback({ feedbackText });
+      toast({
+        title: settingsDict.feedback.toast.success.title,
+        description: settingsDict.feedback.toast.success.description,
+      });
+      setFeedbackText("");
+    } catch (error) {
+      console.error("Feedback submission error:", error);
+      toast({
+        variant: "destructive",
+        title: settingsDict.feedback.toast.error.title,
+        description: settingsDict.feedback.toast.error.general,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -114,6 +150,30 @@ export default function SettingsPage() {
                     </CardContent>
                     <CardFooter className="border-t px-6 py-4">
                         <Button>{settingsDict.notifications.saveButton}</Button>
+                    </CardFooter>
+                </Card>
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{settingsDict.feedback.title}</CardTitle>
+                        <CardDescription>{settingsDict.feedback.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="grid gap-2">
+                            <Textarea
+                                id="feedback"
+                                placeholder={settingsDict.feedback.placeholder}
+                                value={feedbackText}
+                                onChange={(e) => setFeedbackText(e.target.value)}
+                                rows={4}
+                            />
+                        </div>
+                    </CardContent>
+                    <CardFooter className="border-t px-6 py-4">
+                        <Button onClick={handleFeedbackSubmit} disabled={isSubmitting}>
+                            {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                            {settingsDict.feedback.submitButton}
+                        </Button>
                     </CardFooter>
                 </Card>
             </div>
