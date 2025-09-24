@@ -1,4 +1,3 @@
-
 "use client"
 import * as React from "react"
 import { assets as initialAssetsData } from "@/lib/data";
@@ -30,6 +29,7 @@ const assetOrder: string[] = [
   "XAU_ONS",
   "XAU_USD_KG",
   "XAU_EUR_KG",
+  "XAG",
   "XAG_ONS",
   "XAG_TL",
   "XAG_USD",
@@ -39,7 +39,6 @@ const assetOrder: string[] = [
   "XAUT",
   "USD_TRY",
 ];
-
 
 export function LivePrices({ assetNames }: { assetNames: any }) {
   const [liveAssets, setLiveAssets] = React.useState<Record<string, LiveAssetData>>({});
@@ -59,12 +58,10 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
         locale = 'de-DE';
     }
 
-    // Always use TRY for USD_TRY to show the TL value of 1 USD
     if (symbol === 'USD_TRY') {
         currency = 'TRY';
         locale = 'tr-TR';
     }
-
 
     return new Intl.NumberFormat(locale, {
       style: "currency",
@@ -82,17 +79,15 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
       }
       const newPrices: Record<string, any> = await response.json();
       
-       setLiveAssets(currentPrices => {
-        const updatedAssets: Record<string, LiveAssetData> = {};
-        for (const symbol of assetOrder) {
-            const initialAsset = initialAssetsData[symbol as AssetSymbol];
-            const livePrice = newPrices[symbol];
-            if (initialAsset) {
-                updatedAssets[symbol] = { ...initialAsset, ...livePrice };
-            }
-        }
-        return updatedAssets;
-      });
+      const updatedAssets: Record<string, LiveAssetData> = {};
+      for (const symbol of assetOrder) {
+          const initialAsset = initialAssetsData[symbol as AssetSymbol];
+          const livePrice = newPrices[symbol];
+          if (initialAsset) {
+              updatedAssets[symbol] = { ...initialAsset, ...livePrice };
+          }
+      }
+      setLiveAssets(updatedAssets);
 
     } catch (error) {
       console.error("Failed to fetch live prices:", error);
