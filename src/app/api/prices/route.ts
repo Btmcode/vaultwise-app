@@ -34,7 +34,7 @@ export async function GET() {
   try {
     // Fetch data from both APIs concurrently
     const [nadirdovizResponse, coinmarketcapResponse] = await Promise.allSettled([
-      axios.post(nadirDovizApiUrl, {}),
+      axios.post(nadirDovizApiUrl, {}), // IMPORTANT FIX: Added empty object for post body
       coinmarketcapApiKey 
         ? axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,PAXG,XAUT', {
             headers: { 'X-CMC_PRO_API_KEY': coinmarketcapApiKey },

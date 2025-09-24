@@ -26,18 +26,18 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
 type LiveAssetData = Omit<Asset, 'name'>;
 
 const assetOrder: string[] = [
-    "XAU", // HAS ALTIN
-    "XAU_ONS",
-    "XAU_USD_KG",
-    "XAU_EUR_KG",
-    "XAG_ONS",
-    "XAG_TL",
-    "XAG_USD",
-    "XAG_EUR",
-    "BTC",
-    "PAXG",
-    "XAUT",
-    "USD_TRY"
+  "XAU",
+  "XAU_ONS",
+  "XAU_USD_KG",
+  "XAU_EUR_KG",
+  "XAG_ONS",
+  "XAG_TL",
+  "XAG_USD",
+  "XAG_EUR",
+  "BTC",
+  "PAXG",
+  "XAUT",
+  "USD_TRY",
 ];
 
 
@@ -51,13 +51,20 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
     let currency = 'TRY';
     let locale = 'tr-TR';
     
-    if (symbol.includes('USD')) {
+    if (symbol.includes('USD') || symbol === 'BTC' || symbol === 'PAXG' || symbol === 'XAUT' || symbol === 'XAU_ONS' || symbol === 'XAG_ONS') {
         currency = 'USD';
         locale = 'en-US';
     } else if (symbol.includes('EUR')) {
         currency = 'EUR';
         locale = 'de-DE';
     }
+
+    // Always use TRY for USD_TRY to show the TL value of 1 USD
+    if (symbol === 'USD_TRY') {
+        currency = 'TRY';
+        locale = 'tr-TR';
+    }
+
 
     return new Intl.NumberFormat(locale, {
       style: "currency",
@@ -112,7 +119,7 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
   
   if (isLoading) {
     return (
-       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
             {assetOrder.map((symbol) => (
                 <Skeleton key={symbol} className="h-[88px] w-full" />
             ))}
@@ -121,7 +128,7 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
       {assetOrder.map((symbol) => {
         const asset = liveAssets[symbol];
         if (!asset) return null;
