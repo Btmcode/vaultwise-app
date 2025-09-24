@@ -27,18 +27,18 @@ type LiveAssetData = Omit<Asset, 'name'>;
 const USD_TRY_RATE = 32.5;
 
 const assetOrder: AssetSymbol[] = [
-    "BTC",
     "XAU",
-    "XAG",
     "PAXG",
     "XAUT",
     "XAU_ONS",
-    "XAG_ONS",
     "XAU_USD_KG",
-    "XAG_USD",
     "XAU_EUR_KG",
-    "XAG_EUR",
+    "XAG",
+    "XAG_ONS",
     "XAG_TL",
+    "XAG_USD",
+    "XAG_EUR",
+    "BTC",
 ];
 
 export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
@@ -60,7 +60,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
         locale = 'en-US';
     } else if (symbol.includes('EUR')) {
         currency = 'EUR';
-        locale = 'de-DE';
+        locale = 'de-DE'; // Use German locale for Euro formatting
     } else if (symbol.includes('TL')) {
         currency = 'TRY';
         locale = 'tr-TR';
