@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en'
   };
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
   params,
 }: LayoutProps) {
