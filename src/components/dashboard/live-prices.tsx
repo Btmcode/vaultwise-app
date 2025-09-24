@@ -107,6 +107,9 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
             }
 
             updatedAssets[symbol] = { ...initialAsset, ...livePriceData };
+          } else if (initialAsset) {
+            // If price data for an asset is missing in the API response, keep the old data
+            updatedAssets[symbol] = prevAssets[symbol] || initialAsset;
           }
         }
         setPriceDirections(newDirections);
@@ -118,7 +121,7 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
     } finally {
       setIsLoading(false);
     }
-  }, [priceDirections]);
+  }, [priceDirections]); // Dependency added to re-create fetchPrices if priceDirections changes
 
   React.useEffect(() => {
     fetchPrices(); // Fetch immediately on mount
