@@ -38,8 +38,8 @@ export async function GET() {
       const code = item.Kod;
       if (relevantCodes.has(code)) {
         const symbol = codeToSymbolMap[code];
-        const price = parseFloat(item.Alis);
-        const change24h = parseFloat(item.Yuzde);
+        const price = parseFloat(item.Alis.replace(/\./g, '').replace(',', '.'));
+        const change24h = parseFloat(item.Yuzde.replace(',', '.'));
 
         if (symbol && !isNaN(price) && !isNaN(change24h)) {
             prices[symbol] = {

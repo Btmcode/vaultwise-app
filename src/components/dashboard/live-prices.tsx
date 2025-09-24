@@ -23,6 +23,7 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
 };
 
 type LiveAssetData = Omit<Asset, 'name'>;
+const USD_TRY_RATE = 32.5; // Approximate conversion rate
 
 export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
   const [liveAssets, setLiveAssets] = React.useState<Record<AssetSymbol, LiveAssetData>>(initialAssets);
@@ -30,15 +31,26 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   const params = useParams();
   const lang = params.lang as 'tr' | 'en';
 
-  const formatCurrency = React.useCallback((value: number) => {
+  const formatCurrency = React.useCallback((value: number, symbol: AssetSymbol) => {
     if (isNaN(value)) return lang === 'tr' ? "₺..." : "$...";
     
-    const currency = lang === 'tr' ? 'TRY' : 'USD';
+    let displayValue = value;
+    let currency = 'TRY';
+    let locale = 'tr-TR';
+
+    if (lang === 'en') {
+        currency = 'USD';
+        locale = 'en-US';
+        // Convert all prices to USD for the English view, except for BTC which we assume is already in USD from a different source
+        if (symbol !== 'BTC') {
+            displayValue = value / USD_TRY_RATE;
+        }
+    }
     
-    return new Intl.NumberFormat(lang === 'tr' ? 'tr-TR' : "en-US", {
+    return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: currency,
-    }).format(value);
+    }).format(displayValue);
   }, [lang]);
 
   const fetchPrices = React.useCallback(async () => {
@@ -102,7 +114,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
                   </div>
                   <div className="flex-grow">
                   <p className="font-medium text-sm whitespace-nowrap">{assetNames[asset.symbol]}</p>
-                  <p className="text-xs text-muted-foreground">{formatCurrency(asset.price)}</p>
+                  <p className="text-xs text-muted-foreground">{formatCurrency(asset.price, asset.symbol)}</p>
                   </div>
                   <div
                   className={cn(
