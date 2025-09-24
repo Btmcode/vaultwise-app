@@ -38,14 +38,12 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   const formatCurrency = React.useCallback((value: number) => {
     if (isNaN(value)) return lang === 'tr' ? "₺..." : "$...";
     const currency = lang === 'tr' ? 'TRY' : 'USD';
-    // Sadece BTC için USD gösterelim, diğerleri her zaman TL
-    const displayCurrency = (currency === 'TRY' && (assetNames[liveAssets['BTC']?.symbol] !== 'Bitcoin' )) ? 'TRY' : 'USD';
-
+    
     return new Intl.NumberFormat(lang === 'tr' ? 'tr-TR' : "en-US", {
       style: "currency",
-      currency: displayCurrency === 'USD' ? 'USD' : 'TRY',
+      currency: currency,
     }).format(value);
-  }, [lang, assetNames, liveAssets]);
+  }, [lang]);
 
   const fetchPrices = React.useCallback(async () => {
     try {
