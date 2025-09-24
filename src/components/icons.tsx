@@ -142,23 +142,33 @@ export function XautIcon(props: SVGProps<SVGSVGElement>) {
 
 export function UsdTryIcon(props: SVGProps<SVGSVGElement>) {
   return(
-    <svg 
+    <svg
       {...props}
-      viewBox="0 0 48 48" 
+      viewBox="0 0 48 48"
       xmlns="http://www.w3.org/2000/svg"
-    >
+      xmlnsXlink="http://www.w3.org/1999/xlink">
       <defs>
-        <clipPath id="clip0_105_2">
-          <rect width="48" height="48" rx="24" fill="white"/>
+        <clipPath id="clip_USD">
+          <path d="M 0 24 a 24 24 0 0 1 48 0 V 48 H 0 Z" />
+        </clipPath>
+        <clipPath id="clip_TRY">
+          <path d="M 0 0 h 48 v 24 a 24 24 0 0 1 -48 0 V 0 Z" />
         </clipPath>
       </defs>
-      <g clipPath="url(#clip0_105_2)">
-        <path d="M48 0H0V48H48V0Z" fill="#F0F0F0"/>
-        <path d="M0 0H24V48H0V0Z" fill="#D80027"/>
-        <path d="M13.3043 27.2174L10 24.6087L6.69565 27.2174L7.82609 23.2174L4.95652 20.7826H9.13043L10 16.6957L10.8696 20.7826H15.0435L12.1739 23.2174L13.3043 27.2174Z" fill="#F0F0F0"/>
-        <path d="M11.5333 25.5333C12.9233 26.3333 14.52 26.6667 16 26.6667C19.68 26.6667 22.6667 23.68 22.6667 20C22.6667 16.32 19.68 13.3333 16 13.3333C14.52 13.3333 12.9233 13.6667 11.5333 14.4667C12.56 13.04 14.16 12 16 12C20.4183 12 24 15.5817 24 20C24 24.4183 20.4183 28 16 28C14.16 28 12.56 27 11.5333 25.5333Z" fill="#F0F0F0"/>
-        <path d="M24 0H48V48H24V0Z" fill="#3D58A7"/>
-        <path d="M48 27.4286H34.2857V48H30.8571V27.4286H24V24H30.8571V0H34.2857V24H48V27.4286Z" fill="#F0F0F0"/>
+      <g>
+        {/* US Flag part */}
+        <g clipPath="url(#clip_USD)">
+          <rect width="48" height="48" fill="#B22234" />
+          <path d="M0,4.5H48 M0,13.5H48 M0,22.5H48 M0,31.5H48 M0,40.5H48" stroke="#FFFFFF" strokeWidth="4" />
+          <rect width="24" height="27" fill="#3C3B6E" />
+        </g>
+        {/* Turkish Flag part */}
+        <g clipPath="url(#clip_TRY)">
+          <rect width="48" height="48" fill="#E30A17" />
+          <circle cx="18" cy="24" r="7" fill="#FFFFFF" />
+          <circle cx="20" cy="24" r="5.5" fill="#E30A17" />
+          <path d="M27 24 l-4.5 -2 l1.5 4.5 v-5 l-1.5 4.5" fill="#FFFFFF" transform="rotate(15, 27, 24)" />
+        </g>
       </g>
     </svg>
   );

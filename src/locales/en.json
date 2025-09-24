@@ -17,7 +17,7 @@
         "XAG_TL": "Silver/TL",
         "XAG_USD": "Silver/USD",
         "XAG_EUR": "Silver/EUR",
-        "USD_TRY": "USD/TRY Rate"
+        "USD_TRY": "USD/TRY"
     },
     "header": {
         "myAccount": "My Account",
@@ -241,3 +241,5 @@
         }
     }
 }
+
+    
