@@ -1,0 +1,28 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Kıymetli maden verilerini herkes okuyabilir, kimse yazamaz (sunucu hariç)
+    match /precious_metals/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Tarihsel verileri herkes okuyabilir, kimse yazamaz (sunucu hariç)
+    match /precious_metals_history/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Analizleri herkes okuyabilir, kimse yazamaz (sunucu hariç)
+    // Bu koleksiyon henüz kullanılmıyor olabilir ama ilerisi için eklemek iyi bir pratik.
+    match /market_analyses/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Diğer tüm belgelere erişimi varsayılan olarak reddet
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
