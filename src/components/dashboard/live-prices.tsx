@@ -1,3 +1,4 @@
+
 "use client"
 import * as React from "react"
 import { assets as initialAssets } from "@/lib/data";
@@ -41,10 +42,8 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     if (lang === 'en') {
         currency = 'USD';
         locale = 'en-US';
-        // Convert all prices to USD for the English view, except for BTC which we assume is already in USD from a different source
-        if (symbol !== 'BTC') {
-            displayValue = value / USD_TRY_RATE;
-        }
+        // Convert all prices to USD for the English view
+        displayValue = value / USD_TRY_RATE;
     }
     
     return new Intl.NumberFormat(locale, {
@@ -84,7 +83,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
 
   React.useEffect(() => {
     fetchPrices();
-    const interval = setInterval(fetchPrices, 30000); 
+    const interval = setInterval(fetchPrices, 2000); 
 
     return () => clearInterval(interval);
   }, [fetchPrices]);
@@ -105,6 +104,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {assetOrder.map((symbol) => {
         const asset = liveAssets[symbol];
+        if (!asset) return null; // Render nothing if asset data is missing
         const Icon = iconMap[asset.symbol] || InfoIcon;
         return (
           <div key={asset.symbol} className="p-1">
