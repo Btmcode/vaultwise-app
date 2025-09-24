@@ -27,12 +27,11 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
 type LiveAssetData = Omit<Asset, 'name'>;
 const USD_TRY_RATE = 32.5;
 
-const assetOrder: AssetSymbol[] = [
+const assetOrder: string[] = [
     "XAU",
     "XAU_ONS",
     "XAU_USD_KG",
     "XAU_EUR_KG",
-    "XAG",
     "XAG_ONS",
     "XAG_TL",
     "XAG_USD",
