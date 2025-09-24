@@ -23,6 +23,7 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
 };
 
 type LiveAssetData = Omit<Asset, 'name'>;
+type PriceDirection = 'up' | 'down' | 'neutral';
 
 const assetOrder: string[] = [
   "XAU",
@@ -43,6 +44,7 @@ const assetOrder: string[] = [
 export function LivePrices({ assetNames }: { assetNames: any }) {
   const [liveAssets, setLiveAssets] = React.useState<Record<string, LiveAssetData>>({});
   const [isLoading, setIsLoading] = React.useState(true);
+  const [priceDirections, setPriceDirections] = React.useState<Record<string, PriceDirection>>({});
 
   const formatCurrency = React.useCallback((value: number | undefined, symbol: string) => {
     if (value === undefined || isNaN(value)) return "...";
@@ -79,15 +81,37 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
       }
       const newPrices: Record<string, any> = await response.json();
       
-      const updatedAssets: Record<string, LiveAssetData> = {};
-      for (const symbol of assetOrder) {
+      setLiveAssets(prevAssets => {
+        const updatedAssets: Record<string, LiveAssetData> = {};
+        const newDirections: Record<string, PriceDirection> = {};
+        
+        for (const symbol of assetOrder) {
           const initialAsset = initialAssetsData[symbol as AssetSymbol];
-          const livePrice = newPrices[symbol];
-          if (initialAsset) {
-              updatedAssets[symbol] = { ...initialAsset, ...livePrice };
+          const livePriceData = newPrices[symbol];
+
+          if (initialAsset && livePriceData) {
+            const currentAsset = prevAssets[symbol];
+            const newPrice = livePriceData.price ?? livePriceData.buyPrice;
+            const oldPrice = currentAsset?.price ?? currentAsset?.buyPrice;
+
+            if (oldPrice && newPrice) {
+              if (newPrice > oldPrice) {
+                newDirections[symbol] = 'up';
+              } else if (newPrice < oldPrice) {
+                newDirections[symbol] = 'down';
+              } else {
+                newDirections[symbol] = 'neutral';
+              }
+            } else {
+              newDirections[symbol] = 'neutral';
+            }
+
+            updatedAssets[symbol] = { ...initialAsset, ...livePriceData };
           }
-      }
-      setLiveAssets(updatedAssets);
+        }
+        setPriceDirections(newDirections);
+        return updatedAssets;
+      });
 
     } catch (error) {
       console.error("Failed to fetch live prices:", error);
@@ -120,10 +144,15 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
         if (!asset) return null;
         const Icon = iconMap[symbol] || InfoIcon;
         const isCrypto = 'price' in asset;
+        const direction = priceDirections[symbol];
 
         return (
           <div key={symbol} className="p-1">
-              <div className="flex items-center justify-start gap-4 p-4 rounded-lg bg-card border h-full">
+              <div className={cn(
+                  "flex items-center justify-start gap-4 p-4 rounded-lg bg-card border h-full transition-colors duration-300",
+                  direction === 'up' && 'border-green-500 bg-green-500/20',
+                  direction === 'down' && 'border-red-500 bg-red-500/20',
+              )}>
                   <Icon className="h-10 w-10 flex-shrink-0" />
                   <div className="flex-grow flex flex-col justify-center">
                     <div className="flex items-center justify-between w-full">
