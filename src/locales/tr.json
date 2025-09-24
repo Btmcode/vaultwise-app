@@ -16,7 +16,8 @@
         "XAG_ONS": "Gümüş/ONS",
         "XAG_TL": "Gümüş/TL",
         "XAG_USD": "Gümüş/USD",
-        "XAG_EUR": "Gümüş/EUR"
+        "XAG_EUR": "Gümüş/EUR",
+        "USD_TRY": "USD/TRY Kuru"
     },
     "header": {
         "myAccount": "Hesabım",

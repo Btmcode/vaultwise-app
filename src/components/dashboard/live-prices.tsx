@@ -2,7 +2,7 @@
 "use client"
 import * as React from "react"
 import { assets as initialAssets } from "@/lib/data";
-import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, InfoIcon } from "@/components/icons";
+import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon, InfoIcon } from "@/components/icons";
 import type { Asset, AssetSymbol } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,6 +21,7 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG_TL: SilverIcon,
     XAG_USD: SilverIcon,
     XAG_EUR: SilverIcon,
+    USD_TRY: UsdTryIcon,
 };
 
 type LiveAssetData = Omit<Asset, 'name'>;
@@ -31,6 +32,7 @@ const assetOrder: AssetSymbol[] = [
     "XAU_ONS",
     "XAU_USD_KG",
     "XAU_EUR_KG",
+    "XAG",
     "XAG_ONS",
     "XAG_TL",
     "XAG_USD",
@@ -38,6 +40,7 @@ const assetOrder: AssetSymbol[] = [
     "BTC",
     "PAXG",
     "XAUT",
+    "USD_TRY"
 ];
 
 export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
@@ -60,7 +63,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     } else if (symbol.includes('EUR')) {
         currency = 'EUR';
         locale = 'de-DE'; // Use German locale for Euro formatting
-    } else if (symbol.includes('TL')) {
+    } else if (symbol === 'USD_TRY' || symbol.includes('TL')) {
         currency = 'TRY';
         locale = 'tr-TR';
     } else if (lang === 'en') {
@@ -77,7 +80,8 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: currency,
-      maximumFractionDigits: 2,
+      maximumFractionDigits: symbol === 'USD_TRY' ? 4 : 2,
+      minimumFractionDigits: 2,
     }).format(displayValue);
   }, [lang]);
 

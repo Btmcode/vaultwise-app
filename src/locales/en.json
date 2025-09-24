@@ -16,7 +16,8 @@
         "XAG_ONS": "Silver/Ounce",
         "XAG_TL": "Silver/TL",
         "XAG_USD": "Silver/USD",
-        "XAG_EUR": "Silver/EUR"
+        "XAG_EUR": "Silver/EUR",
+        "USD_TRY": "USD/TRY Rate"
     },
     "header": {
         "myAccount": "My Account",

@@ -36,6 +36,7 @@ export const assets: Record<AssetSymbol, Omit<Asset, 'name'>> = {
   XAG_TL: { symbol: "XAG_TL", price: 31.0, change24h: -1.5 },
   XAG_USD: { symbol: "XAG_USD", price: 29.58, change24h: -1.5 },
   XAG_EUR: { symbol: "XAG_EUR", price: 27.56, change24h: -1.5 },
+  USD_TRY: { symbol: "USD_TRY", price: 32.85, change24h: 0.1 },
 };
 
 export const portfolioAssets: PortfolioAsset[] = [
