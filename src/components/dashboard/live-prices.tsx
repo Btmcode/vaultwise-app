@@ -9,6 +9,7 @@ import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, InfoIcon } from "@/c
 import type { Asset, AssetSymbol } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useParams } from "next/navigation";
 
 const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAU: GoldIcon,
@@ -25,19 +26,26 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG_EUR: SilverIcon,
 };
 
-const formatCurrency = (value: number) => {
-  if (isNaN(value)) return "$...";
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-  }).format(value);
-};
 
 type LiveAssetData = Omit<Asset, 'name'>;
 
 export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
   const [liveAssets, setLiveAssets] = React.useState<Record<AssetSymbol, LiveAssetData>>(initialAssets);
   const [isLoading, setIsLoading] = React.useState(true);
+  const params = useParams();
+  const lang = params.lang as 'tr' | 'en';
+
+  const formatCurrency = React.useCallback((value: number) => {
+    if (isNaN(value)) return lang === 'tr' ? "₺..." : "$...";
+    const currency = lang === 'tr' ? 'TRY' : 'USD';
+    // Sadece BTC için USD gösterelim, diğerleri her zaman TL
+    const displayCurrency = (currency === 'TRY' && (assetNames[liveAssets['BTC']?.symbol] !== 'Bitcoin' )) ? 'TRY' : 'USD';
+
+    return new Intl.NumberFormat(lang === 'tr' ? 'tr-TR' : "en-US", {
+      style: "currency",
+      currency: displayCurrency === 'USD' ? 'USD' : 'TRY',
+    }).format(value);
+  }, [lang, assetNames, liveAssets]);
 
   const fetchPrices = React.useCallback(async () => {
     try {

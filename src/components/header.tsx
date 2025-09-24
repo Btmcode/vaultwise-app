@@ -75,14 +75,16 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
                 {userAvatar && (
-                  <Image
-                    src={userAvatar.imageUrl}
-                    width={36}
-                    height={36}
-                    alt={userAvatar.description}
-                    data-ai-hint={userAvatar.imageHint}
-                    className="rounded-full object-cover"
-                  />
+                  <div className="relative h-9 w-9">
+                    <Image
+                      src={userAvatar.imageUrl}
+                      fill
+                      sizes="36px"
+                      alt={userAvatar.description}
+                      data-ai-hint={userAvatar.imageHint}
+                      className="rounded-full object-cover"
+                    />
+                  </div>
                 )}
                 <span className="sr-only">Toggle user menu</span>
               </Button>
