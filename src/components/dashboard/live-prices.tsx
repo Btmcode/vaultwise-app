@@ -28,11 +28,11 @@ const USD_TRY_RATE = 32.5;
 
 const assetOrder: AssetSymbol[] = [
     "XAU",
-    "PAXG",
-    "XAUT",
     "XAU_ONS",
     "XAU_USD_KG",
     "XAU_EUR_KG",
+    "PAXG",
+    "XAUT",
     "XAG",
     "XAG_ONS",
     "XAG_TL",
