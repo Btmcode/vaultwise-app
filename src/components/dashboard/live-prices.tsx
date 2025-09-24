@@ -82,22 +82,13 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
       }
       const newPrices: Record<string, any> = await response.json();
       
-       setLiveAssets(prevAssets => {
-        const updatedAssets = { ...prevAssets };
-        
-        for (const symbol in newPrices) {
-            if (Object.prototype.hasOwnProperty.call(newPrices, symbol)) {
-                updatedAssets[symbol] = {
-                    ...initialAssetsData[symbol], 
-                    ...updatedAssets[symbol], 
-                    ...newPrices[symbol]
-                };
-            }
-        }
-        
-        for (const symbol in initialAssetsData) {
-            if (!updatedAssets[symbol]) {
-                updatedAssets[symbol] = initialAssetsData[symbol as AssetSymbol];
+       setLiveAssets(currentPrices => {
+        const updatedAssets: Record<string, LiveAssetData> = {};
+        for (const symbol of assetOrder) {
+            const initialAsset = initialAssetsData[symbol as AssetSymbol];
+            const livePrice = newPrices[symbol];
+            if (initialAsset) {
+                updatedAssets[symbol] = { ...initialAsset, ...livePrice };
             }
         }
         return updatedAssets;
