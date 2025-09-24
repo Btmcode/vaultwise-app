@@ -33,14 +33,6 @@ export function PreciousMetalsTable() {
     }).format(price);
   };
 
-  const goldProducts = data.filter(item => 
-    item.Ürün.includes('ALTIN') || item.Ürün.includes('Altın') || item.Ürün.includes('USD/KG') || item.Ürün.includes('EUR/KG')
-  );
-  
-  const silverProducts = data.filter(item => 
-    item.Ürün.includes('GÜM')
-  );
-
   if (loading) {
     return (
         <div className="space-y-8">
@@ -74,6 +66,15 @@ export function PreciousMetalsTable() {
   if (error) {
     return <div className="text-red-500 p-4 rounded-md bg-red-50 border border-red-200">Hata: {error.message}</div>;
   }
+
+  // Ensure data exists before trying to filter it
+  const goldProducts = data ? data.filter(item => 
+    item.Ürün.includes('ALTIN') || item.Ürün.includes('Altın') || item.Ürün.includes('USD/KG') || item.Ürün.includes('EUR/KG')
+  ) : [];
+  
+  const silverProducts = data ? data.filter(item => 
+    item.Ürün.includes('GÜM')
+  ) : [];
 
   return (
     <div className="space-y-8">
