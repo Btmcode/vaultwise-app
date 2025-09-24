@@ -100,7 +100,7 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
               } else if (newPrice < oldPrice) {
                 newDirections[symbol] = 'down';
               } else {
-                newDirections[symbol] = 'neutral';
+                newDirections[symbol] = prevAssets[symbol] ? priceDirections[symbol] || 'neutral' : 'neutral';
               }
             } else {
               newDirections[symbol] = 'neutral';
@@ -118,13 +118,13 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [priceDirections]);
 
   React.useEffect(() => {
-    fetchPrices();
+    fetchPrices(); // Fetch immediately on mount
     const interval = setInterval(fetchPrices, 2000); 
 
-    return () => clearInterval(interval);
+    return () => clearInterval(interval); // Cleanup on unmount
   }, [fetchPrices]);
   
   if (isLoading) {
