@@ -1,6 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { doc, setDoc, getDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/lib/firebase/client';
 import type { PreciousMetalItem } from '@/lib/types';
 
@@ -25,7 +25,9 @@ export function usePreciousMetalsData(refreshInterval = 300000) { // 5 dakika
 
     const fetchData = useCallback(async () => {
         setLoading(true);
+        setError(null);
         try {
+            // 1. Check Firestore cache first
             const latestDocRef = doc(db, 'precious_metals', 'latest');
             const latestDoc = await getDoc(latestDocRef);
             const now = new Date();
@@ -33,56 +35,34 @@ export function usePreciousMetalsData(refreshInterval = 300000) { // 5 dakika
             if (latestDoc.exists()) {
                 const latestData = latestDoc.data();
                 const timestamp = latestData.timestamp?.toDate();
+                // If data is fresh (less than interval time), use it from cache
                 if (timestamp && (now.getTime() - timestamp.getTime() < refreshInterval)) {
                     setData(latestData.data);
-                    setLastUpdated(`${latestData.date} ${latestData.time}`);
+                    setLastUpdated(latestData.time ? `${latestData.date} ${latestData.time}` : new Date(timestamp).toLocaleString());
                     setLoading(false);
                     return;
                 }
             }
-            
-            const currentDate = now.toISOString().split('T')[0];
-            const currentTime = now.toTimeString().split(' ')[0];
 
-            try {
-                const response = await fetch('/api/fetch-precious-metals');
-                if (!response.ok) throw new Error('API response was not ok');
-                const fetchedData = await response.json();
-
-                await setDoc(latestDocRef, {
-                    data: fetchedData,
-                    timestamp: new Date(),
-                    date: currentDate,
-                    time: currentTime
-                });
-
-                const historyDocRef = doc(db, 'precious_metals_history', `${currentDate}_${currentTime.replace(/:/g, '-')}`);
-                await setDoc(historyDocRef, {
-                    data: fetchedData,
-                    timestamp: new Date(),
-                    date: currentDate,
-                    time: currentTime
-                });
-
-                setData(fetchedData);
-                setLastUpdated(`${currentDate} ${currentTime}`);
-
-            } catch (apiError) {
-                console.error('API Error:', apiError);
-                const manualData = getManualData();
-                await setDoc(latestDocRef, {
-                    data: manualData,
-                    timestamp: new Date(),
-                    date: currentDate,
-                    time: currentTime,
-                    isManual: true
-                });
-                setData(manualData);
-                setLastUpdated(`${currentDate} ${currentTime} (Manuel)`);
+            // 2. If cache is old or doesn't exist, fetch from our API endpoint
+            const response = await fetch('/api/fetch-precious-metals');
+            if (!response.ok) {
+                // The API route itself will handle errors and return manual data if needed
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'API response was not ok');
             }
+            
+            const fetchedData = await response.json();
+            
+            // The API route is now responsible for writing to Firestore.
+            // The client-side hook just fetches the result.
+            setData(fetchedData.data);
+            setLastUpdated(fetchedData.time ? `${fetchedData.date} ${fetchedData.time}` : new Date().toLocaleString());
+
         } catch (e) {
             console.error('Data fetching error:', e);
             setError(e as Error);
+            // In case of a total failure (e.g., API route down), use manual data as a last resort
             setData(getManualData());
             setLastUpdated(new Date().toLocaleString() + ' (Hata)');
         } finally {
@@ -97,6 +77,7 @@ export function usePreciousMetalsData(refreshInterval = 300000) { // 5 dakika
     }, [fetchData, refreshInterval]);
 
     const refreshData = () => {
+        // Invalidate cache by forcing a new fetch
         fetchData();
     };
 
