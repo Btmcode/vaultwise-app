@@ -2,7 +2,6 @@
 "use client"
 import * as React from "react"
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
-import Autoplay from "embla-carousel-autoplay";
 
 import { assets as initialAssets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, InfoIcon } from "@/components/icons";
@@ -37,6 +36,8 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
 
   const formatCurrency = React.useCallback((value: number) => {
     if (isNaN(value)) return lang === 'tr' ? "₺..." : "$...";
+    
+    // Bitcoin'i her zaman USD olarak göster, diğerlerini dile göre
     const currency = lang === 'tr' ? 'TRY' : 'USD';
     
     return new Intl.NumberFormat(lang === 'tr' ? 'tr-TR' : "en-US", {
@@ -102,13 +103,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
         <Carousel
             opts={{
                 align: "start",
-                loop: true,
             }}
-            plugins={[
-                Autoplay({
-                    delay: 5000, // Animasyon hızını biraz yavaşlattık
-                }),
-            ]}
             className="w-full"
         >
             <CarouselContent>
