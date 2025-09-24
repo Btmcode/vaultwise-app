@@ -31,9 +31,6 @@ const assetOrder: AssetSymbol[] = [
     "XAU_ONS",
     "XAU_USD_KG",
     "XAU_EUR_KG",
-    "PAXG",
-    "XAUT",
-    "XAG",
     "XAG_ONS",
     "XAG_TL",
     "XAG_USD",
@@ -139,7 +136,7 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
   }
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {assetOrder.map((symbol) => {
         const asset = liveAssets[symbol];
         if (!asset) return null;
