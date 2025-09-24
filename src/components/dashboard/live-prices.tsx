@@ -1,4 +1,3 @@
-
 "use client"
 import * as React from "react"
 import { assets as initialAssets } from "@/lib/data";
@@ -8,10 +7,10 @@ import { cn } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useParams } from "next/navigation";
 
-const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
+const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+    BTC: BtcIcon,
     XAU: GoldIcon,
     XAG: SilverIcon,
-    BTC: BtcIcon,
     PAXG: PaxgIcon,
     XAUT: XautIcon,
     XAU_ONS: GoldIcon,
@@ -24,10 +23,25 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
 };
 
 type LiveAssetData = Omit<Asset, 'name'>;
-const USD_TRY_RATE = 32.5; // Approximate conversion rate
+const USD_TRY_RATE = 32.5;
+
+const assetOrder: AssetSymbol[] = [
+    "BTC",
+    "XAU",
+    "XAG",
+    "PAXG",
+    "XAUT",
+    "XAU_ONS",
+    "XAG_ONS",
+    "XAU_USD_KG",
+    "XAG_USD",
+    "XAU_EUR_KG",
+    "XAG_EUR",
+    "XAG_TL",
+];
 
 export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any }) {
-  const [liveAssets, setLiveAssets] = React.useState<Record<AssetSymbol, LiveAssetData>>(initialAssets);
+  const [liveAssets, setLiveAssets] = React.useState<Record<string, LiveAssetData>>({});
   const [isLoading, setIsLoading] = React.useState(true);
   const params = useParams();
   const lang = params.lang as 'tr' | 'en';
@@ -39,28 +53,29 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     let currency = 'TRY';
     let locale = 'tr-TR';
     
-    // Priority rule: Check symbol for currency hints
     if (symbol.includes('USD')) {
         currency = 'USD';
         locale = 'en-US';
     } else if (symbol.includes('EUR')) {
         currency = 'EUR';
-        locale = 'de-DE'; // Using German locale for Euro formatting
+        locale = 'de-DE';
     } else if (symbol.includes('TL')) {
         currency = 'TRY';
         locale = 'tr-TR';
     }
-    // General rule: Use language if no hint in symbol
-    else if (lang === 'en') {
+    else if (lang === 'en' && !symbol.startsWith('BTC')) {
         currency = 'USD';
         locale = 'en-US';
-        // Convert all other prices from TRY to USD for the English view
         displayValue = value / USD_TRY_RATE;
+    } else if (lang === 'en' && symbol.startsWith('BTC')){
+        currency = 'USD';
+        locale = 'en-US';
     }
 
     return new Intl.NumberFormat(locale, {
       style: "currency",
       currency: currency,
+      maximumFractionDigits: 2,
     }).format(displayValue);
   }, [lang]);
 
@@ -72,16 +87,26 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
       }
       const newPrices: Record<string, { price: number; change24h: number }> = await response.json();
       
-      setLiveAssets(prevAssets => {
+       setLiveAssets(prevAssets => {
         const updatedAssets = { ...prevAssets };
+        
+        // Merge fetched prices
         for (const symbol in newPrices) {
-          if (updatedAssets[symbol as AssetSymbol]) {
-            updatedAssets[symbol as AssetSymbol] = {
-              ...updatedAssets[symbol as AssetSymbol],
-              price: newPrices[symbol].price,
-              change24h: newPrices[symbol].change24h,
-            };
-          }
+            if (Object.prototype.hasOwnProperty.call(newPrices, symbol)) {
+                updatedAssets[symbol] = {
+                    ...initialAssets[symbol as AssetSymbol], // Ensure all asset properties are present
+                    ...updatedAssets[symbol], // Keep existing data if any
+                    price: newPrices[symbol].price,
+                    change24h: newPrices[symbol].change24h,
+                };
+            }
+        }
+        
+        // Ensure all initial assets are present, even if not fetched
+        for (const symbol in initialAssets) {
+            if (!updatedAssets[symbol]) {
+                updatedAssets[symbol] = initialAssets[symbol as AssetSymbol];
+            }
         }
         return updatedAssets;
       });
@@ -99,12 +124,10 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
 
     return () => clearInterval(interval);
   }, [fetchPrices]);
-
-  const assetOrder = Object.keys(liveAssets) as AssetSymbol[];
   
   if (isLoading) {
     return (
-       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {Array.from({ length: 5 }).map((_, index) => (
                 <Skeleton key={index} className="h-[76px] w-full" />
             ))}
@@ -116,17 +139,15 @@ export function LivePrices({ dict, assetNames }: { dict: any, assetNames: any })
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
       {assetOrder.map((symbol) => {
         const asset = liveAssets[symbol];
-        if (!asset) return null; // Render nothing if asset data is missing
-        const Icon = iconMap[asset.symbol] || InfoIcon;
+        if (!asset) return null;
+        const Icon = iconMap[symbol] || InfoIcon;
         return (
-          <div key={asset.symbol} className="p-1">
-              <div className="flex items-center justify-center gap-3 p-4 rounded-lg bg-card border h-full">
-                  <div className="bg-muted p-2 rounded-full">
-                  <Icon className="h-6 w-6" />
-                  </div>
+          <div key={symbol} className="p-1">
+              <div className="flex items-center justify-center gap-4 p-4 rounded-lg bg-card border h-full">
+                  <Icon className="h-8 w-8" />
                   <div className="flex-grow">
-                  <p className="font-medium text-sm whitespace-nowrap">{assetNames[asset.symbol]}</p>
-                  <p className="text-xs text-muted-foreground">{formatCurrency(asset.price, asset.symbol)}</p>
+                  <p className="font-medium text-sm whitespace-nowrap">{assetNames[symbol]}</p>
+                  <p className="text-xs text-muted-foreground">{formatCurrency(asset.price, symbol as AssetSymbol)}</p>
                   </div>
                   <div
                   className={cn(
