@@ -14,7 +14,6 @@ export type Asset = {
 export type PortfolioAsset = {
   assetSymbol: AssetSymbol;
   amount: number; // in asset units
-  valueUsd: number;
 };
 
 export type TransactionType = "Buy" | "Sell" | "Auto-Save";

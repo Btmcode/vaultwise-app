@@ -3,20 +3,19 @@
 
 import { useState, useMemo } from 'react';
 import {
-  Card,
   CardHeader,
   CardTitle,
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
-import { assets, portfolioAssets } from "@/lib/data";
+import { portfolioAssets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
+import { useLivePrices } from '@/hooks/useLivePrices';
 import { BuyDialog } from './buy-dialog';
 import { SellDialog } from './sell-dialog';
 
@@ -48,18 +47,31 @@ export function AssetList({ dict }: { dict: any }) {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [hideLowBalances, setHideLowBalances] = useState(false);
+  const { liveAssets, loading } = useLivePrices();
+
+  const enrichedAssets = useMemo(() => {
+    return portfolioAssets.map(pa => {
+      const liveAsset = liveAssets[pa.assetSymbol];
+      const price = liveAsset?.price ?? liveAsset?.buyPrice ?? 0;
+      const valueUsd = pa.amount * price;
+      return {
+        ...pa,
+        price,
+        valueUsd,
+      };
+    });
+  }, [portfolioAssets, liveAssets]);
 
   const filteredAssets = useMemo(() => {
-    return portfolioAssets
+    return enrichedAssets
       .filter(pa => !hideLowBalances || pa.valueUsd >= HIDE_THRESHOLD)
       .filter(pa => {
-        const assetInfo = assets[pa.assetSymbol];
-        const assetName = assetNames[assetInfo.symbol] || '';
-        const symbol = assetInfo.symbol;
+        const assetName = assetNames[pa.assetSymbol] || '';
+        const symbol = pa.assetSymbol;
         return assetName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                symbol.toLowerCase().includes(searchTerm.toLowerCase());
       });
-  }, [portfolioAssets, hideLowBalances, searchTerm, assetNames]);
+  }, [enrichedAssets, hideLowBalances, searchTerm, assetNames]);
 
 
   return (
@@ -86,7 +98,6 @@ export function AssetList({ dict }: { dict: any }) {
       </div>
       <CardContent className="grid gap-6">
         {filteredAssets.map((pa, index) => {
-          const assetInfo = assets[pa.assetSymbol];
           const Icon = iconMap[pa.assetSymbol];
           return (
             <div key={pa.assetSymbol}>
@@ -96,8 +107,8 @@ export function AssetList({ dict }: { dict: any }) {
                      <Icon className="h-6 w-6" />
                   </div>
                   <div>
-                    <p className="font-medium">{assetNames[assetInfo.symbol]}</p>
-                    <p className="text-sm text-muted-foreground">{assetInfo.symbol}</p>
+                    <p className="font-medium">{assetNames[pa.assetSymbol]}</p>
+                    <p className="text-sm text-muted-foreground">{pa.assetSymbol}</p>
                   </div>
                 </div>
                 
@@ -109,12 +120,12 @@ export function AssetList({ dict }: { dict: any }) {
 
                   <div className="text-right md:text-left">
                     <p className="text-sm text-muted-foreground">{assetListDict.table.price}</p>
-                    <div className="font-medium">{formatCurrency(assetInfo.price)}</div>
+                    <div className="font-medium">{loading ? '...' : formatCurrency(pa.price)}</div>
                   </div>
                   
                   <div className="col-span-2 md:col-span-1 text-right">
                     <p className="text-sm text-muted-foreground ">{assetListDict.table.value}</p>
-                    <p className="font-semibold text-lg">{formatCurrency(pa.valueUsd)}</p>
+                    <p className="font-semibold text-lg">{loading ? '...' : formatCurrency(pa.valueUsd)}</p>
                   </div>
                 </div>
                 <div className="flex gap-2 justify-end w-full md:w-auto">

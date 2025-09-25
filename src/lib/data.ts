@@ -45,17 +45,14 @@ export const portfolioAssets: PortfolioAsset[] = [
   {
     assetSymbol: "BTC",
     amount: 0.5,
-    valueUsd: 34061.73,
   },
   {
     assetSymbol: "XAU",
     amount: 10,
-    valueUsd: 23207.8,
   },
   {
     assetSymbol: "PAXG",
     amount: 5,
-    valueUsd: 11599.95,
   },
 ];
 
@@ -226,10 +223,10 @@ const generateLiveChartData = (minutes: number, baseValue: number, volatility: n
   return data;
 }
 
-const findLatestPrice = (asset: PortfolioAsset) => {
-    const assetData = assets[asset.assetSymbol];
+const findLatestPrice = (assetSymbol: AssetSymbol) => {
+    const assetData = assets[assetSymbol];
     if (!assetData) return 0;
-    return assetData.price || assetData.buyPrice || 0;
+    return assetData.price ?? assetData.buyPrice ?? 0;
 }
 
 
@@ -244,5 +241,5 @@ export const chartData: ChartData = {
   "5y": generateChartData('month', 60, 20000, 0.08),
 };
 
-export const totalPortfolioValue = portfolioAssets.reduce((sum, asset) => sum + (asset.amount * findLatestPrice(asset)), 0);
+export const totalPortfolioValue = portfolioAssets.reduce((sum, asset) => sum + (asset.amount * findLatestPrice(asset.assetSymbol)), 0);
 

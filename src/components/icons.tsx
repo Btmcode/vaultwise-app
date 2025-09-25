@@ -22,13 +22,15 @@ export function BtcIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
-      viewBox="0 0 48 48"
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 48 48"
       fill="none"
     >
       <circle cx="24" cy="24" r="24" fill="#F7931A" />
       <path
-        d="M33.433 24.322a4.673 4.673 0 0 0 1.98-3.738c0-2.58-2.03-4.66-4.545-4.66h-7.227v17.062h8.04c2.618 0 4.743-2.053 4.743-4.59 0-2.12-1.42-3.92-3.418-4.444zm-9.255-6.392h5.114c1.378 0 2.5 1.13 2.5 2.52 0 1.39-1.122 2.52-2.5 2.52h-5.114v-5.04zm5.53 10.662h-5.53v-5.582h5.53c1.54 0 2.783 1.257 2.783 2.81 0 1.55-1.243 2.772-2.783 2.772z"
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M25.183 13.003h-6.937v5.934h-4.322v3.74h4.322v6.86h-4.322v3.74h4.322v5.933h6.937v-5.933h2.053c.27 0 .53-.03.78-.08a5.55 5.55 0 004.53-5.59c0-2.82-2.1-5.18-4.87-5.5v-.05c2.1-.5 3.6-2.4 3.6-4.66 0-2.65-2.15-4.8-4.8-4.8h-1.3zM21.986 28.53v-5.414h3.64c1.4 0 2.55 1.14 2.55 2.55v.314c0 1.41-1.15 2.55-2.55 2.55h-3.64zm0-9.155V16.74h3.1c1.24 0 2.25 1 2.25 2.24v.26c0 1.24-1.01 2.25-2.25 2.25h-3.1z"
         fill="#fff"
       />
     </svg>
@@ -53,9 +55,6 @@ export function GoldIcon(props: SVGProps<SVGSVGElement>) {
       </defs>
       <circle cx="24" cy="24" r="24" fill="url(#gold-gradient-coin)" />
       <circle cx="24" cy="24" r="21" fill="none" stroke="#B8860B" strokeWidth="1.5" strokeOpacity="0.7" />
-      <text x="50%" y="50%" dy=".3em" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000" fillOpacity="0.6">
-        GOLD
-      </text>
     </svg>
   );
 }
@@ -108,24 +107,21 @@ export function SilverIcon(props: SVGProps<SVGSVGElement>) {
       </defs>
       <circle cx="24" cy="24" r="24" fill="url(#silver-gradient-coin)" />
       <circle cx="24" cy="24" r="21" fill="none" stroke="#8E8E8E" strokeWidth="1.5" strokeOpacity="0.7" />
-      <text x="50%" y="50%" dy=".3em" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#000" fillOpacity="0.6">
-        SILVER
-      </text>
     </svg>
   );
 }
 
 export function PaxgIcon(props: SVGProps<SVGSVGElement>) {
   return (
-    <svg
+     <svg
       {...props}
-      viewBox="0 0 48 48"
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 48 48"
       fill="none"
     >
-      <circle cx="24" cy="24" r="24" fill="#1A1A1A" />
-      <path d="M24.0001 34.909C29.9991 34.909 34.9091 29.999 34.9091 24C34.9091 18.001 29.9991 13.091 24.0001 13.091C18.0011 13.091 13.0911 18.001 13.0911 24C13.0911 29.999 18.0011 34.909 24.0001 34.909Z" fill="#F2A900"/>
-      <path d="M24 38.6818C32.1127 38.6818 38.6818 32.1127 38.6818 24C38.6818 15.8873 32.1127 9.31818 24 9.31818C15.8873 9.31818 9.31818 15.8873 9.31818 24C9.31818 32.1127 15.8873 38.6818 24 38.6818ZM24 34.0455C29.5455 34.0455 34.0455 29.5455 34.0455 24C34.0455 18.4545 29.5455 13.9545 24 13.9545C18.4545 13.9545 13.9545 18.4545 13.9545 24C13.9545 29.5455 18.4545 34.0455 24 34.0455Z" fill="#D79800"/>
+      <circle cx="24" cy="24" r="24" fill="#F0B90B" />
+      <path d="M24 35c6.075 0 11-4.925 11-11S30.075 13 24 13 13 17.925 13 24s4.925 11 11 11z" fill="#fff" />
+      <path d="M24 38.682c8.113 0 14.682-6.57 14.682-14.682S32.113 9.318 24 9.318 9.318 15.887 9.318 24 15.887 38.682 24 38.682zM24 34c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10z" fill="#F0B90B" />
     </svg>
   );
 }
@@ -135,16 +131,12 @@ export function XautIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}
-      viewBox="0 0 48 48"
       xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 48 48"
       fill="none"
     >
-      <circle cx="24" cy="24" r="24" fill="#F1A900" />
-      <path
-        d="M24.23 35.83c-6.23 0-11.28-5.06-11.28-11.28 0-6.23 5.05-11.28 11.28-11.28s11.28 5.05 11.28 11.28c0 6.22-5.05 11.28-11.28 11.28zm0-20.5c-5.09 0-9.22 4.13-9.22 9.22s4.13 9.22 9.22 9.22 9.22-4.13 9.22-9.22-9.22-4.13-9.22-9.22z"
-        fillOpacity=".4"
-        fill="#fff"
-      />
+      <circle cx="24" cy="24" r="24" fill="#F0B90B" />
+      <path d="M24.23 35.83c-6.23 0-11.28-5.06-11.28-11.28 0-6.23 5.05-11.28 11.28-11.28s11.28 5.05 11.28 11.28c0 6.22-5.05 11.28-11.28 11.28zm0-20.5c-5.09 0-9.22 4.13-9.22 9.22s4.13 9.22 9.22 9.22 9.22-4.13 9.22-9.22-9.22-4.13-9.22-9.22z" fillOpacity=".4" fill="#fff" />
       <path d="M16.92 13.33h14.62v3.7H16.92v-3.7zm7.3 22.5V17.03h-3.7v18.8h3.7z" fill="#fff" />
     </svg>
   );

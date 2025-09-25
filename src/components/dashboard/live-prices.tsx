@@ -24,12 +24,12 @@ const assetOrder = [
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     BTC: BtcIcon,
-    XAU: GoldIcon,
+    XAU: GoldBarIcon, // Has Altın için Külçe ikonu
     PAXG: PaxgIcon,
     XAUT: XautIcon,
-    XAU_ONS: GoldIcon,
-    XAU_USD_KG: GoldBarIcon,
-    XAU_EUR_KG: GoldBarIcon,
+    XAU_ONS: GoldIcon, // Diğer altınlar için Para ikonu
+    XAU_USD_KG: GoldIcon,
+    XAU_EUR_KG: GoldIcon,
     XAG: SilverIcon,
     XAG_ONS: SilverIcon,
     XAG_TL: SilverIcon,
@@ -80,7 +80,7 @@ export function LivePrices({ dict }: { dict: any }) {
     return iconMap[symbol] || InfoIcon;
   }
 
-  if (loading) {
+  if (loading && Object.keys(liveAssets).length === 0) {
     return (
         <div className="space-y-4">
              <div className="flex justify-end items-center">
@@ -136,7 +136,7 @@ export function LivePrices({ dict }: { dict: any }) {
                         "flex items-center justify-start gap-4 p-4 rounded-lg bg-card border h-full transition-colors duration-300",
                         getChangeBgColor(item.change24h)
                     )}>
-                        <Icon className="h-10 w-10 flex-shrink-0" />
+                        <Icon className={cn("h-10 w-10 flex-shrink-0", symbol === 'XAU' && 'h-12 w-12')} />
                         <div className="flex-grow flex flex-col justify-center overflow-hidden">
                             <div className="flex items-center justify-between w-full">
                                 <p className="font-semibold text-base whitespace-nowrap">{assetNames[symbol] || symbol}</p>
