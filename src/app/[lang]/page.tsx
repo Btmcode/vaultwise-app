@@ -12,56 +12,59 @@ import { AssetDistribution } from "@/components/dashboard/asset-distribution";
 import { AutoSavePlans } from "@/components/dashboard/auto-save-plans";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { LivePrices } from "@/components/dashboard/live-prices";
+import { LivePricesProvider } from "@/hooks/useLivePrices";
 
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = getDictionary(lang);
+  const dict = await getDictionary(lang);
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header lang={lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <div className="w-full">
-          <Suspense fallback={<Skeleton className="h-48" />}>
-            <LivePrices dict={dict} />
-          </Suspense>
-        </div>
-        <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
-          <Suspense fallback={<Skeleton className="h-48" />}>
-            <PortfolioSummary dict={dict} />
-          </Suspense>
-          <Suspense fallback={<Skeleton className="h-48" />}>
-            <AssetDistribution dict={dict} />
-          </Suspense>
-           <div className="xl:col-span-2">
-             <Suspense fallback={<Skeleton className="h-48" />}>
-                <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
-             </Suspense>
-           </div>
-        </div>
-        <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-          <Card className="xl:col-span-2">
-            <Suspense fallback={<Skeleton className="h-[350px]" />}>
-              <PortfolioChart dict={dict.portfolioChart} />
+        <LivePricesProvider>
+          <div className="w-full">
+            <Suspense fallback={<Skeleton className="h-48" />}>
+              <LivePrices dict={dict} />
             </Suspense>
-          </Card>
-          <Card>
-            <Suspense fallback={<Skeleton className="h-[350px]" />}>
-              <RecentTransactions dict={dict.recentTransactions} assetNames={dict.assetNames} />
+          </div>
+          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
+            <Suspense fallback={<Skeleton className="h-48" />}>
+              <PortfolioSummary dict={dict} />
             </Suspense>
-          </Card>
-        </div>
-        <div className="grid gap-4 md:gap-8">
-          <Card>
-             <Suspense fallback={<Skeleton className="h-48" />}>
-                <AutoSavePlans dict={dict} />
+            <Suspense fallback={<Skeleton className="h-48" />}>
+              <AssetDistribution dict={dict} />
             </Suspense>
-          </Card>
-          <Card>
-            <Suspense fallback={<Skeleton className="h-96" />}>
-              <AssetList dict={dict} />
-            </Suspense>
-          </Card>
-        </div>
+            <div className="xl:col-span-2">
+              <Suspense fallback={<Skeleton className="h-48" />}>
+                  <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
+              </Suspense>
+            </div>
+          </div>
+          <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+            <Card className="xl:col-span-2">
+              <Suspense fallback={<Skeleton className="h-[350px]" />}>
+                <PortfolioChart dict={dict.portfolioChart} />
+              </Suspense>
+            </Card>
+            <Card>
+              <Suspense fallback={<Skeleton className="h-[350px]" />}>
+                <RecentTransactions dict={dict.recentTransactions} assetNames={dict.assetNames} />
+              </Suspense>
+            </Card>
+          </div>
+          <div className="grid gap-4 md:gap-8">
+            <Card>
+              <Suspense fallback={<Skeleton className="h-48" />}>
+                  <AutoSavePlans dict={dict} />
+              </Suspense>
+            </Card>
+            <Card>
+              <Suspense fallback={<Skeleton className="h-96" />}>
+                <AssetList dict={dict} />
+              </Suspense>
+            </Card>
+          </div>
+        </LivePricesProvider>
       </main>
     </div>
   );

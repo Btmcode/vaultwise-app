@@ -72,7 +72,7 @@ export function AssetDistribution({ dict }: { dict: any }) {
             percent: (asset.valueUsd / totalValue) * 100
         })).filter(asset => asset.value > 0);
 
-    }, [portfolioAssets, liveAssets]);
+    }, [liveAssets]);
 
   return (
     <Card>
@@ -114,4 +114,3 @@ export function AssetDistribution({ dict }: { dict: any }) {
     </Card>
   );
 }
-

@@ -24,7 +24,16 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG: SilverIcon,
     BTC: BtcIcon,
     PAXG: PaxgIcon,
-    XAUT: XautIcon
+    XAUT: XautIcon,
+    // Add other symbols if they can be part of asset list
+    XAU_ONS: GoldIcon,
+    XAU_USD_KG: GoldIcon,
+    XAU_EUR_KG: GoldIcon,
+    XAG_ONS: SilverIcon,
+    XAG_TL: SilverIcon,
+    XAG_USD: SilverIcon,
+    XAG_EUR: SilverIcon,
+    USD_TRY: GoldIcon, // Placeholder
 };
 
 const formatCurrency = (value: number) => {
@@ -60,7 +69,7 @@ export function AssetList({ dict }: { dict: any }) {
         valueUsd,
       };
     });
-  }, [portfolioAssets, liveAssets]);
+  }, [liveAssets]);
 
   const filteredAssets = useMemo(() => {
     return enrichedAssets
