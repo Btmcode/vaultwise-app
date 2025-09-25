@@ -51,15 +51,20 @@ export async function GET() {
           if (relevantCodes.has(code)) {
             const symbol = codeToSymbolMap[code];
             try {
-              const buyPrice = parseFloat(item.Alis.replace(/\./g, '').replace(',', '.'));
-              const sellPrice = parseFloat(item.Satis.replace(/\./g, '').replace(',', '.'));
-              const change24h = parseFloat(item.Yuzde.replace(',', '.'));
+              // Ensure values are strings before calling .replace()
+              const buyPriceStr = String(item.Alis).replace(/\./g, '').replace(',', '.');
+              const sellPriceStr = String(item.Satis).replace(/\./g, '').replace(',', '.');
+              const change24hStr = String(item.Yuzde).replace(',', '.');
+
+              const buyPrice = parseFloat(buyPriceStr);
+              const sellPrice = parseFloat(sellPriceStr);
+              const change24h = parseFloat(change24hStr);
 
               if (symbol && !isNaN(buyPrice) && !isNaN(sellPrice) && !isNaN(change24h)) {
                   prices[symbol] = { buyPrice, sellPrice, change24h };
               }
             } catch (e) {
-                console.warn(`Could not parse item from NadirDoviz: ${JSON.stringify(item)}`);
+                console.warn(`Could not parse item from NadirDoviz: ${JSON.stringify(item)}`, e);
             }
           }
         });
