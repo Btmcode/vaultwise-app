@@ -43,14 +43,19 @@ export function GoldIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
-      <circle cx="24" cy="24" r="20" fill="url(#gold-gradient-circle)" stroke="#DAA520" strokeWidth="2" />
       <defs>
-        <radialGradient id="gold-gradient-circle" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <stop offset="0%" stopColor="#FFF7E0" />
-          <stop offset="70%" stopColor="#FFD700" />
+        <radialGradient id="gold-gradient-coin" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <stop offset="0%" stopColor="#FFFDE4" />
+          <stop offset="60%" stopColor="#FFD700" />
+          <stop offset="95%" stopColor="#FDB813" />
           <stop offset="100%" stopColor="#B8860B" />
         </radialGradient>
       </defs>
+      <circle cx="24" cy="24" r="24" fill="url(#gold-gradient-coin)" />
+      <circle cx="24" cy="24" r="21" fill="none" stroke="#B8860B" strokeWidth="1.5" strokeOpacity="0.7" />
+      <text x="50%" y="50%" dy=".3em" textAnchor="middle" fontSize="10" fontWeight="bold" fill="#000" fillOpacity="0.6">
+        GOLD
+      </text>
     </svg>
   );
 }
@@ -92,14 +97,19 @@ export function SilverIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
-      <circle cx="24" cy="24" r="20" fill="url(#silver-gradient-circle)" stroke="#A0A0A0" strokeWidth="2"/>
-       <defs>
-        <radialGradient id="silver-gradient-circle" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+      <defs>
+         <radialGradient id="silver-gradient-coin" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
           <stop offset="0%" stopColor="#FFFFFF" />
-          <stop offset="80%" stopColor="#DCDCDC" />
-          <stop offset="100%" stopColor="#A9A9A9" />
+          <stop offset="70%" stopColor="#E0E0E0" />
+          <stop offset="95%" stopColor="#B0B0B0" />
+          <stop offset="100%" stopColor="#8E8E8E" />
         </radialGradient>
       </defs>
+      <circle cx="24" cy="24" r="24" fill="url(#silver-gradient-coin)" />
+      <circle cx="24" cy="24" r="21" fill="none" stroke="#8E8E8E" strokeWidth="1.5" strokeOpacity="0.7" />
+      <text x="50%" y="50%" dy=".3em" textAnchor="middle" fontSize="9" fontWeight="bold" fill="#000" fillOpacity="0.6">
+        SILVER
+      </text>
     </svg>
   );
 }
@@ -180,3 +190,5 @@ export function InfoIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
+
+    
