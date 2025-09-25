@@ -17,24 +17,37 @@ const firebaseConfig: FirebaseOptions = {
   measurementId: publicRuntimeConfig?.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Initialize Firebase
-let app: FirebaseApp | undefined;
-let auth: Auth | undefined;
-let db: Firestore | undefined;
+let app: FirebaseApp;
+let auth: Auth;
+let db: Firestore;
 
-// Check if we are on the client side and if all necessary config values are present
-const isClient = typeof window !== 'undefined';
-const hasAllConfig = firebaseConfig.apiKey && firebaseConfig.projectId;
+// This function ensures Firebase is initialized only once (singleton pattern)
+// and only on the client-side.
+function initializeFirebase() {
+  const isClient = typeof window !== 'undefined';
+  if (!isClient) return;
 
-if (isClient && hasAllConfig) {
-    app = getApps().length ? getApp() : initializeApp(firebaseConfig);
-    auth = getAuth(app);
-    db = getFirestore(app);
-} else if (isClient) {
-    // Only warn on the client side if config is missing
-    console.warn(
-        'Firebase config is incomplete. Firebase services will be disabled on the client. Please check your .env.local file or Netlify environment variables.'
-    );
+  const apps = getApps();
+  if (apps.length > 0) {
+    app = apps[0];
+  } else {
+    // Check if all necessary config values are present before initializing
+    if (firebaseConfig.apiKey && firebaseConfig.projectId) {
+      app = initializeApp(firebaseConfig);
+    } else {
+      console.warn(
+        'Firebase config is incomplete. Firebase services will be disabled on the client. Please check your .env file or Netlify environment variables.'
+      );
+      // Do not proceed if config is missing
+      return;
+    }
+  }
+
+  auth = getAuth(app);
+  db = getFirestore(app);
 }
+
+// Initialize on first load
+initializeFirebase();
 
 export { app, auth, db };

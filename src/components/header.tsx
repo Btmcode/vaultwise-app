@@ -42,7 +42,11 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
       }
       
       // Call the API route to clear the server-side session cookie
-      await fetch('/api/auth/logout', { method: 'POST' });
+      const response = await fetch('/api/auth/logout', { method: 'POST' });
+
+      if (!response.ok) {
+        throw new Error('Server failed to clear session.');
+      }
 
       toast({
         title: "Success",
