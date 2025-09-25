@@ -58,3 +58,10 @@ export type PreciousMetalItem = {
     "Alış": number;
     "Satış": number;
 };
+
+export type IbanAccount = {
+  id: string;
+  accountHolder: string;
+  iban: string;
+};
+

@@ -23,7 +23,9 @@
         "myAccount": "Hesabım",
         "profile": "Profil",
         "settings": "Ayarlar",
-        "logout": "Çıkış Yap"
+        "logout": "Çıkış Yap",
+        "deposit": "Para Yatır",
+        "withdraw": "Para Çek"
     },
     "loginPage": {
         "title": "Hesabınıza Giriş Yapın",
@@ -106,7 +108,7 @@
             "suggestionTitle": "Yapay Zeka Öneriniz",
             "createDescription": "Yapay zekamızın sizin için mükemmel tasarruf planını bulmasına izin verin.",
             "suggestionDescription": "Bilgilerinize dayanarak, beğeneceğinizi düşündüğümüz bir plan.",
-            "goalLabel": "Birincil finansal hedefiniz nedir?",
+            "goalLabel": "Birincil finansal hedefiniz nedir? (İsteğe bağlı)",
             "goalPlaceholder": "Örn: Ev peşinatı için biriktirmek",
             "incomeLabel": "Aylık Gelir (USD)",
             "incomePlaceholder": "Örn: 5000",
@@ -227,6 +229,36 @@
                     "general": "Geri bildiriminiz gönderilirken bir hata oluştu. Lütfen tekrar deneyin."
                 }
             }
+        },
+        "iban": {
+            "title": "Banka Hesapları (IBAN)",
+            "description": "Para yatırma ve çekme işlemleri için banka hesaplarınızı yönetin.",
+            "accountHolder": "Hesap Sahibi Adı",
+            "accountHolderPlaceholder": "Örn: Ali Veli",
+            "iban": "IBAN",
+            "ibanPlaceholder": "TR00 0000 0000 0000 0000 0000",
+            "addButton": "Hesap Ekle",
+            "savedAccounts": "Kayıtlı Hesaplar",
+            "noAccounts": "Kayıtlı banka hesabı bulunmamaktadır.",
+            "deleteConfirm": {
+                "title": "Emin misiniz?",
+                "description": "Bu işlem, {iban} ile biten IBAN'ı kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+                "cancel": "İptal",
+                "confirm": "Sil"
+            },
+            "toast": {
+                "success": {
+                    "addTitle": "Hesap Eklendi",
+                    "addDescription": "Yeni banka hesabınız başarıyla eklendi.",
+                    "deleteTitle": "Hesap Silindi",
+                    "deleteDescription": "Banka hesabınız silindi."
+                },
+                "error": {
+                    "title": "Hata",
+                    "emptyFields": "Hesap sahibi ve IBAN alanları boş bırakılamaz.",
+                    "invalidIban": "Lütfen geçerli bir IBAN girin."
+                }
+            }
         }
     },
      "autoSavePlans": {
@@ -239,7 +271,47 @@
             "title": "Plan Durduruldu",
             "description": "Otomatik tasarruf planınız başarıyla durduruldu."
         }
+    },
+    "depositPage": {
+        "title": "Para Yatır",
+        "description": "VaultWise hesabınıza para ekleyin.",
+        "cardTitle": "Yatırma Detayları",
+        "cardDescription": "Hesabı seçin ve yatırmak istediğiniz tutarı girin.",
+        "amountLabel": "Tutar (TRY)",
+        "ibanLabel": "Banka Hesabından",
+        "ibanPlaceholder": "Kayıtlı bir IBAN seçin",
+        "noIban": "Kayıtlı IBAN yok. Lütfen Ayarlar'dan bir tane ekleyin.",
+        "button": "Para Yatır",
+        "toast": {
+            "success": {
+                "title": "Yatırma İşlemi Başlatıldı",
+                "description": "{amount} TRY tutarındaki yatırma işleminiz başlatıldı. Hesabınıza yansıması 1-2 iş günü sürebilir."
+            },
+            "error": {
+                "title": "Yatırma Başarısız",
+                "invalidInput": "Lütfen bir IBAN seçin ve sıfırdan büyük geçerli bir tutar girin."
+            }
+        }
+    },
+    "withdrawPage": {
+        "title": "Para Çek",
+        "description": "VaultWise hesabınızdan bankanıza para transfer edin.",
+        "cardTitle": "Çekme Detayları",
+        "cardDescription": "Çekilecek tutarı girin ve hedef hesabı seçin.",
+        "amountLabel": "Tutar (USD)",
+        "ibanLabel": "Banka Hesabına",
+        "ibanPlaceholder": "Kayıtlı bir IBAN seçin",
+        "noIban": "Kayıtlı IBAN yok. Lütfen Ayarlar'dan bir tane ekleyin.",
+        "button": "Para Çek",
+        "toast": {
+            "success": {
+                "title": "Çekme İşlemi Başlatıldı",
+                "description": "${amount} tutarındaki çekme işleminiz başlatıldı. Paranın hesabınıza ulaşması 1-2 iş günü sürebilir."
+            },
+            "error": {
+                "title": "Çekme Başarısız",
+                "invalidInput": "Lütfen bir IBAN seçin ve sıfırdan büyük geçerli bir tutar girin."
+            }
+        }
     }
 }
-
-    

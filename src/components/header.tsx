@@ -1,3 +1,4 @@
+
 "use client";
 import Link from "next/link";
 import Image from "next/image";
@@ -14,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { VaultWiseLogo } from "@/components/icons";
 import { PlaceHolderImages } from "@/lib/placeholder-images";
-import { User, Settings, LogOut, Languages, Moon, Sun } from "lucide-react";
+import { User, Settings, LogOut, Languages, Moon, Sun, Landmark, ArrowLeftRight } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
@@ -91,6 +92,19 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>{dict.myAccount}</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem asChild>
+                <Link href={`/${lang}/deposit`} className="cursor-pointer">
+                  <Landmark className="mr-2 h-4 w-4" />
+                  <span>{dict.deposit}</span>
+                </Link>
+              </DropdownMenuItem>
+               <DropdownMenuItem asChild>
+                <Link href={`/${lang}/withdraw`} className="cursor-pointer">
+                  <ArrowLeftRight className="mr-2 h-4 w-4" />
+                  <span>{dict.withdraw}</span>
+                </Link>
+              </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={`/${lang}/profile`} className="cursor-pointer">

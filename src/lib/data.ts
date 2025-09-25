@@ -1,6 +1,6 @@
 
 
-import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol, AutoSavePlan } from "@/lib/types";
+import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol, AutoSavePlan, IbanAccount } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 
 export const assets: Record<string, Omit<Asset, 'name'>> = {
@@ -94,9 +94,11 @@ export const transactions: Transaction[] = [
   },
 ];
 
-const STORAGE_KEY = 'autoSavePlans';
+const AUTOSAVE_STORAGE_KEY = 'autoSavePlans';
+const IBAN_STORAGE_KEY = 'ibanAccounts';
 
-const initialPlans: AutoSavePlan[] = [
+// --- Auto-Save Plans ---
+const initialAutoSavePlans: AutoSavePlan[] = [
     {
       id: "plan-1",
       assetSymbol: "XAU",
@@ -106,54 +108,82 @@ const initialPlans: AutoSavePlan[] = [
     }
 ];
 
-// Getter to read plans from localStorage
 export const getAutoSavePlans = (): AutoSavePlan[] => {
-  if (typeof window === 'undefined') {
-    // We are on the server, return initial plans
-    return initialPlans;
-  }
+  if (typeof window === 'undefined') return initialAutoSavePlans;
   try {
-    const plansJson = window.localStorage.getItem(STORAGE_KEY);
-    if (plansJson) {
-      return JSON.parse(plansJson);
-    } else {
-      // If no plans in storage, set initial plans and return them
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(initialPlans));
-      return initialPlans;
-    }
+    const plansJson = window.localStorage.getItem(AUTOSAVE_STORAGE_KEY);
+    if (plansJson) return JSON.parse(plansJson);
+    
+    window.localStorage.setItem(AUTOSAVE_STORAGE_KEY, JSON.stringify(initialAutoSavePlans));
+    return initialAutoSavePlans;
   } catch (error) {
-    console.error("Error reading from localStorage", error);
-    return initialPlans;
+    console.error("Error reading auto-save plans from localStorage", error);
+    return initialAutoSavePlans;
   }
 };
 
-// Function to add a new plan (simulates a DB write)
 export const addAutoSavePlan = (plan: Omit<AutoSavePlan, 'id' | 'status' | 'frequency'>): AutoSavePlan[] => {
   const currentPlans = getAutoSavePlans();
   const newPlan: AutoSavePlan = {
     ...plan,
     id: uuidv4(),
     status: 'active',
-    frequency: 'monthly', // Defaulting to monthly for simplicity
+    frequency: 'monthly',
   };
   const updatedPlans = [...currentPlans, newPlan];
   if (typeof window !== 'undefined') {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPlans));
+    window.localStorage.setItem(AUTOSAVE_STORAGE_KEY, JSON.stringify(updatedPlans));
   }
   return updatedPlans;
 };
 
-// Function to remove a plan (simulates a DB delete)
 export const removeAutoSavePlan = (planId: string): AutoSavePlan[] => {
   const currentPlans = getAutoSavePlans();
   const updatedPlans = currentPlans.filter(p => p.id !== planId);
    if (typeof window !== 'undefined') {
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPlans));
+    window.localStorage.setItem(AUTOSAVE_STORAGE_KEY, JSON.stringify(updatedPlans));
   }
   return updatedPlans;
 };
 
+// --- IBAN Accounts ---
+const initialIbanAccounts: IbanAccount[] = [];
 
+export const getIbanAccounts = (): IbanAccount[] => {
+  if (typeof window === 'undefined') return initialIbanAccounts;
+  try {
+    const ibansJson = window.localStorage.getItem(IBAN_STORAGE_KEY);
+    if (ibansJson) return JSON.parse(ibansJson);
+
+    window.localStorage.setItem(IBAN_STORAGE_KEY, JSON.stringify(initialIbanAccounts));
+    return initialIbanAccounts;
+  } catch (error) {
+    console.error("Error reading IBANs from localStorage", error);
+    return initialIbanAccounts;
+  }
+};
+
+export const addIbanAccount = (account: Omit<IbanAccount, 'id'>): IbanAccount[] => {
+  const currentAccounts = getIbanAccounts();
+  const newAccount: IbanAccount = { ...account, id: uuidv4() };
+  const updatedAccounts = [...currentAccounts, newAccount];
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(IBAN_STORAGE_KEY, JSON.stringify(updatedAccounts));
+  }
+  return updatedAccounts;
+};
+
+export const removeIbanAccount = (accountId: string): IbanAccount[] => {
+  const currentAccounts = getIbanAccounts();
+  const updatedAccounts = currentAccounts.filter(acc => acc.id !== accountId);
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(IBAN_STORAGE_KEY, JSON.stringify(updatedAccounts));
+  }
+  return updatedAccounts;
+};
+
+
+// --- Chart Data ---
 const generateChartData = (period: 'day' | 'week' | 'month' | 'year', count: number, baseValue: number, volatility: number) => {
   const data = [];
   let value = baseValue;
@@ -215,3 +245,4 @@ export const chartData: ChartData = {
 };
 
 export const totalPortfolioValue = portfolioAssets.reduce((sum, asset) => sum + (asset.amount * findLatestPrice(asset)), 0);
+

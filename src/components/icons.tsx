@@ -84,6 +84,7 @@ export function GoldBarIcon(props: SVGProps<SVGSVGElement>) {
             fill="#FFE766"
             opacity="0.5"
         />
+        <text x="24" y="30" textAnchor="middle" fontSize="8" fill="#A07000" fontWeight="bold">999.9</text>
     </svg>
   );
 }
@@ -191,4 +192,14 @@ export function InfoIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+export const BankIcon = (props: SVGProps<SVGSVGElement>) => (
+    <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m3 21 18 0" />
+        <path d="M5 21V7l7-4 7 4v14" />
+        <path d="M12 21V7" />
+        <path d="M10 12h4" />
+        <path d="M21 10h-2.5" />
+        <path d="M5.5 10H3" />
+    </svg>
+);
     

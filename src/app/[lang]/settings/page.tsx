@@ -1,7 +1,8 @@
 
+
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
@@ -9,10 +10,24 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { Eye, EyeOff, Loader2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Trash2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { analyzeFeedback } from "@/app/actions";
 import { Textarea } from '@/components/ui/textarea';
+import { getIbanAccounts, addIbanAccount, removeIbanAccount, type IbanAccount } from '@/lib/data';
+import { BankIcon } from '@/components/icons';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 
 export default function SettingsPage() {
@@ -26,6 +41,17 @@ export default function SettingsPage() {
   const [feedbackText, setFeedbackText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+
+  // IBAN State
+  const [ibanAccounts, setIbanAccounts] = useState<IbanAccount[]>([]);
+  const [newAccountHolder, setNewAccountHolder] = useState("");
+  const [newIban, setNewIban] = useState("");
+  const [isAddingIban, setIsAddingIban] = useState(false);
+
+
+  useEffect(() => {
+    setIbanAccounts(getIbanAccounts());
+  }, []);
 
   if (!dict) {
     return null; // or a loading skeleton
@@ -62,6 +88,48 @@ export default function SettingsPage() {
     }
   };
 
+  const handleAddIban = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (newAccountHolder.trim() === "" || newIban.trim() === "") {
+        toast({
+            variant: "destructive",
+            title: settingsDict.iban.toast.error.title,
+            description: settingsDict.iban.toast.error.emptyFields,
+        });
+        return;
+    }
+    setIsAddingIban(true);
+    // Simple IBAN validation (basic check)
+    if (newIban.trim().length < 15) {
+         toast({
+            variant: "destructive",
+            title: settingsDict.iban.toast.error.title,
+            description: settingsDict.iban.toast.error.invalidIban,
+        });
+        setIsAddingIban(false);
+        return;
+    }
+    const updatedAccounts = addIbanAccount({ accountHolder: newAccountHolder, iban: newIban });
+    setIbanAccounts(updatedAccounts);
+    setNewAccountHolder("");
+    setNewIban("");
+    toast({
+        title: settingsDict.iban.toast.success.addTitle,
+        description: settingsDict.iban.toast.success.addDescription,
+    });
+    setIsAddingIban(false);
+  };
+
+  const handleDeleteIban = (accountId: string) => {
+    const updatedAccounts = removeIbanAccount(accountId);
+    setIbanAccounts(updatedAccounts);
+    toast({
+        variant: "destructive",
+        title: settingsDict.iban.toast.success.deleteTitle,
+        description: settingsDict.iban.toast.success.deleteDescription,
+    });
+  };
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -72,6 +140,77 @@ export default function SettingsPage() {
         </div>
         <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
             <div className="grid gap-6">
+
+                <Card>
+                    <CardHeader>
+                        <CardTitle>{settingsDict.iban.title}</CardTitle>
+                        <CardDescription>{settingsDict.iban.description}</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <form onSubmit={handleAddIban} className="grid gap-4 sm:grid-cols-3 sm:gap-6">
+                            <div className="grid gap-2">
+                                <label htmlFor="account-holder">{settingsDict.iban.accountHolder}</label>
+                                <Input 
+                                  id="account-holder"
+                                  value={newAccountHolder}
+                                  onChange={(e) => setNewAccountHolder(e.target.value)}
+                                  placeholder={settingsDict.iban.accountHolderPlaceholder}
+                                />
+                            </div>
+                            <div className="grid gap-2">
+                                <label htmlFor="iban">{settingsDict.iban.iban}</label>
+                                <Input 
+                                  id="iban"
+                                  value={newIban}
+                                  onChange={(e) => setNewIban(e.target.value)}
+                                  placeholder={settingsDict.iban.ibanPlaceholder}
+                                />
+                            </div>
+                             <Button type="submit" className="self-end" disabled={isAddingIban}>
+                                {isAddingIban && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                                {settingsDict.iban.addButton}
+                             </Button>
+                        </form>
+                         <div className="mt-6 space-y-4">
+                            <h3 className="text-md font-medium">{settingsDict.iban.savedAccounts}</h3>
+                            {ibanAccounts.length > 0 ? (
+                                ibanAccounts.map(account => (
+                                <div key={account.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
+                                    <div className="flex items-center gap-4">
+                                        <BankIcon className="h-6 w-6 text-muted-foreground" />
+                                        <div>
+                                            <p className="font-semibold">{account.accountHolder}</p>
+                                            <p className="text-sm text-muted-foreground font-mono">{account.iban}</p>
+                                        </div>
+                                    </div>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger asChild>
+                                            <Button variant="ghost" size="icon">
+                                                <Trash2 className="h-4 w-4 text-red-500" />
+                                            </Button>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>{settingsDict.iban.deleteConfirm.title}</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    {settingsDict.iban.deleteConfirm.description.replace('{iban}', account.iban)}
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>{settingsDict.iban.deleteConfirm.cancel}</AlertDialogCancel>
+                                                <AlertDialogAction onClick={() => handleDeleteIban(account.id)} className="bg-destructive hover:bg-destructive/90">{settingsDict.iban.deleteConfirm.confirm}</AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </div>
+                                ))
+                            ) : (
+                                <p className="text-sm text-muted-foreground text-center py-4">{settingsDict.iban.noAccounts}</p>
+                            )}
+                        </div>
+                    </CardContent>
+                </Card>
+
                 <Card>
                     <CardHeader>
                         <CardTitle>{settingsDict.account.title}</CardTitle>

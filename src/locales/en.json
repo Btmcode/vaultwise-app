@@ -23,7 +23,9 @@
         "myAccount": "My Account",
         "profile": "Profile",
         "settings": "Settings",
-        "logout": "Logout"
+        "logout": "Logout",
+        "deposit": "Deposit",
+        "withdraw": "Withdraw"
     },
     "loginPage": {
         "title": "Login to your Account",
@@ -106,7 +108,7 @@
             "suggestionTitle": "Your AI Suggestion",
             "createDescription": "Let our AI find the perfect savings plan for you.",
             "suggestionDescription": "Based on your info, here's a plan we think you'll like.",
-            "goalLabel": "What is your primary financial goal?",
+            "goalLabel": "What is your primary financial goal? (Optional)",
             "goalPlaceholder": "e.g., Save for a house down payment",
             "incomeLabel": "Monthly Income (USD)",
             "incomePlaceholder": "e.g., 5000",
@@ -227,6 +229,36 @@
                     "general": "An error occurred while sending your feedback. Please try again."
                 }
             }
+        },
+        "iban": {
+            "title": "Bank Accounts (IBAN)",
+            "description": "Manage your bank accounts for deposits and withdrawals.",
+            "accountHolder": "Account Holder Name",
+            "accountHolderPlaceholder": "e.g., John Doe",
+            "iban": "IBAN",
+            "ibanPlaceholder": "TR00 0000 0000 0000 0000 0000",
+            "addButton": "Add Account",
+            "savedAccounts": "Saved Accounts",
+            "noAccounts": "No saved bank accounts.",
+            "deleteConfirm": {
+                "title": "Are you sure?",
+                "description": "This will permanently delete the IBAN ending in {iban}. This action cannot be undone.",
+                "cancel": "Cancel",
+                "confirm": "Delete"
+            },
+            "toast": {
+                "success": {
+                    "addTitle": "Account Added",
+                    "addDescription": "The new bank account has been successfully added.",
+                    "deleteTitle": "Account Deleted",
+                    "deleteDescription": "The bank account has been deleted."
+                },
+                "error": {
+                    "title": "Error",
+                    "emptyFields": "Account holder and IBAN fields cannot be empty.",
+                    "invalidIban": "Please enter a valid IBAN."
+                }
+            }
         }
     },
     "autoSavePlans": {
@@ -239,7 +271,47 @@
             "title": "Plan Stopped",
             "description": "Your auto-save plan has been successfully stopped."
         }
+    },
+    "depositPage": {
+        "title": "Deposit Funds",
+        "description": "Add funds to your VaultWise account.",
+        "cardTitle": "Deposit Details",
+        "cardDescription": "Select the account and enter the amount you want to deposit.",
+        "amountLabel": "Amount (TRY)",
+        "ibanLabel": "From Bank Account",
+        "ibanPlaceholder": "Select a saved IBAN",
+        "noIban": "No saved IBANs. Please add one in Settings.",
+        "button": "Deposit",
+        "toast": {
+            "success": {
+                "title": "Deposit Initiated",
+                "description": "Your deposit of {amount} TRY has been initiated. It may take 1-2 business days to reflect in your account."
+            },
+            "error": {
+                "title": "Deposit Failed",
+                "invalidInput": "Please select an IBAN and enter a valid amount greater than zero."
+            }
+        }
+    },
+    "withdrawPage": {
+        "title": "Withdraw Funds",
+        "description": "Transfer funds from your VaultWise account to your bank.",
+        "cardTitle": "Withdrawal Details",
+        "cardDescription": "Enter the amount to withdraw and select the destination account.",
+        "amountLabel": "Amount (USD)",
+        "ibanLabel": "To Bank Account",
+        "ibanPlaceholder": "Select a saved IBAN",
+        "noIban": "No saved IBANs. Please add one in Settings.",
+        "button": "Withdraw",
+        "toast": {
+            "success": {
+                "title": "Withdrawal Initiated",
+                "description": "Your withdrawal of ${amount} has been initiated. It may take 1-2 business days to arrive."
+            },
+            "error": {
+                "title": "Withdrawal Failed",
+                "invalidInput": "Please select an IBAN and enter a valid amount greater than zero."
+            }
+        }
     }
 }
-
-    
