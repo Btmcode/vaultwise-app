@@ -15,13 +15,15 @@ import { LivePrices } from "@/components/dashboard/live-prices";
 
 
 export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = getDictionary(params.lang);
+  const dict = await getDictionary(params.lang);
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header lang={params.lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="w-full">
+          <Suspense fallback={<Skeleton className="h-48" />}>
             <LivePrices dict={dict} />
+          </Suspense>
         </div>
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
           <Suspense fallback={<Skeleton className="h-48" />}>

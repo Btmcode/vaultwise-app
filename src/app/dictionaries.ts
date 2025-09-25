@@ -7,5 +7,5 @@ const dictionaries = {
 };
 
 export const getDictionary = (locale: 'tr' | 'en') => {
-  return dictionaries[locale] || dictionaries.tr;
+  return dictionaries[locale] ?? dictionaries.tr;
 };
