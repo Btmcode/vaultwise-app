@@ -9,9 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { portfolioAssets, assets } from "@/lib/data";
-import { cn } from "@/lib/utils";
+import { portfolioAssets } from "@/lib/data";
 import { useMemo } from "react";
+import { useLivePrices } from "@/hooks/useLivePrices";
 
 const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))", "hsl(var(--chart-5))"];
 
@@ -48,13 +48,31 @@ const CustomTooltip = ({ active, payload, dict }: any) => {
 
 export function AssetDistribution({ dict }: { dict: any }) {
     const assetDistributionDict = dict.assetDistribution;
-    
-    const totalValue = useMemo(() => portfolioAssets.reduce((sum, asset) => sum + asset.valueUsd, 0), []);
-    const chartData = useMemo(() => portfolioAssets.map(asset => ({
-        name: asset.assetSymbol,
-        value: asset.valueUsd,
-        percent: (asset.valueUsd / totalValue) * 100
-    })), [totalValue]);
+    const { liveAssets } = useLivePrices();
+
+    const chartData = useMemo(() => {
+        if (Object.keys(liveAssets).length === 0) return [];
+        
+        const enrichedAssets = portfolioAssets.map(pa => {
+            const liveAsset = liveAssets[pa.assetSymbol];
+            const price = liveAsset?.price ?? liveAsset?.buyPrice ?? 0;
+            const valueUsd = pa.amount * price;
+            return {
+                ...pa,
+                valueUsd,
+            };
+        });
+
+        const totalValue = enrichedAssets.reduce((sum, asset) => sum + asset.valueUsd, 0);
+        if (totalValue === 0) return [];
+
+        return enrichedAssets.map(asset => ({
+            name: asset.assetSymbol,
+            value: asset.valueUsd,
+            percent: (asset.valueUsd / totalValue) * 100
+        })).filter(asset => asset.value > 0);
+
+    }, [portfolioAssets, liveAssets]);
 
   return (
     <Card>
@@ -63,8 +81,8 @@ export function AssetDistribution({ dict }: { dict: any }) {
         <CardDescription>{assetDistributionDict.description}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div style={{ width: '100%', height: 150 }}>
-            <ResponsiveContainer>
+        <div className="w-full h-40">
+            <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                 <Tooltip content={<CustomTooltip dict={dict} />} />
                 <Pie
@@ -72,7 +90,7 @@ export function AssetDistribution({ dict }: { dict: any }) {
                     cx="50%"
                     cy="50%"
                     labelLine={false}
-                    outerRadius={60}
+                    outerRadius={70}
                     fill="#8884d8"
                     dataKey="value"
                     strokeWidth={2}
@@ -96,3 +114,4 @@ export function AssetDistribution({ dict }: { dict: any }) {
     </Card>
   );
 }
+
