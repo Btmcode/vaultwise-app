@@ -46,9 +46,9 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
       });
 
       // Redirect to the login page after a short delay to ensure cookie is cleared
-      setTimeout(() => {
-        window.location.href = `/${lang}/login`;
-      }, 500);
+      // Using window.location.href ensures a full page reload, clearing any component state
+      // and forcing the middleware to re-evaluate the auth status.
+      window.location.href = `/${lang}/login`;
 
     } catch (error) {
       console.error("Logout Error:", error);
