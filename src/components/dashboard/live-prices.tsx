@@ -85,7 +85,7 @@ export function LivePrices({ assetNames }: { assetNames: Record<string, string> 
              <div className="flex justify-end items-center">
                 <Skeleton className="h-8 w-1/4" />
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, index) => (
                     <Skeleton key={index} className="h-[88px] w-full" />
                 ))}
@@ -123,7 +123,7 @@ export function LivePrices({ assetNames }: { assetNames: Record<string, string> 
               </Button>
             </div>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {assetOrder.map((symbol) => {
                 const item = liveAssets[symbol];
                 if (!item) return null;
