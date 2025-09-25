@@ -54,7 +54,7 @@ const formSchema = z.object({
   riskTolerance: z.enum(["low", "medium", "high"], {
     required_error: "You need to select a risk tolerance.",
   }),
-  financialGoal: z.string().min(5, "Please describe your financial goal."),
+  financialGoal: z.string().min(5, "Please describe your financial goal.").optional().or(z.literal('')),
   assets: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one asset.",
   }),
@@ -93,7 +93,9 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
       });
 
       const result = await getAutomatedSavingsGoal({
-        ...values,
+        income: values.income,
+        riskTolerance: values.riskTolerance,
+        financialGoal: values.financialGoal || 'General savings',
         assets: assetSymbols,
         language: lang,
       });
@@ -179,7 +181,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
 
         {step === 1 && (
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
               <FormField
                 control={form.control}
                 name="financialGoal"
@@ -213,7 +215,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
                 control={form.control}
                 name="riskTolerance"
                 render={({ field }) => (
-                  <FormItem className="space-y-3">
+                  <FormItem className="space-y-1">
                     <FormLabel>{autoSaveDialogDict.riskLabel}</FormLabel>
                     <FormControl>
                       <RadioGroup
@@ -250,7 +252,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
                 name="assets"
                 render={() => (
                   <FormItem>
-                    <div className="mb-4">
+                    <div className="mb-2">
                       <FormLabel>{autoSaveDialogDict.assetsLabel}</FormLabel>
                     </div>
                     {availableAssets.map((item) => {
@@ -264,7 +266,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
                           return (
                             <FormItem
                               key={item.symbol}
-                              className="flex flex-row items-start space-x-3 space-y-0"
+                              className="flex flex-row items-start space-x-3 space-y-0 mb-1"
                             >
                               <FormControl>
                                 <Checkbox
@@ -295,7 +297,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
                   </FormItem>
                 )}
               />
-              <DialogFooter>
+              <DialogFooter className="pt-4">
                 <Button type="submit" disabled={isLoading}>
                   {isLoading && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -336,3 +338,5 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
     </Dialog>
   );
 }
+
+    
