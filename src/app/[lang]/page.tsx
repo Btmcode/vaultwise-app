@@ -1,4 +1,3 @@
-
 import { Header } from "@/components/header";
 import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
 import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
