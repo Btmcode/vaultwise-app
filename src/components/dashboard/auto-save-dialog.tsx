@@ -338,5 +338,3 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
     </Dialog>
   );
 }
-
-    

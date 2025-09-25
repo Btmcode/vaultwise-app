@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-import { GoldIcon, SilverIcon, InfoIcon } from "@/components/icons";
+import { GoldIcon, SilverIcon, InfoIcon, GoldBarIcon } from "@/components/icons";
 
 export function PreciousMetalsTable() {
   const { data, loading, error, lastUpdated, refreshData } = usePreciousMetalsData();
@@ -34,10 +34,14 @@ export function PreciousMetalsTable() {
   };
   
   const getIcon = (productName: string) => {
-    if (productName.toLowerCase().includes('altın') || productName.toLowerCase().includes('ons') || productName.toLowerCase().includes('usd/kg') || productName.toLowerCase().includes('eur/kg')) {
+    const lowerProductName = productName.toLowerCase();
+    if (lowerProductName === 'has altin') {
+      return <GoldBarIcon className="h-10 w-10 flex-shrink-0" />;
+    }
+    if (lowerProductName.includes('altın') || lowerProductName.includes('ons') || lowerProductName.includes('usd/kg') || lowerProductName.includes('eur/kg')) {
         return <GoldIcon className="h-10 w-10 flex-shrink-0" />;
     }
-    if (productName.toLowerCase().includes('güm')) {
+    if (lowerProductName.includes('güm')) {
         return <SilverIcon className="h-10 w-10 flex-shrink-0" />;
     }
     return <InfoIcon className="h-10 w-10 flex-shrink-0" />;
@@ -49,7 +53,7 @@ export function PreciousMetalsTable() {
              <div className="flex justify-end items-center">
                 <Skeleton className="h-8 w-1/4" />
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, index) => (
                     <Skeleton key={index} className="h-[88px] w-full" />
                 ))}

@@ -43,28 +43,46 @@ export function GoldIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
+      <circle cx="24" cy="24" r="20" fill="url(#gold-gradient-circle)" stroke="#DAA520" strokeWidth="2" />
       <defs>
-        <linearGradient id="gold-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#FFDF00" />
+        <radialGradient id="gold-gradient-circle" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <stop offset="0%" stopColor="#FFF7E0" />
+          <stop offset="70%" stopColor="#FFD700" />
           <stop offset="100%" stopColor="#B8860B" />
-        </linearGradient>
+        </radialGradient>
       </defs>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M8 14C8 12.8954 8.89543 12 10 12H38C39.1046 12 40 12.8954 40 14V34C40 35.1046 39.1046 36 38 36H10C8.89543 36 8 35.1046 8 34V14Z"
-        fill="url(#gold-gradient)"
-      />
-      <path
-        d="M14 21H34V27H14V21Z"
-        stroke="#DAA520"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }
+
+export function GoldBarIcon(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg 
+        {...props}
+        viewBox="0 0 48 48"
+        xmlns="http://www.w3.org/2000/svg" 
+        fill="none">
+        <defs>
+            <linearGradient id="gold-bar-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFDF00" />
+                <stop offset="100%" stopColor="#B8860B" />
+            </linearGradient>
+        </defs>
+        <path 
+            d="M6 16 L10 12 L38 12 L42 16 L42 36 L38 40 L10 40 L6 36 Z" 
+            fill="url(#gold-bar-gradient)" 
+            stroke="#A07000" 
+            strokeWidth="1"
+        />
+        <path 
+            d="M10 12 L38 12 L42 16 L38 20 L10 20 L6 16 Z" 
+            fill="#FFE766"
+            opacity="0.5"
+        />
+    </svg>
+  );
+}
+
 
 export function SilverIcon(props: SVGProps<SVGSVGElement>) {
   return (
@@ -74,25 +92,14 @@ export function SilverIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
-      <defs>
-        <linearGradient id="silver-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#E0E0E0" />
-          <stop offset="100%" stopColor="#A0A0A0" />
-        </linearGradient>
+      <circle cx="24" cy="24" r="20" fill="url(#silver-gradient-circle)" stroke="#A0A0A0" strokeWidth="2"/>
+       <defs>
+        <radialGradient id="silver-gradient-circle" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
+          <stop offset="0%" stopColor="#FFFFFF" />
+          <stop offset="80%" stopColor="#DCDCDC" />
+          <stop offset="100%" stopColor="#A9A9A9" />
+        </radialGradient>
       </defs>
-      <path
-        fillRule="evenodd"
-        clipRule="evenodd"
-        d="M8 14C8 12.8954 8.89543 12 10 12H38C39.1046 12 40 12.8954 40 14V34C40 35.1046 39.1046 36 38 36H10C8.89543 36 8 35.1046 8 34V14Z"
-        fill="url(#silver-gradient)"
-      />
-      <path
-        d="M14 21H34V27H14V21Z"
-        stroke="#C0C0C0"
-        strokeWidth="1.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
     </svg>
   );
 }
@@ -173,5 +180,3 @@ export function InfoIcon(props: SVGProps<SVGSVGElement>) {
     </svg>
   );
 }
-
-    
