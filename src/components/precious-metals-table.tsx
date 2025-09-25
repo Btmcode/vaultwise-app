@@ -28,7 +28,7 @@ export function PreciousMetalsTable() {
     return new Intl.NumberFormat('tr-TR', {
       style: 'currency',
       currency: 'TRY',
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 3,
       maximumFractionDigits: 3
     }).format(price);
   };
@@ -97,19 +97,17 @@ export function PreciousMetalsTable() {
                         {getIcon(item.Ürün)}
                         <div className="flex-grow flex flex-col justify-center overflow-hidden">
                             <div className="flex items-center justify-between w-full">
-                                <p className="font-semibold text-base whitespace-nowrap truncate">{item.Ürün}</p>
+                                <p className="font-semibold text-base whitespace-nowrap">{item.Ürün}</p>
                                 <div className={cn("text-xs font-medium pl-2", getChangeColor(item.Değişim))}>
                                     {item.Değişim >= 0 ? "+" : ""}
                                     {item.Değişim.toFixed(2)}%
                                 </div>
                             </div>
-                            <div className="text-xs text-muted-foreground flex flex-wrap gap-x-3">
-                                <div className="flex-shrink-0 whitespace-nowrap">
-                                    <span className="font-medium">Alış: </span>{formatPrice(item.Alış)}
-                                </div>
-                                <div className="flex-shrink-0 whitespace-nowrap">
-                                    <span className="font-medium">Satış: </span>{formatPrice(item.Satış)}
-                                </div>
+                            <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
+                                <span className="font-medium">Alış:</span>
+                                <span className="font-mono text-right">{formatPrice(item.Alış)}</span>
+                                <span className="font-medium">Satış:</span>
+                                <span className="font-mono text-right">{formatPrice(item.Satış)}</span>
                             </div>
                         </div>
                     </div>
