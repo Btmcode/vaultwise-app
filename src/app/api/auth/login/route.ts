@@ -8,7 +8,8 @@ import type { App } from 'firebase-admin/app';
 // It ensures that the app is initialized only once.
 function getAdminApp(): App {
   if (admin.apps.length > 0) {
-    return admin.app();
+    const existingApp = admin.apps.find(app => app?.name === 'admin');
+    if(existingApp) return existingApp;
   }
 
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
@@ -28,7 +29,7 @@ function getAdminApp(): App {
         clientEmail,
         privateKey,
       }),
-    });
+    }, 'admin');
   } catch (error: any) {
     console.error('Firebase Admin SDK initialization error:', error);
     // Rethrow the original error with a more descriptive message
