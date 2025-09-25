@@ -133,14 +133,6 @@
         "description": "Portföyünüzün varlık dağılımı.",
         "percentage": "Yüzde"
     },
-    "topPerformer": {
-        "title": "En İyi Performans (24s)",
-        "description": "Son 24 saatte en iyi performans gösteren varlık."
-    },
-    "worstPerformer": {
-        "title": "En Kötü Performans (24s)",
-        "description": "Son 24 saatte en kötü performans gösteren varlık."
-    },
     "portfolioChart": {
         "title": "Portföy Değeri",
         "description": "Portföy performansınızın bir özeti.",
@@ -179,12 +171,11 @@
     },
     "livePrices": {
         "title": "Canlı Fiyatlar",
-        "description": "Mevcut varlıkların anlık fiyatları.",
-        "table": {
-            "asset": "Varlık",
-            "price": "Fiyat",
-            "change": "24s Değişim"
-        }
+        "lastUpdated": "Son Güncelleme",
+        "refresh": "Yenile",
+        "error": "Hata: Veriler yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+        "buy": "Alış",
+        "sell": "Satış"
     },
     "profilePage": {
         "title": "Profil",
@@ -267,6 +258,7 @@
         "amount": "Tutar",
         "frequency": "Aylık",
         "stopButton": "Durdur",
+        "noPlans": "Aktif otomatik tasarruf planı yok.",
         "toast": {
             "title": "Plan Durduruldu",
             "description": "Otomatik tasarruf planınız başarıyla durduruldu."
@@ -312,6 +304,19 @@
                 "title": "Çekme Başarısız",
                 "invalidInput": "Lütfen bir IBAN seçin ve sıfırdan büyük geçerli bir tutar girin."
             }
+        }
+    },
+    "aiMarketAnalysis": {
+        "title": "Yapay Zeka Piyasa Analizi",
+        "description": "Piyasa verileri hakkında anlık bir değerlendirme alın.",
+        "buttonText": "Analiz Oluştur",
+        "buttonLoadingText": "Analiz Oluşturuluyor...",
+        "errorTitle": "Hata",
+        "error": {
+            "noData": "Analiz edilecek piyasa verisi bulunamadı.",
+            "generationFailed": "Yapay zeka bir analiz üretemedi. Lütfen tekrar deneyin.",
+            "general": "Analiz oluşturulurken beklenmedik bir hata oluştu.",
+            "dataSourceError": "Veri kaynağı hatası nedeniyle analiz yapılamıyor."
         }
     }
 }

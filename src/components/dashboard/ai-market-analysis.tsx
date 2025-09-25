@@ -8,7 +8,7 @@ import { Loader2, Wand2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
 import { useLivePrices } from '@/hooks/useLivePrices';
 
-export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
+export function AIMarketAnalysis({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   const { liveAssets, lastUpdated, error: dataError } = useLivePrices();
   const [analysis, setAnalysis] = useState<string>('');
   const [isPending, startTransition] = useTransition();
@@ -20,7 +20,7 @@ export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
       setAnalysisError(null);
       const data = Object.values(liveAssets);
       if (!data || data.length === 0) {
-        setAnalysisError("Analiz edilecek piyasa verisi bulunamadı.");
+        setAnalysisError(dict.noData);
         return;
       }
 
@@ -39,11 +39,11 @@ export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
         if (result.analysis) {
           setAnalysis(result.analysis);
         } else {
-          setAnalysisError("Yapay zeka bir analiz üretemedi. Lütfen tekrar deneyin.");
+          setAnalysisError(dict.generationFailed);
         }
       } catch (error) {
         console.error('AI analysis error:', error);
-        setAnalysisError("Analiz oluşturulurken beklenmedik bir hata oluştu.");
+        setAnalysisError(dict.general);
       }
     });
   };
@@ -51,8 +51,8 @@ export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
   return (
     <Card className="h-full flex flex-col">
       <CardHeader>
-        <CardTitle>Yapay Zeka Piyasa Analizi</CardTitle>
-        <CardDescription>Piyasa verileri hakkında anlık bir değerlendirme alın.</CardDescription>
+        <CardTitle>{dict.title}</CardTitle>
+        <CardDescription>{dict.description}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col flex-grow justify-center">
         {analysis ? (
@@ -63,7 +63,7 @@ export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
           <div className="text-center">
             {analysisError && (
                  <Alert variant="destructive" className="mb-4">
-                    <AlertTitle>Hata</AlertTitle>
+                    <AlertTitle>{dict.errorTitle}</AlertTitle>
                     <AlertDescription>{analysisError}</AlertDescription>
                  </Alert>
             )}
@@ -74,16 +74,16 @@ export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
               {isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Analiz Oluşturuluyor...
+                  {dict.buttonLoadingText}
                 </>
               ) : (
                 <>
                   <Wand2 className="mr-2 h-4 w-4" />
-                  Analiz Oluştur
+                  {dict.buttonText}
                 </>
               )}
             </Button>
-            {dataError && <p className="text-xs text-red-500 mt-2">Veri kaynağı hatası nedeniyle analiz yapılamıyor.</p>}
+            {dataError && <p className="text-xs text-red-500 mt-2">{dict.dataSourceError}</p>}
           </div>
         )}
       </CardContent>

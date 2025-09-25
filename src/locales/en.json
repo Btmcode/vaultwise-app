@@ -133,14 +133,6 @@
         "description": "Your portfolio's asset allocation.",
         "percentage": "Percentage"
     },
-    "topPerformer": {
-        "title": "Top Performer (24h)",
-        "description": "The best performing asset in the last 24 hours."
-    },
-    "worstPerformer": {
-        "title": "Worst Performer (24h)",
-        "description": "The worst performing asset in the last 24 hours."
-    },
     "portfolioChart": {
         "title": "Portfolio Value",
         "description": "A summary of your portfolio's performance.",
@@ -179,12 +171,11 @@
     },
     "livePrices": {
         "title": "Live Prices",
-        "description": "Real-time prices of available assets.",
-        "table": {
-            "asset": "Asset",
-            "price": "Price",
-            "change": "24h Change"
-        }
+        "lastUpdated": "Last Updated",
+        "refresh": "Refresh",
+        "error": "Error: Failed to load data. Please try again later.",
+        "buy": "Buy",
+        "sell": "Sell"
     },
     "profilePage": {
         "title": "Profile",
@@ -267,6 +258,7 @@
         "amount": "Amount",
         "frequency": "Monthly",
         "stopButton": "Stop",
+        "noPlans": "No active auto-save plans.",
         "toast": {
             "title": "Plan Stopped",
             "description": "Your auto-save plan has been successfully stopped."
@@ -312,6 +304,19 @@
                 "title": "Withdrawal Failed",
                 "invalidInput": "Please select an IBAN and enter a valid amount greater than zero."
             }
+        }
+    },
+    "aiMarketAnalysis": {
+        "title": "AI Market Analysis",
+        "description": "Get an instant assessment of the market data.",
+        "buttonText": "Generate Analysis",
+        "buttonLoadingText": "Generating Analysis...",
+        "errorTitle": "Error",
+        "error": {
+            "noData": "No market data available to analyze.",
+            "generationFailed": "The AI could not generate an analysis. Please try again.",
+            "general": "An unexpected error occurred while generating the analysis.",
+            "dataSourceError": "Analysis cannot be performed due to a data source error."
         }
     }
 }

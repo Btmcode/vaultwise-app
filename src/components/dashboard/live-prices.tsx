@@ -8,18 +8,18 @@ import { cn } from '@/lib/utils';
 import { GoldIcon, SilverIcon, InfoIcon, GoldBarIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
 
 const assetOrder = [
-  "XAU",       // Gold
-  "XAU_ONS",   // Gold Ounce
-  "XAU_USD_KG",// Gold USD/KG
-  "XAU_EUR_KG",// Gold EUR/KG
-  "XAG_ONS",   // Silver Ounce
-  "XAG_TL",    // Silver TL
-  "XAG_USD",   // Silver USD
-  "XAG_EUR",   // Silver EUR
-  "BTC",       // Bitcoin
-  "PAXG",      // PAX Gold
-  "XAUT",      // Tether Gold
-  "USD_TRY"    // USD/TRY
+  "XAU",
+  "XAU_ONS",
+  "XAU_USD_KG",
+  "XAU_EUR_KG",
+  "XAG_ONS",
+  "XAG_TL",
+  "XAG_USD",
+  "XAG_EUR",
+  "BTC",
+  "PAXG",
+  "XAUT",
+  "USD_TRY"
 ];
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
@@ -38,8 +38,10 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     USD_TRY: UsdTryIcon,
 };
 
-export function LivePrices({ assetNames }: { assetNames: Record<string, string> }) {
+export function LivePrices({ dict }: { dict: any }) {
   const { liveAssets, loading, error, lastUpdated, refreshData } = useLivePrices();
+  const assetNames = dict.assetNames;
+  const livePricesDict = dict.livePrices;
 
   const getChangeBgColor = (change: number) => {
     if (change > 0) return 'border-green-500 bg-green-500/20';
@@ -84,7 +86,7 @@ export function LivePrices({ assetNames }: { assetNames: Record<string, string> 
              <div className="flex justify-end items-center">
                 <Skeleton className="h-8 w-1/4" />
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, index) => (
                     <Skeleton key={index} className="h-[88px] w-full" />
                 ))}
@@ -99,11 +101,11 @@ export function LivePrices({ assetNames }: { assetNames: Record<string, string> 
             <div className="flex justify-end items-center">
                  <Button size="sm" variant="outline" onClick={refreshData} disabled={loading}>
                     <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                    Yenile
+                    {livePricesDict.refresh}
                 </Button>
             </div>
             <div className="text-red-500 p-4 rounded-md bg-red-50 border border-red-200">
-                Hata: Veriler yüklenemedi. Lütfen daha sonra tekrar deneyin. ({error.message})
+                {livePricesDict.error}: {error.message}
             </div>
         </div>
     );
@@ -114,15 +116,15 @@ export function LivePrices({ assetNames }: { assetNames: Record<string, string> 
         <div className="flex justify-end items-center">
             <div className="flex items-center gap-4">
               <div className="text-sm text-muted-foreground">
-                Son Güncelleme: {lastUpdated}
+                {livePricesDict.lastUpdated}: {lastUpdated}
               </div>
               <Button size="sm" variant="outline" onClick={refreshData} disabled={loading}>
                 <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-                Yenile
+                {livePricesDict.refresh}
               </Button>
             </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
             {assetOrder.map((symbol) => {
                 const item = liveAssets[symbol];
                 if (!item) return null;
@@ -147,9 +149,9 @@ export function LivePrices({ assetNames }: { assetNames: Record<string, string> 
                                 <p className="text-sm text-muted-foreground">{formatPrice(item.price, symbol)}</p>
                             ) : (
                                 <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
-                                    <span className="font-medium whitespace-nowrap">Alış:</span>
+                                    <span className="font-medium whitespace-nowrap">{livePricesDict.buy}:</span>
                                     <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.buyPrice, symbol)}</span>
-                                    <span className="font-medium whitespace-nowrap">Satış:</span>
+                                    <span className="font-medium whitespace-nowrap">{livePricesDict.sell}:</span>
                                     <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.sellPrice, symbol)}</span>
                                 </div>
                             )}

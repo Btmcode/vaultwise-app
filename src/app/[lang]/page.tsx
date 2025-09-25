@@ -21,7 +21,7 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
       <Header lang={params.lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="w-full">
-            <LivePrices assetNames={dict.assetNames} />
+            <LivePrices dict={dict} />
         </div>
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
           <Suspense fallback={<Skeleton className="h-48" />}>
@@ -32,7 +32,7 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
           </Suspense>
            <div className="xl:col-span-2">
              <Suspense fallback={<Skeleton className="h-48" />}>
-                <AIMarketAnalysis lang={params.lang} />
+                <AIMarketAnalysis lang={params.lang} dict={dict.aiMarketAnalysis} />
              </Suspense>
            </div>
         </div>

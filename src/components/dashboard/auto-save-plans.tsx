@@ -20,7 +20,16 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG: SilverIcon,
     BTC: BtcIcon,
     PAXG: PaxgIcon,
-    XAUT: XautIcon
+    XAUT: XautIcon,
+    // Add other symbols if they can be part of auto-save
+    XAU_ONS: GoldIcon,
+    XAU_USD_KG: GoldIcon,
+    XAU_EUR_KG: GoldIcon,
+    XAG_ONS: SilverIcon,
+    XAG_TL: SilverIcon,
+    XAG_USD: SilverIcon,
+    XAG_EUR: SilverIcon,
+    USD_TRY: GoldIcon, // Placeholder, decide on a real icon
 };
 
 const formatCurrency = (value: number) => {
@@ -65,7 +74,7 @@ export function AutoSavePlans({ dict }: { dict: any }) {
         </CardHeader>
         <CardContent>
             <div className="text-center text-muted-foreground py-4">
-                No active auto-save plans.
+                {autoSavePlansDict.noPlans}
             </div>
         </CardContent>
       </>
