@@ -4,7 +4,6 @@ import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
 import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
 import { AssetList } from "@/components/dashboard/asset-list";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
-import { LivePrices } from "@/components/dashboard/live-prices";
 import { Suspense } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -36,9 +35,6 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
                 <AIMarketAnalysis lang={params.lang} />
              </Suspense>
            </div>
-        </div>
-        <div className="w-full">
-          <LivePrices dict={dict} assetNames={dict.assetNames} />
         </div>
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
           <Card className="xl:col-span-2">
