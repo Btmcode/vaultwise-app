@@ -24,17 +24,27 @@ export async function GET() {
   const nadirDovizApiUrl = process.env.PRICE_API_URL;
   const coinmarketcapApiKey = process.env.COINMARKETCAP_API_KEY;
 
-  if (!nadirDovizApiUrl) {
-      console.error('Nadir Doviz API URL is not configured.');
-      return NextResponse.json({ error: 'Price API URL is not configured.' }, { status: 500 });
-  }
-
-  const prices: Record<string, { buyPrice?: number; sellPrice?: number; price?: number; change24h: number }> = {};
+  // Start with fallback data. Fetched data will be merged on top of this.
+  const prices: Record<string, { buyPrice?: number; sellPrice?: number; price?: number; change24h: number }> = {
+      "XAU": { "buyPrice": 2450.12, "sellPrice": 2445.50, "change24h": -0.82 },
+      "XAG": { "buyPrice": 31.55, "sellPrice": 31.40, "change24h": -1.2 },
+      "BTC": { "price": 68123.45, "change24h": 2.5 },
+      "PAXG": { "price": 2319.99, "change24h": -0.7 },
+      "XAUT": { "price": 2321.1, "change24h": -0.75 },
+      "XAU_ONS": { "buyPrice": 2329.43, "sellPrice": 2328.00, "change24h": -0.78 },
+      "XAU_USD_KG": { "buyPrice": 74932.8, "sellPrice": 74900.00, "change24h": -0.78 },
+      "XAU_EUR_KG": { "buyPrice": 69821.5, "sellPrice": 69800.00, "change24h": -0.78 },
+      "XAG_ONS": { "buyPrice": 29.58, "sellPrice": 29.50, "change24h": -1.5 },
+      "XAG_TL": { "buyPrice": 31.0, "sellPrice": 30.90, "change24h": -1.5 },
+      "XAG_USD": { "buyPrice": 29.58, "sellPrice": 29.50, "change24h": -1.5 },
+      "XAG_EUR": { "buyPrice": 27.56, "sellPrice": 27.50, "change24h": -1.5 },
+      "USD_TRY": { "buyPrice": 32.85, "sellPrice": 32.80, "change24h": 0.1 },
+  };
 
   try {
     // Fetch data from both APIs concurrently
     const [nadirdovizResponse, coinmarketcapResponse] = await Promise.allSettled([
-      axios.post(nadirDovizApiUrl, {}), // Corrected: Added empty object for the request body
+      nadirDovizApiUrl ? axios.post(nadirDovizApiUrl, {}) : Promise.resolve(null),
       coinmarketcapApiKey 
         ? axios.get('https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?symbol=BTC,PAXG,XAUT', {
             headers: { 'X-CMC_PRO_API_KEY': coinmarketcapApiKey },
@@ -42,8 +52,8 @@ export async function GET() {
         : Promise.resolve(null)
     ]);
 
-    // Process Nadir Doviz data
-    if (nadirdovizResponse.status === 'fulfilled' && nadirdovizResponse.value.data) {
+    // Process Nadir Doviz data if successful
+    if (nadirdovizResponse.status === 'fulfilled' && nadirdovizResponse.value?.data) {
       const nadirdovizData = nadirdovizResponse.value.data;
       if (Array.isArray(nadirdovizData)) {
         nadirdovizData.forEach((item: any) => {
@@ -51,7 +61,6 @@ export async function GET() {
           if (relevantCodes.has(code)) {
             const symbol = codeToSymbolMap[code];
             try {
-              // Ensure values are strings before calling .replace()
               const buyPriceStr = String(item.Alis).replace(/\./g, '').replace(',', '.');
               const sellPriceStr = String(item.Satis).replace(/\./g, '').replace(',', '.');
               const change24hStr = String(item.Yuzde).replace(',', '.');
@@ -69,11 +78,11 @@ export async function GET() {
           }
         });
       }
-    } else {
-        console.error('Failed to fetch or process data from Nadir Doviz API.');
+    } else if (nadirdovizResponse.status === 'rejected') {
+        console.error('Failed to fetch or process data from Nadir Doviz API:', nadirdovizResponse.reason);
     }
 
-    // Process CoinMarketCap data
+    // Process CoinMarketCap data if successful
     if (coinmarketcapResponse.status === 'fulfilled' && coinmarketcapResponse.value?.data?.data) {
         const cryptoData = coinmarketcapResponse.value.data.data;
         ['BTC', 'PAXG', 'XAUT'].forEach(symbol => {
@@ -82,7 +91,7 @@ export async function GET() {
                 const price = data.quote.USD.price;
                 const change24h = data.quote.USD.percent_change_24h;
 
-                if (price && change24h !== undefined) { // change24h can be 0
+                if (price && change24h !== undefined) {
                     prices[symbol] = {
                         price: parseFloat(price),
                         change24h: parseFloat(change24h),
@@ -90,45 +99,16 @@ export async function GET() {
                 }
             }
         });
-    } else if (coinmarketcapApiKey) {
-        console.error('Failed to fetch or process data from CoinMarketCap API.');
+    } else if (coinmarketcapResponse.status === 'rejected') {
+        console.error('Failed to fetch or process data from CoinMarketCap API:', coinmarketcapResponse.reason);
     }
     
-    // Add fallback data for assets not available in the APIs (if they weren't fetched)
-    if (!prices['BTC']) {
-      prices['BTC'] = { price: 68123.45, change24h: 2.5 };
-    }
-    if (!prices['PAXG']) {
-        prices['PAXG'] = { price: 2319.99, change24h: -0.7 };
-    }
-    if (!prices['XAUT']) {
-        prices['XAUT'] = { price: 2321.1, change24h: -0.75 };
-    }
-
-    if (Object.keys(prices).length === 0) {
-        throw new Error("All API sources failed.");
-    }
-
+    // Always return a successful response with the best available data
     return NextResponse.json(prices);
 
   } catch (error: any) {
-    console.error('API request or data processing error:', error.message);
-    // Return fallback data in case of any error
-    const fallbackPrices = {
-        "XAU": { "buyPrice": 2450.12, "sellPrice": 2445.50, "change24h": -0.82 },
-        "XAG": { "buyPrice": 31.55, "sellPrice": 31.40, "change24h": -1.2 },
-        "BTC": { "price": 68123.45, "change24h": 2.5 },
-        "PAXG": { "price": 2319.99, "change24h": -0.7 },
-        "XAUT": { "price": 2321.1, "change24h": -0.75 },
-        "XAU_ONS": { "buyPrice": 2329.43, "sellPrice": 2328.00, "change24h": -0.78 },
-        "XAU_USD_KG": { "buyPrice": 74932.8, "sellPrice": 74900.00, "change24h": -0.78 },
-        "XAU_EUR_KG": { "buyPrice": 69821.5, "sellPrice": 69800.00, "change24h": -0.78 },
-        "XAG_ONS": { "buyPrice": 29.58, "sellPrice": 29.50, "change24h": -1.5 },
-        "XAG_TL": { "buyPrice": 31.0, "sellPrice": 30.90, "change24h": -1.5 },
-        "XAG_USD": { "buyPrice": 29.58, "sellPrice": 29.50, "change24h": -1.5 },
-        "XAG_EUR": { "buyPrice": 27.56, "sellPrice": 27.50, "change24h": -1.5 },
-        "USD_TRY": { "buyPrice": 32.85, "sellPrice": 32.80, "change24h": 0.1 },
-    };
-    return NextResponse.json(fallbackPrices);
+    console.error('An unexpected error occurred in the prices API route:', error.message);
+    // Even in case of a totally unexpected error, return the fallback data
+    return NextResponse.json(prices);
   }
 }
