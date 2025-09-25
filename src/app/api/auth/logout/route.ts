@@ -11,8 +11,11 @@ export async function POST() {
   response.cookies.set({
     name: 'firebase-session',
     value: '',
-    expires: new Date(0), // Set expiry to a date in the past
-    path: '/', // Ensure the path matches the one used to set it
+    expires: new Date(0),
+    maxAge: 0,
+    httpOnly: true,
+    secure: true,
+    path: '/',
   });
 
   return response;

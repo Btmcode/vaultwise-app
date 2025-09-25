@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,7 +26,9 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const { toast } = useToast();
-  const otherLang = lang === 'tr' ? 'en' : 'tr';
+  const params = useParams();
+  const currentLang = params.lang || 'tr';
+  const otherLang = currentLang === 'tr' ? 'en' : 'tr';
   
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
@@ -51,7 +53,7 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
       // Using window.location.href ensures a full page reload, clearing any component state
       // and forcing the middleware to re-evaluate the auth status.
       setTimeout(() => {
-        window.location.href = `/${lang}/login`;
+        window.location.href = `/${currentLang}/login`;
       }, 500);
 
     } catch (error) {
@@ -66,7 +68,7 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
 
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
-      <Link href={`/${lang}`} className="flex items-center gap-2 font-semibold" prefetch={false}>
+      <Link href={`/${currentLang}`} className="flex items-center gap-2 font-semibold" prefetch={false}>
         <VaultWiseLogo className="h-8 w-8 text-primary" />
         <span className="text-xl font-bold">VaultWise</span>
       </Link>
@@ -105,26 +107,26 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
               <DropdownMenuLabel>{dict.myAccount}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={`/${lang}/deposit`} className="cursor-pointer">
+                <Link href={`/${currentLang}/deposit`} className="cursor-pointer">
                   <Landmark className="mr-2 h-4 w-4" />
                   <span>{dict.deposit}</span>
                 </Link>
               </DropdownMenuItem>
                <DropdownMenuItem asChild>
-                <Link href={`/${lang}/withdraw`} className="cursor-pointer">
+                <Link href={`/${currentLang}/withdraw`} className="cursor-pointer">
                   <ArrowLeftRight className="mr-2 h-4 w-4" />
                   <span>{dict.withdraw}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={`/${lang}/profile`} className="cursor-pointer">
+                <Link href={`/${currentLang}/profile`} className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
                   <span>{dict.profile}</span>
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
-                <Link href={`/${lang}/settings`} className="cursor-pointer">
+                <Link href={`/${currentLang}/settings`} className="cursor-pointer">
                   <Settings className="mr-2 h-4 w-4" />
                   <span>{dict.settings}</span>
                 </Link>
