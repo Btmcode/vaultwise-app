@@ -9,54 +9,68 @@ type LiveAssetData = Omit<Asset, 'name'>;
 interface LivePricesContextType {
     liveAssets: Record<string, LiveAssetData>;
     loading: boolean;
-    error: Error | null;
+    error: string | null;
     lastUpdated: string;
     refreshData: () => void;
 }
 
-// 1. Create a context with a default undefined value
 const LivePricesContext = createContext<LivePricesContextType | undefined>(undefined);
 
-// 2. Create a provider component
-export function LivePricesProvider({ children, refreshInterval = 60000 }: { children: ReactNode, refreshInterval?: number }) {
+interface ProviderProps {
+    children: ReactNode;
+    metalsInterval?: number;
+    cryptoInterval?: number;
+}
+
+export function LivePricesProvider({ children, metalsInterval = 20000, cryptoInterval = 90000 }: ProviderProps) {
     const [liveAssets, setLiveAssets] = useState<Record<string, LiveAssetData>>({});
     const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<Error | null>(null);
+    const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState<string>('');
 
-    const fetchData = useCallback(async (isInitialLoad = false) => {
-        if (isInitialLoad) {
-            setLoading(true);
-        }
-        
+    const fetchData = useCallback(async (url: string, isInitialLoad: boolean) => {
+        if (isInitialLoad) setLoading(true);
         try {
-            const response = await axios.get('/api/prices');
+            const response = await axios.get(url);
             if (response.data) {
-                setLiveAssets(response.data);
+                setLiveAssets(prevAssets => ({ ...prevAssets, ...response.data }));
                 setLastUpdated(new Date().toLocaleString());
+                setError(null); // Clear error on successful fetch
             }
-            setError(null);
-        } catch (e) {
-            console.error('Data fetching error:', e);
-            setError(e as Error);
+        } catch (e: any) {
+            console.error(`Data fetching error from ${url}:`, e);
+            setError(`Failed to load data from ${url}. ${e.message}`);
         } finally {
-            if (isInitialLoad) {
-                setLoading(false);
-            }
+            if (isInitialLoad) setLoading(false);
         }
     }, []);
 
+    const fetchAllData = useCallback((isInitial: boolean) => {
+        fetchData('/api/prices/metals', isInitial);
+        fetchData('/api/prices/crypto', isInitial);
+    }, [fetchData]);
+
+    // Initial fetch for both
     useEffect(() => {
-        // Fetch immediately on mount
-        fetchData(true);
-        // Then set up the interval
-        const intervalId = setInterval(() => fetchData(false), refreshInterval);
-        // Clear interval on component unmount
+        fetchAllData(true);
+    }, [fetchAllData]);
+
+    // Interval for metals
+    useEffect(() => {
+        const intervalId = setInterval(() => fetchData('/api/prices/metals', false), metalsInterval);
         return () => clearInterval(intervalId);
-    }, [fetchData, refreshInterval]);
+    }, [fetchData, metalsInterval]);
+
+    // Interval for crypto
+    useEffect(() => {
+        const intervalId = setInterval(() => fetchData('/api/prices/crypto', false), cryptoInterval);
+        return () => clearInterval(intervalId);
+    }, [fetchData, cryptoInterval]);
 
     const refreshData = () => {
-        fetchData(false);
+        // Reset loading state to give user feedback
+        setLoading(true);
+        fetchAllData(true);
     };
 
     const value = { liveAssets, loading, error, lastUpdated, refreshData };
@@ -68,7 +82,6 @@ export function LivePricesProvider({ children, refreshInterval = 60000 }: { chil
     );
 }
 
-// 3. Create a custom hook to use the context
 export function useLivePrices() {
     const context = useContext(LivePricesContext);
     if (context === undefined) {
