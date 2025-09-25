@@ -2,7 +2,6 @@
 'use client';
 
 import { usePreciousMetalsData } from '@/hooks/usePreciousMetalsData';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -11,12 +10,6 @@ import { GoldIcon, SilverIcon, InfoIcon, GoldBarIcon } from "@/components/icons"
 
 export function PreciousMetalsTable() {
   const { data, loading, error, lastUpdated, refreshData } = usePreciousMetalsData();
-
-  const getChangeColor = (change: number) => {
-    if (change > 0) return 'text-green-500';
-    if (change < 0) return 'text-red-500';
-    return 'text-gray-500';
-  };
 
   const getChangeBgColor = (change: number) => {
     if (change > 0) return 'border-green-500 bg-green-500/20';
@@ -36,13 +29,13 @@ export function PreciousMetalsTable() {
   const getIcon = (productName: string) => {
     const lowerProductName = productName.toLowerCase();
     if (lowerProductName === 'has altin') {
-      return <GoldBarIcon className="h-10 w-10 flex-shrink-0" />;
+      return <GoldBarIcon className="h-12 w-12 flex-shrink-0" />;
+    }
+    if (lowerProductName.includes('güm')) { // Check for silver first
+        return <SilverIcon className="h-10 w-10 flex-shrink-0" />;
     }
     if (lowerProductName.includes('altın') || lowerProductName.includes('ons') || lowerProductName.includes('usd/kg') || lowerProductName.includes('eur/kg')) {
         return <GoldIcon className="h-10 w-10 flex-shrink-0" />;
-    }
-    if (lowerProductName.includes('güm')) {
-        return <SilverIcon className="h-10 w-10 flex-shrink-0" />;
     }
     return <InfoIcon className="h-10 w-10 flex-shrink-0" />;
   }
@@ -102,16 +95,16 @@ export function PreciousMetalsTable() {
                         <div className="flex-grow flex flex-col justify-center overflow-hidden">
                             <div className="flex items-center justify-between w-full">
                                 <p className="font-semibold text-base whitespace-nowrap">{item.Ürün}</p>
-                                <div className={cn("text-xs font-medium pl-2", getChangeColor(item.Değişim))}>
+                                <div className={cn("text-xs font-medium pl-2 whitespace-nowrap", item.Değişim > 0 ? "text-green-500" : "text-red-500")}>
                                     {item.Değişim >= 0 ? "+" : ""}
                                     {item.Değişim.toFixed(2)}%
                                 </div>
                             </div>
                             <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
-                                <span className="font-medium">Alış:</span>
-                                <span className="font-mono text-right">{formatPrice(item.Alış)}</span>
-                                <span className="font-medium">Satış:</span>
-                                <span className="font-mono text-right">{formatPrice(item.Satış)}</span>
+                                <span className="font-medium whitespace-nowrap">Alış:</span>
+                                <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.Alış)}</span>
+                                <span className="font-medium whitespace-nowrap">Satış:</span>
+                                <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.Satış)}</span>
                             </div>
                         </div>
                     </div>
