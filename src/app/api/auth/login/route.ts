@@ -12,6 +12,7 @@ function getAdminApp(): App {
     if(existingApp) return existingApp;
   }
 
+  // The private key must have its newlines properly formatted.
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
   const projectId = process.env.FIREBASE_PROJECT_ID;
@@ -31,8 +32,8 @@ function getAdminApp(): App {
       }),
     }, 'admin');
   } catch (error: any) {
-    console.error('Firebase Admin SDK initialization error:', error);
-    // Rethrow the original error with a more descriptive message
+    console.error('Firebase Admin SDK initialization error:', error.message);
+    // Rethrow a more specific error to be caught later
     throw new Error(
       'Firebase Admin SDK could not be initialized. ' + error.message
     );
