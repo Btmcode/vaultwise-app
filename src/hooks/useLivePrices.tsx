@@ -29,15 +29,15 @@ export function LivePricesProvider({ children }: ProviderProps) {
         try {
             const response = await axios.get(url);
             if (response.data && Object.keys(response.data).length > 0) {
+                 // On success, clear any previous error and update assets
+                setError(null);
                 setLiveAssets(prevAssets => ({ ...prevAssets, ...response.data }));
-                setError(null); 
             } else {
                  throw new Error(`Received empty data from ${url}`);
             }
         } catch (e: any) {
-            console.error(`Data fetching error from ${url}:`, e);
-            setError(`Failed to load data. Please try again. (${e.message})`);
-            // Re-throw to be caught by Promise.allSettled
+            console.error(`Data fetching error from ${url}:`, e.message);
+            // Re-throw to be caught by Promise.allSettled and handled there
             throw e;
         }
     }, []);
@@ -45,6 +45,9 @@ export function LivePricesProvider({ children }: ProviderProps) {
     const fetchAllData = useCallback(async (isInitial: boolean) => {
         if (isInitial) {
             setLoading(true);
+        } else {
+            // For manual refresh, clear old errors
+            setError(null);
         }
         
         const results = await Promise.allSettled([
@@ -52,11 +55,16 @@ export function LivePricesProvider({ children }: ProviderProps) {
             fetchData('/api/prices/crypto'),
         ]);
 
-        // Check if at least one API call was successful
         const isAnySuccess = results.some(res => res.status === 'fulfilled');
+        const allFailed = results.every(res => res.status === 'rejected');
 
         if(isAnySuccess){
             setLastUpdated(new Date().toLocaleString());
+        }
+
+        if (allFailed) {
+            const firstError = results[0] as PromiseRejectedResult;
+            setError(`Failed to load all price data. Please try again. (${firstError.reason?.message})`);
         }
 
         if (isInitial) {
@@ -69,11 +77,10 @@ export function LivePricesProvider({ children }: ProviderProps) {
         fetchAllData(true);
     }, [fetchAllData]);
 
-
-    const refreshData = () => {
+    const refreshData = useCallback(() => {
         setLoading(true);
         fetchAllData(false).finally(() => setLoading(false));
-    };
+    }, [fetchAllData]);
 
     const value = { liveAssets, loading, error, lastUpdated, refreshData };
 

@@ -11,15 +11,15 @@ const codeToSymbolMap: Record<string, string> = {
 
 export async function GET() {
   const coinmarketcapApiKey = process.env.COINMARKETCAP_API_KEY;
+  
+  const fallbackPrices = {
+      "BTC": { "price": 68123.45, "change24h": 2.5 },
+      "PAXG": { "price": 2319.99, "change24h": -0.7 },
+      "XAUT": { "price": 2321.1, "change24h": -0.75 },
+  };
 
   if (!coinmarketcapApiKey) {
     console.warn('CoinMarketCap API key not found. Returning fallback crypto data.');
-    // Return fallback data if API key is missing
-    const fallbackPrices = {
-        "BTC": { "price": 68123.45, "change24h": 2.5 },
-        "PAXG": { "price": 2319.99, "change24h": -0.7 },
-        "XAUT": { "price": 2321.1, "change24h": -0.75 },
-    };
     return NextResponse.json(fallbackPrices);
   }
 
@@ -47,10 +47,11 @@ export async function GET() {
             }
         });
     }
-    return NextResponse.json(prices);
+    // If we fetched some prices, merge them with fallback for resilience
+    return NextResponse.json({ ...fallbackPrices, ...prices });
   } catch (error: any) {
-    console.error('An unexpected error occurred in the crypto prices API route:', error.message);
-    // In case of any error, return an empty object or handle as needed
-    return NextResponse.json({}, { status: 500, statusText: error.message });
+    console.error('Crypto prices API route error:', error.message);
+    // In case of any error, return the fallback data to prevent app crash
+    return NextResponse.json(fallbackPrices);
   }
 }
