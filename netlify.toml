@@ -1,3 +1,15 @@
 [build]
   command = "npm run build"
   publish = ".next"
+
+# Next.js Image Optimization
+# This allows using next/image with Netlify's image optimization service.
+[[redirects]]
+  from = "/_next/image*"
+  to = "/.netlify/images"
+  status = 200
+
+[[headers]]
+  for = "/_next/static/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
