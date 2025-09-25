@@ -28,6 +28,11 @@ export function usePreciousMetalsData(refreshInterval = 300000) { // 5 dakika
         setLoading(true);
         setError(null);
         try {
+            // Check if db is properly initialized. If not, Firebase config is likely missing.
+            if (!db || typeof db.INTERNAL === 'undefined') {
+                throw new Error("Firestore is not initialized. Check your Firebase config.");
+            }
+
             // 1. Check Firestore cache first
             const latestDocRef = doc(db, 'precious_metals', 'latest');
             const latestDoc = await getDoc(latestDocRef);
