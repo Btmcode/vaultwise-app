@@ -11,6 +11,12 @@ import {
   type FeedbackAnalysisInput,
   type FeedbackAnalysisOutput,
 } from "@/ai/flows/feedback-analysis";
+import {
+  getMarketAnalysis as getMarketAnalysisFlow,
+  type MarketAnalysisInput,
+  type MarketAnalysisOutput,
+} from "@/ai/flows/market-analysis";
+
 
 export async function getAutomatedSavingsGoal(
   input: AutomatedSavingsGoalInput
@@ -25,5 +31,12 @@ export async function analyzeFeedback(
 ): Promise<FeedbackAnalysisOutput> {
   // In a real app, you would add user authentication checks here.
   const analysis = await analyzeFeedbackFlow(input);
+  return analysis;
+}
+
+export async function getMarketAnalysis(
+  input: MarketAnalysisInput
+): Promise<MarketAnalysisOutput> {
+  const analysis = await getMarketAnalysisFlow(input);
   return analysis;
 }
