@@ -1,10 +1,27 @@
-"use client"
-import * as React from "react"
-import { assets as initialAssetsData } from "@/lib/data";
-import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon, InfoIcon } from "@/components/icons";
-import type { Asset, AssetSymbol } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
+
+'use client';
+import { useLivePrices } from '@/hooks/useLivePrices';
+import { Button } from '@/components/ui/button';
+import { RefreshCw } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { cn } from '@/lib/utils';
+import { GoldIcon, SilverIcon, InfoIcon, GoldBarIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
+
+const assetOrder = [
+  "XAU",       // Gold
+  "XAU_ONS",   // Gold Ounce
+  "XAU_USD_KG",// Gold USD/KG
+  "XAU_EUR_KG",// Gold EUR/KG
+  "XAG",       // Silver
+  "XAG_ONS",   // Silver Ounce
+  "XAG_TL",    // Silver TL
+  "XAG_USD",   // Silver USD
+  "XAG_EUR",   // Silver EUR
+  "BTC",       // Bitcoin
+  "PAXG",      // PAX Gold
+  "XAUT",      // Tether Gold
+  "USD_TRY"    // USD/TRY
+];
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     BTC: BtcIcon,
@@ -13,8 +30,8 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     PAXG: PaxgIcon,
     XAUT: XautIcon,
     XAU_ONS: GoldIcon,
-    XAU_USD_KG: GoldIcon,
-    XAU_EUR_KG: GoldIcon,
+    XAU_USD_KG: GoldBarIcon,
+    XAU_EUR_KG: GoldBarIcon,
     XAG_ONS: SilverIcon,
     XAG_TL: SilverIcon,
     XAG_USD: SilverIcon,
@@ -22,32 +39,17 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     USD_TRY: UsdTryIcon,
 };
 
-type LiveAssetData = Omit<Asset, 'name'>;
-type PriceDirection = 'up' | 'down' | 'neutral';
+export function LivePrices({ assetNames }: { assetNames: Record<string, string> }) {
+  const { liveAssets, loading, error, lastUpdated, refreshData } = useLivePrices();
 
-const assetOrder: string[] = [
-  "XAU",
-  "XAU_ONS",
-  "XAU_USD_KG",
-  "XAU_EUR_KG",
-  "XAG",
-  "XAG_ONS",
-  "XAG_TL",
-  "XAG_USD",
-  "XAG_EUR",
-  "BTC",
-  "PAXG",
-  "XAUT",
-  "USD_TRY",
-];
+  const getChangeBgColor = (change: number) => {
+    if (change > 0) return 'border-green-500 bg-green-500/20';
+    if (change < 0) return 'border-red-500 bg-red-500/20';
+    return 'border-border';
+  }
 
-export function LivePrices({ assetNames }: { assetNames: any }) {
-  const [liveAssets, setLiveAssets] = React.useState<Record<string, LiveAssetData>>({});
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [priceDirections, setPriceDirections] = React.useState<Record<string, PriceDirection>>({});
-
-  const formatCurrency = React.useCallback((value: number | undefined, symbol: string) => {
-    if (value === undefined || isNaN(value)) return "...";
+ const formatPrice = (price: number | undefined, symbol: string) => {
+    if (price === undefined || isNaN(price)) return "...";
 
     let currency = 'TRY';
     let locale = 'tr-TR';
@@ -70,134 +72,93 @@ export function LivePrices({ assetNames }: { assetNames: any }) {
       currency: currency,
       maximumFractionDigits: symbol === 'USD_TRY' ? 4 : 2,
       minimumFractionDigits: 2,
-    }).format(value);
-  }, []);
-
-  const fetchPrices = React.useCallback(async () => {
-    try {
-      const response = await fetch('/api/prices');
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
-      const newPrices: Record<string, any> = await response.json();
-      
-      setLiveAssets(prevAssets => {
-        const updatedAssets: Record<string, LiveAssetData> = {};
-        const newDirections: Record<string, PriceDirection> = {};
-        
-        for (const symbol of assetOrder) {
-          const initialAsset = initialAssetsData[symbol as AssetSymbol];
-          const livePriceData = newPrices[symbol];
-
-          if (initialAsset && livePriceData) {
-            const currentAsset = prevAssets[symbol];
-            const newPrice = livePriceData.price ?? livePriceData.buyPrice;
-            const oldPrice = currentAsset?.price ?? currentAsset?.buyPrice;
-
-            if (oldPrice && newPrice) {
-              if (newPrice > oldPrice) {
-                newDirections[symbol] = 'up';
-              } else if (newPrice < oldPrice) {
-                newDirections[symbol] = 'down';
-              } else {
-                newDirections[symbol] = prevAssets[symbol] ? priceDirections[symbol] || 'neutral' : 'neutral';
-              }
-            } else {
-              newDirections[symbol] = 'neutral';
-            }
-
-            updatedAssets[symbol] = { ...initialAsset, ...livePriceData };
-          } else if (initialAsset) {
-            // If price data for an asset is missing in the API response, keep the old data
-            updatedAssets[symbol] = prevAssets[symbol] || initialAsset;
-          }
-        }
-        setPriceDirections(newDirections);
-        return updatedAssets;
-      });
-
-    } catch (error) {
-      console.error("Failed to fetch live prices:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [priceDirections]); // Dependency added to re-create fetchPrices if priceDirections changes
-
-  React.useEffect(() => {
-    fetchPrices(); // Fetch immediately on mount
-    const interval = setInterval(fetchPrices, 2000); 
-
-    return () => clearInterval(interval); // Cleanup on unmount
-  }, [fetchPrices]);
+    }).format(price);
+  };
   
-  const hasData = Object.keys(liveAssets).length > 0;
-
-  if (isLoading) {
-    return (
-       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-            {assetOrder.map((symbol) => (
-                <Skeleton key={symbol} className="h-[88px] w-full" />
-            ))}
-       </div>
-    )
+  const getIcon = (symbol: string) => {
+    return iconMap[symbol] || InfoIcon;
   }
 
-  if (!hasData) {
+  if (loading) {
     return (
-        <div className="text-center text-muted-foreground py-8">
-            Could not load price data. Please try again later.
+        <div className="space-y-4">
+             <div className="flex justify-end items-center">
+                <Skeleton className="h-8 w-1/4" />
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                {Array.from({ length: 8 }).map((_, index) => (
+                    <Skeleton key={index} className="h-[88px] w-full" />
+                ))}
+            </div>
         </div>
-    )
+    );
+  }
+
+  if (error) {
+    return (
+        <div className="space-y-4">
+            <div className="flex justify-end items-center">
+                 <Button size="sm" variant="outline" onClick={refreshData} disabled={loading}>
+                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                    Yenile
+                </Button>
+            </div>
+            <div className="text-red-500 p-4 rounded-md bg-red-50 border border-red-200">
+                Hata: Veriler yüklenemedi. Lütfen daha sonra tekrar deneyin. ({error.message})
+            </div>
+        </div>
+    );
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-4">
-      {assetOrder.map((symbol) => {
-        const asset = liveAssets[symbol];
-        if (!asset) return null;
-        const Icon = iconMap[symbol] || InfoIcon;
-        const isCrypto = 'price' in asset && asset.price !== undefined;
-        const direction = priceDirections[symbol];
-
-        return (
-          <div key={symbol} className="p-1">
-              <div className={cn(
-                  "flex items-center justify-start gap-4 p-4 rounded-lg bg-card border h-full transition-colors duration-300",
-                  direction === 'up' && 'border-green-500 bg-green-500/20',
-                  direction === 'down' && 'border-red-500 bg-red-500/20',
-              )}>
-                  <Icon className="h-10 w-10 flex-shrink-0" />
-                  <div className="flex-grow flex flex-col justify-center">
-                    <div className="flex items-center justify-between w-full">
-                        <p className="font-semibold text-base whitespace-nowrap">{assetNames[symbol]}</p>
-                         <div
-                            className={cn(
-                                "text-xs font-medium",
-                                asset.change24h >= 0 ? "text-green-500" : "text-red-500"
+    <div className="space-y-4">
+        <div className="flex justify-end items-center">
+            <div className="flex items-center gap-4">
+              <div className="text-sm text-muted-foreground">
+                Son Güncelleme: {lastUpdated}
+              </div>
+              <Button size="sm" variant="outline" onClick={refreshData} disabled={loading}>
+                <RefreshCw className={`h-4 w-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
+                Yenile
+              </Button>
+            </div>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {assetOrder.map((symbol) => {
+                const item = liveAssets[symbol];
+                if (!item) return null;
+                const Icon = getIcon(symbol);
+                const isCrypto = 'price' in item && item.price !== undefined;
+                return (
+                <div key={symbol} className="p-1">
+                    <div className={cn(
+                        "flex items-center justify-start gap-4 p-4 rounded-lg bg-card border h-full transition-colors duration-300",
+                        getChangeBgColor(item.change24h)
+                    )}>
+                        <Icon className="h-10 w-10 flex-shrink-0" />
+                        <div className="flex-grow flex flex-col justify-center overflow-hidden">
+                            <div className="flex items-center justify-between w-full">
+                                <p className="font-semibold text-base whitespace-nowrap">{assetNames[symbol] || symbol}</p>
+                                <div className={cn("text-xs font-medium pl-2 whitespace-nowrap", item.change24h > 0 ? "text-green-500" : "text-red-500")}>
+                                    {item.change24h >= 0 ? "+" : ""}
+                                    {item.change24h.toFixed(2)}%
+                                </div>
+                            </div>
+                           {isCrypto ? (
+                                <p className="text-sm text-muted-foreground">{formatPrice(item.price, symbol)}</p>
+                            ) : (
+                                <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
+                                    <span className="font-medium whitespace-nowrap">Alış:</span>
+                                    <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.buyPrice, symbol)}</span>
+                                    <span className="font-medium whitespace-nowrap">Satış:</span>
+                                    <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.sellPrice, symbol)}</span>
+                                </div>
                             )}
-                            >
-                            {asset.change24h >= 0 ? "+" : ""}
-                            {asset.change24h.toFixed(2)}%
                         </div>
                     </div>
-                    
-                    {isCrypto ? (
-                         <p className="text-sm text-muted-foreground">{formatCurrency(asset.price, symbol)}</p>
-                    ) : (
-                        <div className="text-xs text-muted-foreground grid grid-cols-2 gap-x-3">
-                            <div>
-                                <span className="font-medium">Alış: </span>{formatCurrency(asset.buyPrice, symbol)}
-                            </div>
-                            <div>
-                                <span className="font-medium">Satış: </span>{formatCurrency(asset.sellPrice, symbol)}
-                            </div>
-                        </div>
-                    )}
-                  </div>
-              </div>
-          </div>
-        );
-      })}
+                </div>
+            )})}
+        </div>
     </div>
   );
 }

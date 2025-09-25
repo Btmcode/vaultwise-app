@@ -3,13 +3,13 @@
 import { useState, useTransition } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { usePreciousMetalsData } from '@/hooks/usePreciousMetalsData';
 import { getMarketAnalysis } from '@/app/actions';
 import { Loader2, Wand2 } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '../ui/alert';
+import { useLivePrices } from '@/hooks/useLivePrices';
 
 export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
-  const { data, lastUpdated, error: dataError } = usePreciousMetalsData();
+  const { liveAssets, lastUpdated, error: dataError } = useLivePrices();
   const [analysis, setAnalysis] = useState<string>('');
   const [isPending, startTransition] = useTransition();
   const [analysisError, setAnalysisError] = useState<string | null>(null);
@@ -18,15 +18,17 @@ export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
     startTransition(async () => {
       setAnalysis('');
       setAnalysisError(null);
+      const data = Object.values(liveAssets);
       if (!data || data.length === 0) {
         setAnalysisError("Analiz edilecek piyasa verisi bulunamadı.");
         return;
       }
 
       try {
-        const marketData = data.map(item =>
-          `${item.Ürün}: Alış ${item.Alış} TL, Satış ${item.Satış} TL, Değişim %${item.Değişim}`
-        ).join('\n');
+        const marketData = data.map(item => {
+          const price = item.price ?? item.buyPrice;
+          return `${item.symbol}: Fiyat ${price}, Değişim %${item.change24h}`
+        }).join('\n');
 
         const result = await getMarketAnalysis({
           marketData,
@@ -67,7 +69,7 @@ export function AIMarketAnalysis({ lang }: { lang: 'tr' | 'en' }) {
             )}
             <Button
               onClick={generateAnalysis}
-              disabled={isPending || data.length === 0 || !!dataError}
+              disabled={isPending || Object.keys(liveAssets).length === 0 || !!dataError}
             >
               {isPending ? (
                 <>
