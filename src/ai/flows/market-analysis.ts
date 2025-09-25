@@ -10,16 +10,16 @@
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 
-// 1. Define the input schema
-export const MarketAnalysisInputSchema = z.object({
+// 1. Define the input schema (but do not export it)
+const MarketAnalysisInputSchema = z.object({
   marketData: z.string().describe('A string containing the current precious metals prices and changes.'),
   lastUpdated: z.string().describe('The last time the data was updated.'),
   language: z.enum(['tr', 'en']).describe('The language for the AI-generated response.'),
 });
 export type MarketAnalysisInput = z.infer<typeof MarketAnalysisInputSchema>;
 
-// 2. Define the output schema
-export const MarketAnalysisOutputSchema = z.object({
+// 2. Define the output schema (but do not export it)
+const MarketAnalysisOutputSchema = z.object({
   analysis: z.string().describe('The AI-generated analysis of the market data.'),
 });
 export type MarketAnalysisOutput = z.infer<typeof MarketAnalysisOutputSchema>;
