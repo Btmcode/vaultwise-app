@@ -59,10 +59,11 @@ export async function POST(request: NextRequest) {
       expiresIn,
     });
     
+    // Standardized cookie options
     const options = {
         name: 'firebase-session',
         value: sessionCookie,
-        maxAge: expiresIn,
+        maxAge: expiresIn / 1000, // maxAge is in seconds
         httpOnly: true,
         secure: true,
         path: '/',

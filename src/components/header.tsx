@@ -49,12 +49,9 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
         description: "You have been logged out.",
       });
 
-      // Redirect to the login page after a short delay to ensure cookie is cleared
-      // Using window.location.href ensures a full page reload, clearing any component state
-      // and forcing the middleware to re-evaluate the auth status.
-      setTimeout(() => {
-        window.location.href = `/${currentLang}/login`;
-      }, 500);
+      // Use window.location.href for a full page refresh to ensure middleware catches the new cookie state.
+      // This is the most reliable way to handle redirection after setting an httpOnly cookie.
+      window.location.href = `/${currentLang}/login`;
 
     } catch (error) {
       console.error("Logout Error:", error);
