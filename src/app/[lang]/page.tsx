@@ -21,6 +21,9 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header lang={params.lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+        <div className="w-full">
+            <PreciousMetalsTable />
+        </div>
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
           <Suspense fallback={<Skeleton className="h-48" />}>
             <PortfolioSummary dict={dict} />
@@ -33,9 +36,6 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
                 <AIMarketAnalysis lang={params.lang} />
              </Suspense>
            </div>
-        </div>
-         <div className="w-full">
-            <PreciousMetalsTable />
         </div>
         <div className="w-full">
           <LivePrices dict={dict} assetNames={dict.assetNames} />
