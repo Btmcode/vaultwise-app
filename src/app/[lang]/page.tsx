@@ -14,11 +14,11 @@ import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { LivePrices } from "@/components/dashboard/live-prices";
 
 
-export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = await getDictionary(params.lang);
+export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
+  const dict = getDictionary(lang);
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <Header lang={params.lang} dict={dict.header} />
+      <Header lang={lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="w-full">
           <Suspense fallback={<Skeleton className="h-48" />}>
@@ -34,7 +34,7 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
           </Suspense>
            <div className="xl:col-span-2">
              <Suspense fallback={<Skeleton className="h-48" />}>
-                <AIMarketAnalysis lang={params.lang} dict={dict.aiMarketAnalysis} />
+                <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
              </Suspense>
            </div>
         </div>
@@ -66,4 +66,3 @@ export default async function Home({ params }: { params: { lang: 'tr' | 'en' } }
     </div>
   );
 }
-

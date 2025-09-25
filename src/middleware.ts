@@ -10,12 +10,10 @@ const i18n = {
 const PUBLIC_FILE = /\.(.*)$/;
 const AUTH_ROUTES = ['/login', '/signup'];
 
-// This middleware is simplified to only handle routing and basic cookie checks.
-// It avoids importing any server-side Node.js modules to prevent edge runtime errors.
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-   // Skip public files and API routes
+   // Skip specific paths for performance
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
@@ -25,40 +23,33 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Handle i18n locale redirection
-  const pathnameHasLocale = i18n.locales.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
+  // Handle i18n
+  const pathnameIsMissingLocale = i18n.locales.every(
+    (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
-  if (!pathnameHasLocale) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/${i18n.defaultLocale}${pathname}`;
-    return NextResponse.redirect(url);
+  if (pathnameIsMissingLocale) {
+    const locale = i18n.defaultLocale;
+    return NextResponse.redirect(new URL(`/${locale}${pathname}`, request.url));
   }
 
-  // Handle authentication routing
+  // Handle authentication
   const locale = pathname.split('/')[1] || i18n.defaultLocale;
   const sessionCookie = request.cookies.get('firebase-session');
-  const isAuthRoute = AUTH_ROUTES.some(route => pathname.endsWith(route));
+  const pathAfterLocale = pathname.substring(pathname.indexOf('/', 1));
+  const isAuthRoute = AUTH_ROUTES.includes(pathAfterLocale);
 
-  // If no session cookie and trying to access a protected route, redirect to login
   if (!sessionCookie && !isAuthRoute) {
-    const url = request.nextUrl.clone();
-    url.pathname = `/${locale}/login`;
-    return NextResponse.redirect(url);
+    return NextResponse.redirect(new URL(`/${locale}/login`, request.url));
   }
 
-  // If there is a session cookie and trying to access an auth route, redirect to home
   if (sessionCookie && isAuthRoute) {
-     const url = request.nextUrl.clone();
-     url.pathname = `/${locale}/`;
-     return NextResponse.redirect(url);
+     return NextResponse.redirect(new URL(`/${locale}/`, request.url));
   }
 
   return NextResponse.next();
 }
 
-// The config object specifies which routes the middleware should run on.
 export const config = {
   matcher: [
     /*
@@ -67,9 +58,7 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - images (image files)
-     * - login, signup (auth routes to prevent race conditions)
      */
-    '/((?!api|_next/static|_next/image|favicon.ico|images|.*\\.png$|login|signup).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|images|.*\\.png$).*)',
   ],
 }

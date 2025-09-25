@@ -10,6 +10,7 @@ type LayoutProps = {
   children: React.ReactNode;
 };
 
+// This function is async and correctly awaits params
 export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en' } }): Promise<Metadata> {
   const dict = getDictionary(params.lang);
   return {
@@ -18,11 +19,11 @@ export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en'
   };
 }
 
+// The RootLayout itself is also async
 export default async function RootLayout({
   children,
-  params,
+  params: { lang }, // Destructure lang directly from params
 }: LayoutProps) {
-  const { lang } = params;
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
