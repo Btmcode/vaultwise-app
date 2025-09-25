@@ -6,7 +6,7 @@ import axios from 'axios';
 const codeToSymbolMap: Record<string, string> = {
     'GA': 'XAU',       // Gram Altın
     'G': 'XAG',        // Gümüş
-    'BTC': 'BTC',      // Bitcoin (Fallback, will be overridden by CoinMarketCap)
+    'BTC': 'BTC',      // Fallback, will be overridden by CoinMarketCap
     'USD': 'USD_TRY',  // USD/TRY Kuru
     'XAU.ONS': 'XAU_ONS',  // ONS Altın
     'XAU.USD.KG': 'XAU_USD_KG',
