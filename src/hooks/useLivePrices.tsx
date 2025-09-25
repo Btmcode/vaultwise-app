@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from 'react';
 import type { Asset } from '@/lib/types';
@@ -26,52 +25,54 @@ export function LivePricesProvider({ children }: ProviderProps) {
     const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState<string>('');
 
-    const fetchData = useCallback(async (url: string, isInitialLoad: boolean) => {
-        // Only show loader on the very first load or manual refresh
-        if (isInitialLoad) setLoading(true);
+    const fetchData = useCallback(async (url: string) => {
         try {
             const response = await axios.get(url);
             if (response.data && Object.keys(response.data).length > 0) {
                 setLiveAssets(prevAssets => ({ ...prevAssets, ...response.data }));
-                setLastUpdated(new Date().toLocaleString());
-                setError(null); // Clear error on successful fetch
+                setError(null); 
             } else {
-                 throw new Error("Received empty data from API");
+                 throw new Error(`Received empty data from ${url}`);
             }
         } catch (e: any) {
             console.error(`Data fetching error from ${url}:`, e);
-            // Don't overwrite existing data if a fetch fails, just show an error.
             setError(`Failed to load data. Please try again. (${e.message})`);
-        } finally {
-            if (isInitialLoad) setLoading(false);
+            // Re-throw to be caught by Promise.allSettled
+            throw e;
         }
     }, []);
 
-    const fetchAllData = useCallback((isInitial: boolean) => {
-        // Reset loading state for feedback on manual refresh
-        if (!isInitial) {
-             setLoading(true);
+    const fetchAllData = useCallback(async (isInitial: boolean) => {
+        if (isInitial) {
+            setLoading(true);
         }
-        Promise.all([
-            fetchData('/api/prices/metals', isInitial),
-            fetchData('/api/prices/crypto', isInitial),
-        ]).finally(() => {
-            // Ensure loading is false after all fetches are settled, especially for manual refresh
-            if (!isInitial) {
-                setLoading(false);
-            }
-        });
+        
+        const results = await Promise.allSettled([
+            fetchData('/api/prices/metals'),
+            fetchData('/api/prices/crypto'),
+        ]);
+
+        // Check if at least one API call was successful
+        const isAnySuccess = results.some(res => res.status === 'fulfilled');
+
+        if(isAnySuccess){
+            setLastUpdated(new Date().toLocaleString());
+        }
+
+        if (isInitial) {
+            setLoading(false);
+        }
     }, [fetchData]);
 
-    // Initial fetch for both on component mount
+
     useEffect(() => {
         fetchAllData(true);
     }, [fetchAllData]);
 
 
     const refreshData = () => {
-        // This is the manual refresh action triggered by the button
-        fetchAllData(false);
+        setLoading(true);
+        fetchAllData(false).finally(() => setLoading(false));
     };
 
     const value = { liveAssets, loading, error, lastUpdated, refreshData };
