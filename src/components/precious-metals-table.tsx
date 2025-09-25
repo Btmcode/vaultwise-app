@@ -103,11 +103,11 @@ export function PreciousMetalsTable() {
                                     {item.Değişim.toFixed(2)}%
                                 </div>
                             </div>
-                            <div className="text-xs text-muted-foreground grid grid-cols-2 gap-x-3 whitespace-nowrap">
-                                <div className="truncate">
+                            <div className="text-xs text-muted-foreground flex flex-wrap gap-x-3">
+                                <div className="flex-shrink-0 whitespace-nowrap">
                                     <span className="font-medium">Alış: </span>{formatPrice(item.Alış)}
                                 </div>
-                                <div className="truncate">
+                                <div className="flex-shrink-0 whitespace-nowrap">
                                     <span className="font-medium">Satış: </span>{formatPrice(item.Satış)}
                                 </div>
                             </div>
