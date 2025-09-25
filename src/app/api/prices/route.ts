@@ -93,8 +93,8 @@ export async function GET() {
 
                 if (price && change24h !== undefined) {
                     prices[symbol] = {
-                        price: parseFloat(price),
-                        change24h: parseFloat(change24h),
+                        price: parseFloat(price as any),
+                        change24h: parseFloat(change24h as any),
                     };
                 }
             }
