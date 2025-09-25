@@ -12,7 +12,6 @@ const assetOrder = [
   "XAU_ONS",   // Gold Ounce
   "XAU_USD_KG",// Gold USD/KG
   "XAU_EUR_KG",// Gold EUR/KG
-  "XAG",       // Silver
   "XAG_ONS",   // Silver Ounce
   "XAG_TL",    // Silver TL
   "XAG_USD",   // Silver USD
@@ -26,12 +25,12 @@ const assetOrder = [
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     BTC: BtcIcon,
     XAU: GoldIcon,
-    XAG: SilverIcon,
     PAXG: PaxgIcon,
     XAUT: XautIcon,
     XAU_ONS: GoldIcon,
     XAU_USD_KG: GoldBarIcon,
     XAU_EUR_KG: GoldBarIcon,
+    XAG: SilverIcon,
     XAG_ONS: SilverIcon,
     XAG_TL: SilverIcon,
     XAG_USD: SilverIcon,
