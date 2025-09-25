@@ -6,7 +6,7 @@
     },
     "assetNames": {
         "BTC": "Bitcoin",
-        "XAU": "Gold",
+        "XAU": "Fine Gold",
         "XAG": "Silver",
         "PAXG": "PAX Gold",
         "XAUT": "Tether Gold",
@@ -312,11 +312,11 @@
         "buttonText": "Generate Analysis",
         "buttonLoadingText": "Generating Analysis...",
         "errorTitle": "Error",
-        "error": {
-            "noData": "No market data available to analyze.",
-            "generationFailed": "The AI could not generate an analysis. Please try again.",
-            "general": "An unexpected error occurred while generating the analysis.",
-            "dataSourceError": "Analysis cannot be performed due to a data source error."
-        }
+        "noData": "No market data available to analyze.",
+        "generationFailed": "The AI could not generate an analysis. Please try again.",
+        "general": "An unexpected error occurred while generating the analysis.",
+        "dataSourceError": "Analysis cannot be performed due to a data source error."
     }
 }
+
+    

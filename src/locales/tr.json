@@ -6,7 +6,7 @@
     },
     "assetNames": {
         "BTC": "Bitcoin",
-        "XAU": "Altın",
+        "XAU": "Has Altın",
         "XAG": "Gümüş",
         "PAXG": "PAX Gold",
         "XAUT": "Tether Gold",
@@ -312,11 +312,11 @@
         "buttonText": "Analiz Oluştur",
         "buttonLoadingText": "Analiz Oluşturuluyor...",
         "errorTitle": "Hata",
-        "error": {
-            "noData": "Analiz edilecek piyasa verisi bulunamadı.",
-            "generationFailed": "Yapay zeka bir analiz üretemedi. Lütfen tekrar deneyin.",
-            "general": "Analiz oluşturulurken beklenmedik bir hata oluştu.",
-            "dataSourceError": "Veri kaynağı hatası nedeniyle analiz yapılamıyor."
-        }
+        "noData": "Analiz edilecek piyasa verisi bulunamadı.",
+        "generationFailed": "Yapay zeka bir analiz üretemedi. Lütfen tekrar deneyin.",
+        "general": "Analiz oluşturulurken beklenmedik bir hata oluştu.",
+        "dataSourceError": "Veri kaynağı hatası nedeniyle analiz yapılamıyor."
     }
 }
+
+    
