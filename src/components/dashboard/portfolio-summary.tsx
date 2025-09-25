@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/card";
 import { totalPortfolioValue } from "@/lib/data";
 import { ArrowUpRight } from "lucide-react";
-import { AutoSaveDialog } from "./auto-save-dialog";
 import { BuyDialog } from "./buy-dialog";
 import { SellDialog } from "./sell-dialog";
 
@@ -33,7 +32,6 @@ export function PortfolioSummary({ dict }: { dict: any }) {
       <CardFooter className="flex gap-2">
         <BuyDialog dict={dict} />
         <SellDialog dict={dict} />
-        <AutoSaveDialog dict={dict} />
       </CardFooter>
     </Card>
   );
