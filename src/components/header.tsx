@@ -34,8 +34,10 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
 
   const handleLogout = async () => {
     try {
-      // Clear the client-side token
-      await signOut(auth);
+      // Clear the client-side token only if auth is initialized
+      if (auth) {
+        await signOut(auth);
+      }
       
       // Call the API route to clear the server-side session cookie
       await fetch('/api/auth/logout', { method: 'POST' });
@@ -48,7 +50,9 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
       // Redirect to the login page after a short delay to ensure cookie is cleared
       // Using window.location.href ensures a full page reload, clearing any component state
       // and forcing the middleware to re-evaluate the auth status.
-      window.location.href = `/${lang}/login`;
+      setTimeout(() => {
+        window.location.href = `/${lang}/login`;
+      }, 500);
 
     } catch (error) {
       console.error("Logout Error:", error);
