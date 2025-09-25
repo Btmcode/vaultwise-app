@@ -59,27 +59,17 @@ export async function POST(request: NextRequest) {
       expiresIn,
     });
     
-    const isDevelopment = process.env.NODE_ENV === 'development';
-    const requestUrl = new URL(request.url);
-
-    const cookieOptions: any = {
+    const options = {
         name: 'firebase-session',
         value: sessionCookie,
+        maxAge: expiresIn,
         httpOnly: true,
-        secure: true, // Secure must be true for SameSite=None
+        secure: true,
         path: '/',
-        sameSite: 'None', // Allow cross-site cookie usage for iframe
     };
     
-    // For production, set domain and maxAge for persistence.
-    // For development, we leave them out to use a session cookie scoped to the current domain.
-    if (!isDevelopment) {
-        cookieOptions.domain = requestUrl.hostname.split('.').slice(-2).join('.');
-        cookieOptions.maxAge = expiresIn;
-    }
-    
     const response = NextResponse.json({status: 'success'}, {status: 200});
-    response.cookies.set(cookieOptions);
+    response.cookies.set(options);
 
     return response;
 

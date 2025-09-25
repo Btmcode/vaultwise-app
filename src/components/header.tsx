@@ -34,15 +34,22 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
 
   const handleLogout = async () => {
     try {
+      // Clear the client-side token
       await signOut(auth);
-      // Oturum cookie'sini silmek için bir API rotası çağır
+      
+      // Call the API route to clear the server-side session cookie
       await fetch('/api/auth/logout', { method: 'POST' });
+
       toast({
         title: "Success",
         description: "You have been logged out.",
       });
-       // race condition'ı önlemek ve middleware'in cookie'nin silindiğini görmesini sağlamak için tam sayfa yenilemesi yap
-      window.location.href = `/${lang}/login`;
+
+      // Redirect to the login page after a short delay to ensure cookie is cleared
+      setTimeout(() => {
+        window.location.href = `/${lang}/login`;
+      }, 500);
+
     } catch (error) {
       console.error("Logout Error:", error);
       toast({
