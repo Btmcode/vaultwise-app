@@ -10,12 +10,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { useToast } from "@/hooks/use-toast";
-import { Loader2 } from 'lucide-react';
+import { Loader2, ArrowLeft } from 'lucide-react';
 import { getUserDoc, updateUserProfile } from '@/lib/firebase/firestore';
 import { auth, storage } from '@/lib/firebase/client';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import type { FirestoreUser } from '@/lib/types';
 import { Skeleton } from '@/components/ui/skeleton';
+import Link from 'next/link';
 
 export default function ProfilePage() {
   const params = useParams();
@@ -146,6 +147,10 @@ export default function ProfilePage() {
       <Header lang={lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="mx-auto grid w-full max-w-4xl gap-2">
+           <Link href={`/${lang}/dashboard`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-2">
+              <ArrowLeft className="h-4 w-4" />
+              {dict.backToDashboard}
+            </Link>
           <h1 className="text-3xl font-semibold">{profileDict.title}</h1>
         </div>
         <div className="mx-auto grid w-full max-w-4xl items-start gap-6">

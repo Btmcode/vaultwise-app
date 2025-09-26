@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
-import { Eye, EyeOff, Loader2, Trash2 } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Trash2, ArrowLeft } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { analyzeFeedback } from "@/app/actions";
 import { Textarea } from '@/components/ui/textarea';
@@ -29,6 +29,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -158,6 +159,10 @@ export default function SettingsPage() {
       <Header lang={lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="mx-auto grid w-full max-w-4xl gap-2">
+           <Link href={`/${lang}/dashboard`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-2">
+              <ArrowLeft className="h-4 w-4" />
+              {dict.backToDashboard}
+            </Link>
           <h1 className="text-3xl font-semibold">{settingsDict.title}</h1>
         </div>
         <div className="mx-auto grid w-full max-w-4xl items-start gap-6">

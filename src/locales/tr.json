@@ -4,6 +4,7 @@
         "title": "VaultWise",
         "description": "Modern, çok varlıklı bir tasarruf platformu."
     },
+    "backToDashboard": "Kontrol Paneline Geri Dön",
     "landingPage": {
         "login": "Giriş Yap",
         "signup": "Hesap Oluştur",

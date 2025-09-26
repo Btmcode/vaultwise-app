@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Info, Banknote, Landmark, Wallet } from 'lucide-react';
+import { Loader2, Info, Banknote, Landmark, Wallet, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
@@ -179,6 +179,10 @@ export default function WithdrawPage() {
       <Header lang={lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="mx-auto grid w-full max-w-3xl gap-2">
+          <Link href={`/${lang}/dashboard`} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-primary mb-2">
+              <ArrowLeft className="h-4 w-4" />
+              {dict.backToDashboard}
+            </Link>
           <h1 className="text-3xl font-semibold">{withdrawDict.title}</h1>
           <p className="text-muted-foreground">{withdrawDict.description}</p>
         </div>

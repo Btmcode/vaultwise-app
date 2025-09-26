@@ -4,6 +4,7 @@
         "title": "VaultWise",
         "description": "A modern multi-asset saving platform."
     },
+    "backToDashboard": "Back to Dashboard",
     "landingPage": {
         "login": "Login",
         "signup": "Sign Up",
