@@ -10,7 +10,6 @@ import {
   GoldIcon,
   SilverIcon,
   InfoIcon,
-  GoldBarIcon,
   BtcIcon,
   PaxgIcon,
   XautIcon,
@@ -50,6 +49,21 @@ const apiSymbolMap: Record<string, AssetSymbol> = {
     "Tether Gold": "XAUT",
     "USD/TRY": "USD_TRY",
 }
+
+const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
+    "HAS ALTIN": GoldIcon,
+    "Altın/ONS": GoldIcon,
+    "Altın USD/Kg": GoldIcon,
+    "Altın EUR/Kg": GoldIcon,
+    "Gümüş/ONS": SilverIcon,
+    "Gümüş/TL": SilverIcon,
+    "Gümüş/USD": SilverIcon,
+    "Gümüş/EUR": SilverIcon,
+    "Bitcoin": BtcIcon,
+    "PAX Gold": PaxgIcon,
+    "Tether Gold": XautIcon,
+    "USD/TRY": UsdTryIcon,
+};
 
 type LivePricesProps = {
     dict: any;
