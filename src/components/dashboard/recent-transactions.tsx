@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { assets, transactions } from "@/lib/data";
-import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
+import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
 import type { AssetSymbol, TransactionType } from "@/lib/types";
 
 const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
@@ -15,7 +15,16 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG: SilverIcon,
     BTC: BtcIcon,
     PAXG: PaxgIcon,
-    XAUT: XautIcon
+    XAUT: XautIcon,
+    USD_TRY: UsdTryIcon,
+    // Add other symbols if they can be part of asset list
+    XAU_ONS: GoldIcon,
+    XAU_USD_KG: GoldIcon,
+    XAU_EUR_KG: GoldIcon,
+    XAG_ONS: SilverIcon,
+    XAG_TL: SilverIcon,
+    XAG_USD: SilverIcon,
+    XAG_EUR: SilverIcon,
 };
 
 const getBadgeVariant = (type: TransactionType) => {
@@ -26,6 +35,10 @@ const getBadgeVariant = (type: TransactionType) => {
       return 'destructive';
     case 'Auto-Save':
       return 'secondary';
+    case 'Withdraw':
+        return 'outline'
+    case 'Deposit':
+        return 'default'
     default:
       return 'outline';
   }
@@ -37,7 +50,7 @@ const getTransactionTypeKey = (type: TransactionType) => {
 
 
 export function RecentTransactions({ dict, assetNames }: { dict: any, assetNames: any }) {
-    const recentTransactionsDict = dict;
+    const recentTransactionsDict = dict.recentTransactions;
   return (
     <>
       <CardHeader>
@@ -56,10 +69,10 @@ export function RecentTransactions({ dict, assetNames }: { dict: any, assetNames
               </div>
               <div className="grid gap-1 flex-1">
                 <p className="text-sm font-medium leading-none">
-                  {assetNames[assetInfo.symbol]}
+                  {assetNames[tx.assetSymbol]}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  {tx.date.toLocaleDateString()}
+                  {new Date(tx.date).toLocaleDateString()}
                 </p>
               </div>
               <div className="text-right">

@@ -153,7 +153,9 @@
         "transactionTypes": {
             "buy": "Alış",
             "sell": "Satış",
-            "auto_save": "Oto-Tasarruf"
+            "auto_save": "Oto-Tasarruf",
+            "deposit": "Yatırma",
+            "withdraw": "Çekme"
         }
     },
     "assetList": {

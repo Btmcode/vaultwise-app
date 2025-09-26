@@ -153,7 +153,9 @@
         "transactionTypes": {
             "buy": "Buy",
             "sell": "Sell",
-            "auto_save": "Auto-Save"
+            "auto_save": "Auto-Save",
+            "deposit": "Deposit",
+            "withdraw": "Withdraw"
         }
     },
     "assetList": {
