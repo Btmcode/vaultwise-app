@@ -48,7 +48,7 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
             </Card>
             <Card>
               <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                <RecentTransactions dict={dict.recentTransactions} assetNames={dict.assetNames} />
+                <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} />
               </Suspense>
             </Card>
           </div>

@@ -44,13 +44,13 @@ const getBadgeVariant = (type: TransactionType) => {
   }
 };
 
-const getTransactionTypeKey = (type: TransactionType) => {
-    return type.toLowerCase().replace('-', '_') as keyof typeof dict.recentTransactions.transactionTypes;
+const getTransactionTypeKey = (type: TransactionType, dict: any) => {
+    const key = type.toLowerCase().replace('-', '_');
+    return dict[key] || type;
 }
 
 
-export function RecentTransactions({ dict, assetNames }: { dict: any, assetNames: any }) {
-    const recentTransactionsDict = dict.recentTransactions;
+export function RecentTransactions({ recentTransactionsDict, assetNames }: { recentTransactionsDict: any, assetNames: any }) {
   return (
     <>
       <CardHeader>
