@@ -16,7 +16,8 @@ export function useLivePricesForLanding() {
     const [error, setError] = useState<string | null>(null);
 
     const fetchAllData = useCallback(async () => {
-        setLoading(true);
+        // Don't set loading to true on subsequent fetches to avoid flicker
+        // setLoading(true); 
         setError(null);
         
         try {
@@ -28,7 +29,10 @@ export function useLivePricesForLanding() {
             ]);
             
             if (!metalsResponse.ok || !cryptoResponse.ok) {
-                throw new Error('Failed to fetch price data.');
+                // Combine error messages if possible
+                const metalError = metalsResponse.statusText;
+                const cryptoError = cryptoResponse.statusText;
+                throw new Error(`Failed to fetch price data. Metals: ${metalError}, Crypto: ${cryptoError}`);
             }
 
             const metalsData = await metalsResponse.json();
@@ -59,7 +63,7 @@ export function useLivePricesForLanding() {
 
         } catch (e: any) {
             console.error(`Landing page data fetching error:`, e.message);
-            setError(`Fiyat verileri yüklenemedi.`);
+            setError(`Canlı fiyat verileri şu anda alınamıyor. Lütfen daha sonra tekrar deneyin.`);
         } finally {
             setLoading(false);
         }
@@ -67,6 +71,8 @@ export function useLivePricesForLanding() {
 
     useEffect(() => {
         fetchAllData();
+         const interval = setInterval(fetchAllData, 60000); // Auto-refresh every 60 seconds
+        return () => clearInterval(interval);
     }, [fetchAllData]);
 
     return { liveAssets, loading, error };

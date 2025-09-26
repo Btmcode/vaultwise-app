@@ -24,8 +24,8 @@ const assetDetails: Record<
   { name: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }
 > = {
   BTC: { name: 'Bitcoin', icon: BtcIcon },
-  XAU: { name: 'Altın', icon: GoldIcon },
-  XAG: { name: 'Gümüş', icon: SilverIcon },
+  XAU: { name: 'Altın (Gr)', icon: GoldIcon },
+  XAG: { name: 'Gümüş (Gr)', icon: SilverIcon },
   PAXG: { name: 'PAX Gold', icon: PaxgIcon },
   XAUT: { name: 'Tether Gold', icon: XautIcon },
   USD_TRY: { name: 'Dolar/TL', icon: UsdTryIcon },
@@ -46,7 +46,7 @@ export function PriceTicker() {
     let currency = 'USD';
     let locale = 'en-US';
 
-    if (symbol === 'USD_TRY' || symbol === 'XAU') {
+    if (symbol === 'USD_TRY' || symbol === 'XAU' || symbol === 'XAG') {
       currency = 'TRY';
       locale = 'tr-TR';
     }
@@ -67,34 +67,45 @@ export function PriceTicker() {
 
   if (loading) {
     return (
-      <div className="w-full max-w-md mx-auto">
-        <Skeleton className="h-24 w-full" />
+      <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
+        <div className="flex items-center justify-center md:justify-start animate-infinite-scroll">
+            {Array.from({length: 6}).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-64 mx-4 rounded-full" />
+            ))}
+        </div>
+         <div className="flex items-center justify-center md:justify-start animate-infinite-scroll" aria-hidden="true">
+             {Array.from({length: 6}).map((_, i) => (
+                <Skeleton key={i} className="h-10 w-64 mx-4 rounded-full" />
+            ))}
+        </div>
       </div>
     )
   }
 
   if (error) {
-    return <div className="text-destructive text-center">{error}</div>
+    return <div className="text-destructive text-center px-4">{error}</div>
   }
 
   const TickerContent = () => (
     <>
       {orderedAssets.map((asset) => {
         const details = assetDetails[asset.symbol as AssetSymbol];
+        if (!details) return null;
+        
         const Icon = details.icon;
         const price = asset.price ?? asset.sellPrice;
         const change = asset.change24h;
 
         return (
-          <div key={asset.symbol} className="flex-shrink-0 flex items-center justify-center gap-4 px-8 py-2 mx-4 rounded-full border bg-background/50 backdrop-blur-sm shadow-sm">
-            <Icon className="h-6 w-6" />
-            <div className="flex items-baseline gap-3">
+          <div key={asset.symbol} className="flex-shrink-0 flex items-center justify-center gap-4 px-6 py-2 mx-4 rounded-full border bg-card/60 backdrop-blur-sm shadow-md transition-all hover:shadow-lg hover:border-primary/50">
+            <Icon className="h-7 w-7" />
+            <div className="flex flex-col items-start">
                 <span className="font-semibold text-sm">{details.name}</span>
-                <span className="font-mono text-sm">{formatPrice(price, asset.symbol as AssetSymbol)}</span>
+                <span className="font-mono text-xs text-muted-foreground">{formatPrice(price, asset.symbol as AssetSymbol)}</span>
             </div>
             <div
               className={cn(
-                'flex items-center text-sm font-semibold',
+                'flex items-center text-sm font-semibold pl-2',
                 change >= 0 ? 'text-green-500' : 'text-red-500'
               )}
             >
@@ -110,10 +121,10 @@ export function PriceTicker() {
 
   return (
     <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
-        <div className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll">
+        <div className="flex items-center justify-center md:justify-start animate-infinite-scroll">
             <TickerContent />
         </div>
-        <div className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll" aria-hidden="true">
+        <div className="flex items-center justify-center md:justify-start animate-infinite-scroll" aria-hidden="true">
             <TickerContent />
         </div>
     </div>
