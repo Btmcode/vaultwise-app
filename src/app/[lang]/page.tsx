@@ -8,7 +8,8 @@ import { getDictionary } from '@/app/dictionaries';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PriceTicker } from '@/components/landing/price-ticker';
-import { ShieldCheck, Cpu, Zap } from 'lucide-react';
+import { ShieldCheck, Cpu, Zap, Moon, Sun } from 'lucide-react';
+import { useTheme } from 'next-themes';
 
 const HeroScene = dynamic(() => import('@/components/landing/hero-scene'), {
   ssr: false,
@@ -18,6 +19,11 @@ export default function LandingPage() {
   const params = useParams();
   const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
+  const { theme, setTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
   
   if (!dict) {
     return null; // or a loading skeleton
@@ -25,19 +31,24 @@ export default function LandingPage() {
   const landingDict = dict.landingPage;
 
   return (
-    <div className="flex flex-col min-h-dvh bg-background text-foreground overflow-x-hidden relative">
-      <HeroScene />
+    <div className="flex flex-col min-h-dvh bg-background text-foreground overflow-x-hidden">
+       <HeroScene />
       
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-transparent backdrop-blur-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/80 backdrop-blur-sm">
         <Link href={`/${lang}`} className="flex items-center justify-center" prefetch={false}>
           <VaultWiseLogo className="h-8 w-8 text-primary" />
           <span className="ml-2 text-xl font-bold">VaultWise</span>
         </Link>
-        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+        <nav className="ml-auto flex items-center gap-2 sm:gap-4">
+           <Button variant="ghost" size="icon" onClick={toggleTheme}>
+            <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+            <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <span className="sr-only">Toggle theme</span>
+          </Button>
           <Button variant="ghost" asChild>
             <Link href={`/${lang}/login`}>{landingDict.login}</Link>
           </Button>
-          <Button asChild>
+          <Button asChild className="bg-cta text-white hover:bg-cta/90">
             <Link href={`/${lang}/signup`}>{landingDict.signup}</Link>
           </Button>
         </nav>
@@ -53,7 +64,7 @@ export default function LandingPage() {
               {landingDict.hero.description}
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8">
-              <Button size="lg" asChild>
+              <Button size="lg" asChild className="bg-cta text-white hover:bg-cta/90">
                  <Link href={`/${lang}/signup`}>{landingDict.hero.ctaPrimary}</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
