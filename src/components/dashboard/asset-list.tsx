@@ -44,6 +44,9 @@ const formatCurrency = (value: number) => {
 };
 
 const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
+    if (amount === 0) {
+        return "0";
+    }
     const unit = symbol === 'XAU' || symbol === 'XAG' ? 'oz' : symbol;
     return `${amount.toLocaleString('en-US')} ${unit}`;
 }
