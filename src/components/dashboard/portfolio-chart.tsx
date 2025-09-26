@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -16,7 +15,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { chartData, totalPortfolioValue } from "@/lib/data";
+import { chartData } from "@/lib/data";
 import type { ChartData, ChartDataPoint } from "@/lib/types";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -40,7 +39,7 @@ const formatPercentage = (value: number) => {
 
 export function PortfolioChart({ dict }: { dict: any }) {
   const [timeRange, setTimeRange] = useState<keyof ChartData>("1w");
-  const [displayValue, setDisplayValue] = useState(totalPortfolioValue);
+  const [displayValue, setDisplayValue] = useState(0);
   const [percentageChange, setPercentageChange] = useState<number | null>(null);
   
   const currentData = chartData[timeRange];
