@@ -63,7 +63,7 @@ export default function LandingPage() {
               {landingDict.hero.description}
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8">
-              <Button size="lg" asChild className="bg-cta text-white hover:bg-cta/90">
+              <Button size="lg" asChild className="bg-cta text-primary-foreground hover:bg-cta/90">
                  <Link href={`/${lang}/signup`}>{landingDict.hero.ctaPrimary}</Link>
               </Button>
               <Button size="lg" variant="outline" asChild>
