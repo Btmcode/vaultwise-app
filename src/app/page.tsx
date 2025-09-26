@@ -25,20 +25,15 @@ export default function LandingPage() {
       </header>
       
       <main className="flex-1">
-        <section className="relative w-full h-dvh flex flex-col items-center justify-center p-4 overflow-hidden">
-           <div className="absolute inset-0 z-0 opacity-50">
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary rounded-full filter blur-3xl animate-blob"></div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/4 -translate-y-1/4 w-96 h-96 bg-accent rounded-full filter blur-3xl animate-blob animation-delay-2000"></div>
-                <div className="absolute top-1/2 left-1/2 translate-x-1/4 translate-y-1/4 w-96 h-96 bg-secondary rounded-full filter blur-3xl animate-blob animation-delay-4000"></div>
-            </div>
-          <div className="relative z-10 flex flex-col items-center text-center">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground animate-fade-in-up">
+        <section className="relative w-full flex flex-col items-center justify-center text-center py-24 sm:py-32 lg:py-40 px-4">
+          <div className="z-10 flex flex-col items-center">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground">
               Gerçek Değer, Gerçek Güvence.
             </h1>
-            <p className="max-w-[700px] text-muted-foreground md:text-xl mt-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <p className="max-w-[700px] text-muted-foreground md:text-xl mt-6">
               VaultWise, dijital varlıklarınızı dahi sigortalı, fiziksel kasalarda koruyan tek platform. Geleceğin birikim standardı ile tanışın.
             </p>
-            <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8">
               <Button size="lg" asChild>
                 <Link href="/tr/signup">Biriktirmeye Başla</Link>
               </Button>
@@ -99,5 +94,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-    
