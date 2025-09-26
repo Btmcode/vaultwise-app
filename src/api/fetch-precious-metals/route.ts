@@ -18,6 +18,7 @@ export async function GET() {
         const data: any[] = [];
         snapshot.forEach(doc => {
             data.push({
+                "Ürün": doc.id,
                 ...doc.data()
             });
         });

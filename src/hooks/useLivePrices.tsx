@@ -31,8 +31,7 @@ interface ProviderProps {
 const parseNumber = (str: string | number): number => {
     if (typeof str === 'number') return str;
     if (!str || typeof str !== 'string') return 0;
-    // Replaces dots used as thousand separators, then replaces comma decimal with a dot
-    return parseFloat(str.replace(/\./g, '').replace(',', '.'));
+    return parseFloat(str.toString().replace(/,/g, '.'));
 };
 
 export function LivePricesProvider({ children }: ProviderProps) {
@@ -41,10 +40,8 @@ export function LivePricesProvider({ children }: ProviderProps) {
     const [error, setError] = useState<string | null>(null);
     const [lastUpdated, setLastUpdated] = useState<string>('');
 
-    const fetchAllData = useCallback(async (isInitial: boolean) => {
-        if (isInitial) {
-            setLoading(true);
-        }
+    const fetchAllData = useCallback(async () => {
+        setLoading(true);
         setError(null);
         
         try {
@@ -61,12 +58,14 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
-                const symbol = item['name'];
-                const buyPrice = parseNumber(item['public_bid']);
-                const sellPrice = parseNumber(item['public_ask']);
-                
-                if (symbol && buyPrice > 0 && sellPrice > 0) {
-                     const change24h = ((sellPrice - buyPrice) / buyPrice) * 100;
+                // The API now returns "Ürün" for the symbol/name
+                const symbol = item['Ürün'];
+                // Use the correct keys from the Firestore data structure
+                const buyPrice = parseNumber(item['public_ask']);
+                const sellPrice = parseNumber(item['public_bid']);
+                const change24h = parseFloat(item['Değişim'] || '0');
+
+                if (symbol) {
                      processedAssets[symbol] = {
                         symbol: symbol as AssetSymbol,
                         buyPrice,
@@ -89,13 +88,12 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
 
     useEffect(() => {
-        fetchAllData(true);
+        fetchAllData();
     }, [fetchAllData]);
 
     const refreshData = useCallback(() => {
         if (loading) return;
-        setLoading(true);
-        fetchAllData(false).finally(() => setLoading(false));
+        fetchAllData();
     }, [fetchAllData, loading]);
 
     const value = { liveAssets, loading, error, lastUpdated, refreshData };
