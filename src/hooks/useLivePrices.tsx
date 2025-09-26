@@ -1,15 +1,14 @@
 
 'use client';
 import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from 'react';
-import type { AssetSymbol } from '@/lib/types';
 
-// This type represents the structure of the data after being processed
-// It aligns with what the components expect.
+// Bu tip, verinin işlendikten sonraki yapısını temsil eder
+// ve bileşenlerin beklentileriyle uyumludur.
 type LiveAssetData = {
-    symbol: AssetSymbol;
+    symbol: string;
     buyPrice?: number;
     sellPrice?: number;
-    price?: number; // For crypto
+    price?: number; // Kripto için
     change24h: number;
 };
 
@@ -27,13 +26,15 @@ interface ProviderProps {
     children: ReactNode;
 }
 
-// Function to parse numeric values from string, handling different decimal formats
-const parseNumber = (str: string | number): number => {
+// String'den sayısal değerleri ayrıştıran fonksiyon, farklı ondalık formatlarını ele alır
+const parseNumber = (str: string | number | undefined): number => {
     if (typeof str === 'number') return str;
     if (!str || typeof str !== 'string') return 0;
-    return parseFloat(str.toString().replace(/,/g, '.'));
+    // Firestore'dan gelen "1,234.56" gibi formatlar yerine "1234.56" formatını kabul eder
+    return parseFloat(str.replace(/,/g, ''));
 };
 
+// Değişimi hesaplayan fonksiyon
 const calculateChange = (item: any): number => {
     if (item && item.forex && item.forex.lastOpen && item.forex.lastClose) {
         const lastOpen = parseNumber(item.forex.lastOpen);
@@ -42,7 +43,7 @@ const calculateChange = (item: any): number => {
             return ((lastClose - lastOpen) / lastOpen) * 100;
         }
     }
-    // Fallback if data is missing
+    // Veri eksikse geri dönüş değeri
     return 0;
 }
 
@@ -70,15 +71,19 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
-                const symbol = item['Ürün'];
-                // Use public_bid and public_ask for buy and sell prices respectively
-                const buyPrice = parseNumber(item['Alış']);
-                const sellPrice = parseNumber(item['Satış']);
-                const change24h = item['Değişim'];
+                // `item.name` alanını sembol olarak kullan
+                const symbol = item.name;
+
+                // Doğru fiyatları `forex.groups` içinden al
+                const buyPrice = item.forex?.groups?.[0]?.bid ? parseNumber(item.forex.groups[0].bid) : 0;
+                const sellPrice = item.forex?.groups?.[0]?.ask ? parseNumber(item.forex.groups[0].ask) : 0;
+                
+                // Değişimi `forex.lastOpen` ve `forex.lastClose` ile hesapla
+                const change24h = calculateChange(item);
 
                 if (symbol) {
                      processedAssets[symbol] = {
-                        symbol: symbol as AssetSymbol,
+                        symbol: symbol,
                         buyPrice,
                         sellPrice,
                         change24h: isFinite(change24h) ? change24h : 0,
@@ -95,7 +100,6 @@ export function LivePricesProvider({ children }: ProviderProps) {
         } finally {
             setLoading(false);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -104,7 +108,6 @@ export function LivePricesProvider({ children }: ProviderProps) {
     }, [fetchAllData]);
 
     const refreshData = useCallback(() => {
-        // No need to check for loading here, as fetchAllData will handle it.
         fetchAllData();
     }, [fetchAllData]);
 
