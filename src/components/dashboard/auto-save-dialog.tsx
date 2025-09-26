@@ -36,7 +36,6 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Loader2, Wand2 } from "lucide-react";
-import { assets } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import type { AutomatedSavingsGoalOutput } from "@/ai/flows/automated-savings-goal-suggestions";
 import {
@@ -46,7 +45,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useParams } from "next/navigation";
-import { addAutoSavePlan } from "@/lib/data";
+import { useLivePrices } from "@/hooks/useLivePrices";
 
 
 const formSchema = z.object({
@@ -69,6 +68,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   const { toast } = useToast();
   const params = useParams();
   const lang = params.lang as 'tr' | 'en';
+  const { liveAssets } = useLivePrices();
   
   const autoSaveDialogDict = dict.portfolioSummary.autoSaveDialog;
   const assetNames = dict.assetNames;
@@ -82,7 +82,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
     },
   });
 
-  const availableAssets = Object.values(assets);
+  const availableAssets = Object.values(liveAssets);
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
@@ -116,9 +116,9 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
   function handleAccept() {
     if (!suggestion) return;
 
-    // Add the new plan to our "database" (localStorage)
-    addAutoSavePlan({
-        assetSymbol: suggestion.suggestedAsset as any,
+    // In a real app, you'd save this to a database
+    console.log("Accepted Plan:", {
+        assetSymbol: suggestion.suggestedAsset,
         amount: suggestion.suggestedAmount,
     });
 
@@ -127,10 +127,7 @@ export function AutoSaveDialog({ dict }: { dict: any }) {
       description: autoSaveDialogDict.toastSuccessDescription.replace('{asset}', suggestion?.suggestedAsset),
     });
     
-    // Reset the dialog and reload the page to show the new plan
     resetAndClose();
-    // Using window.location.reload() is a simple way to ensure the other component re-fetches from localStorage
-    window.location.reload();
   }
 
   function resetAndClose() {

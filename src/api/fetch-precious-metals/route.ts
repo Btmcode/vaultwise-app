@@ -11,15 +11,14 @@ export async function GET() {
         const snapshot = await db.collection('precious_metals').get();
 
         if (snapshot.empty) {
-            console.warn("Firestore 'precious_metals' collection is empty.");
              return NextResponse.json({ error: 'No precious metals data found in database.' }, { status: 404 });
         }
 
         const data: any[] = [];
         snapshot.forEach(doc => {
+            const docData = doc.data();
             data.push({
-                "Ürün": doc.id,
-                ...doc.data()
+                ...docData, // Spread all fields from the document
             });
         });
 

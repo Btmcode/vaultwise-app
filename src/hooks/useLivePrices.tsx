@@ -7,6 +7,7 @@ type LiveAssetData = {
     buyPrice: number;
     sellPrice: number;
     change24h: number;
+    price?: number; // for crypto
 };
 
 interface LivePricesContextType {
@@ -24,10 +25,11 @@ interface ProviderProps {
 }
 
 const parsePrice = (price: string | number | undefined): number => {
+    if (price === null || price === undefined) return 0;
     if (typeof price === 'number') return price;
     if (typeof price === 'string') {
-        // Handles formats like "1,234.56" and "1234.56"
-        return parseFloat(price.replace(/,/g, ''));
+        const num = parseFloat(price.replace(/,/g, ''));
+        return isNaN(num) ? 0 : num;
     }
     return 0;
 };
@@ -68,11 +70,11 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
-                const symbol = item['Ürün'] || item.name;
+                const symbol = item.name;
                 if (!symbol) return;
                 
-                // Safely access nested group data with optional chaining and provide a fallback
                 const group = item.forex?.groups?.[0];
+                
                 const buyPrice = group ? parsePrice(group.bid) : parsePrice(item.public_bid);
                 const sellPrice = group ? parsePrice(group.ask) : parsePrice(item.public_ask);
                 const change24h = calculateChange(item.forex);
@@ -99,6 +101,8 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
     useEffect(() => {
         fetchAllData();
+        const interval = setInterval(fetchAllData, 60000); // Auto-refresh every 60 seconds
+        return () => clearInterval(interval);
     }, [fetchAllData]);
 
     const refreshData = useCallback(() => {

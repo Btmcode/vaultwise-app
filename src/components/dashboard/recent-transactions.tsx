@@ -6,7 +6,6 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { assets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
 import type { AssetSymbol, Transaction, TransactionType } from "@/lib/types";
 
@@ -67,7 +66,7 @@ export function RecentTransactions({ recentTransactionsDict, assetNames, transac
           return (
             <div key={tx.id} className="flex items-center gap-4">
               <div className="bg-muted p-2 rounded-full">
-                <Icon className="h-6 w-6" />
+                {Icon && <Icon className="h-6 w-6" />}
               </div>
               <div className="grid gap-1 flex-1">
                 <p className="text-sm font-medium leading-none">

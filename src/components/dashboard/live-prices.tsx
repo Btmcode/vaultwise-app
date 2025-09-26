@@ -11,7 +11,6 @@ import {
   InfoIcon,
   GoldBarIcon,
 } from "@/components/icons";
-import type { AssetSymbol } from "@/lib/types";
 
 const assetOrder: string[] = [
   "HAS ALTIN",
