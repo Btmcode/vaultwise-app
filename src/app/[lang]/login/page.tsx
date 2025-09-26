@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
@@ -14,6 +14,7 @@ import { VaultWiseLogo } from '@/components/icons';
 import { auth } from '@/lib/firebase/client';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { Loader2 } from 'lucide-react';
+import HeroScene from '@/components/landing/hero-scene';
 
 
 export default function LoginPage() {
@@ -100,8 +101,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen w-full items-center justify-center bg-background px-4">
-       <Card className="mx-auto max-w-sm w-full">
+    <div className="flex min-h-screen w-full items-center justify-center bg-background px-4 relative">
+       <HeroScene />
+       <Card className="mx-auto max-w-sm w-full z-10">
         <CardHeader className="text-center">
             <div className="flex justify-center items-center mb-4">
                 <VaultWiseLogo className="h-12 w-12 text-primary" />
