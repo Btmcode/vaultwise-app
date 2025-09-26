@@ -1,41 +1,20 @@
-
 'use server';
 
 import { getAdminApp } from '@/lib/firebase/server';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
-import { cookies } from 'next/headers';
 import type { IbanAccount, FirestoreUser, PortfolioAsset, Transaction, UserProfile } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 import { revalidatePath } from 'next/cache';
-import { getAuth } from 'firebase-admin/auth';
+import { getCurrentUser } from './server-auth';
 
 export const runtime = 'nodejs';
-
-async function getCurrentUserData(): Promise<{ uid: string; email: string | undefined } | null> {
-  try {
-    const adminApp = getAdminApp();
-    const auth = getAuth(adminApp);
-    const sessionCookieValue = cookies().get('firebase-session')?.value;
-    
-    if (!sessionCookieValue) {
-      // This is a normal case for a logged-out user.
-      return null;
-    }
-    const decodedToken = await auth.verifySessionCookie(sessionCookieValue, true);
-    return { uid: decodedToken.uid, email: decodedToken.email };
-  } catch (error) {
-    // This can happen if the cookie is expired or invalid. Also a normal case.
-    console.log("Could not verify session cookie:", error);
-    return null;
-  }
-}
 
 // Function to get the user document from Firestore
 export async function getUserDoc(): Promise<FirestoreUser | null> {
     const adminApp = getAdminApp();
     const db = getFirestore(adminApp);
     
-    const currentUser = await getCurrentUserData();
+    const currentUser = await getCurrentUser();
     if (!currentUser) {
         console.log("Could not get current user. User may not be logged in.");
         return null;
@@ -94,7 +73,7 @@ export async function addIbanAccount(account: Omit<IbanAccount, 'id'>): Promise<
     const adminApp = getAdminApp();
     const db = getFirestore(adminApp);
     
-    const currentUser = await getCurrentUserData();
+    const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User not authenticated");
 
     const newAccount: IbanAccount = { ...account, id: uuidv4() };
@@ -109,7 +88,7 @@ export async function removeIbanAccount(accountId: string): Promise<void> {
     const adminApp = getAdminApp();
     const db = getFirestore(adminApp);
 
-    const currentUser = await getCurrentUserData();
+    const currentUser = await getCurrentUser();
     if (!currentUser) throw new Error("User not authenticated");
     
     const userDoc = await getUserDoc();

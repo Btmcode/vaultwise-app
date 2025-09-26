@@ -12,10 +12,18 @@ import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { getUserDoc } from '@/lib/firebase/firestore';
+import { getCurrentUser } from "@/lib/firebase/server-auth";
+import { redirect } from "next/navigation";
 
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
   const dict = await getDictionary(lang);
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect(`/${lang}/login`);
+  }
+
   const userData = await getUserDoc();
 
   if (!userData) {
