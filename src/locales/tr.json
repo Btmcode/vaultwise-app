@@ -294,19 +294,34 @@
         "description": "VaultWise hesabınızdan bankanıza para transfer edin.",
         "cardTitle": "Çekme Detayları",
         "cardDescription": "Çekilecek tutarı girin ve hedef hesabı seçin.",
-        "amountLabel": "Tutar (USD)",
+        "amountLabel": "Tutar (TRY)",
         "ibanLabel": "Banka Hesabına",
         "ibanPlaceholder": "Kayıtlı bir IBAN seçin",
         "noIban": "Kayıtlı IBAN yok. Lütfen Ayarlar'dan bir tane ekleyin.",
         "button": "Para Çek",
+        "transactionFeeLabel": "İşlem Ücreti",
+        "netAmountLabel": "Hesaba Geçecek Net Tutar",
+        "fastInfo": {
+            "title": "FAST Transfer",
+            "description": "FAST ile 100.000 TL'ye kadar 7/24 hızlı ve ücretsiz Türk Lirası çekebilirsiniz."
+        },
+        "info": {
+            "title": "Bilgilendirme",
+            "personalAccount": "VaultWise'da yalnızca kendi adınıza kayıtlı bir banka hesabına para çekebilirsiniz.",
+            "limit24h": "24 saatlik para çekme limitinizden kalan: {amount} TRY",
+            "limit30d": "30 günlük para çekme limitinizden kalan: {amount} TRY",
+            "minWithdrawal": "Banka transferi yalnızca {amount} TRY ve üzeri para çekme işlemleri için geçerlidir.",
+            "supportedBanks": "VaultWise'dan Akbank, Türkiye İş Bankası, VakıfBank, Yapı Kredi ve Ziraat Bankası hesaplarına 7/24 havale ile para çekebilirsiniz.",
+            "otherBanks": "Diğer bankalara hafta içi 9.00 - 16.45 saatleri arasında vereceğiniz çekim talepleri aynı gün, hafta sonu ve resmi tatillerdeki çekim talepleri ilk iş gününde gerçekleşecektir."
+        },
         "toast": {
             "success": {
                 "title": "Çekme İşlemi Başlatıldı",
-                "description": "${amount} tutarındaki çekme işleminiz başlatıldı. Paranın hesabınıza ulaşması 1-2 iş günü sürebilir."
+                "description": "{amount} TRY tutarındaki çekme işleminiz başlatıldı. Paranın hesabınıza ulaşması 1-2 iş günü sürebilir."
             },
             "error": {
                 "title": "Çekme Başarısız",
-                "invalidInput": "Lütfen bir IBAN seçin ve sıfırdan büyük geçerli bir tutar girin."
+                "invalidInput": "Lütfen bir IBAN seçin ve {min} TRY'den büyük geçerli bir tutar girin."
             }
         }
     },
@@ -322,3 +337,5 @@
         "dataSourceError": "Veri kaynağı hatası nedeniyle analiz yapılamıyor."
     }
 }
+
+    
