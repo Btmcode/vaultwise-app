@@ -29,6 +29,7 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: { lang: 'tr' | 'en' };
 }) {
+  const dict = getDictionary(params.lang);
   return (
     <html lang={params.lang} suppressHydrationWarning>
       <head />
