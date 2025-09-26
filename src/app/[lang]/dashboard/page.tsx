@@ -51,6 +51,7 @@ export default function DashboardPage() {
       <div className="flex min-h-screen w-full flex-col bg-background">
         <Header lang={lang} dict={dict.header} />
         <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+          <Skeleton className="h-80" />
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
             <Skeleton className="h-36" />
             <Skeleton className="h-36" />
@@ -82,7 +83,12 @@ export default function DashboardPage() {
   return (
     <>
       <Header lang={lang} dict={dict.header} />
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+      <main className="flex flex-1 flex-col gap-8 p-4 md:p-8">
+        <div>
+          <h2 className="text-2xl font-bold mb-4">{dict.livePrices.title}</h2>
+          <LivePrices dict={dict} portfolioAssets={userData.portfolio} />
+        </div>
+        
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <PortfolioSummary dict={dict} portfolioAssets={userData.portfolio} />
           <AssetDistribution dict={dict} portfolioAssets={userData.portfolio} />
@@ -93,16 +99,13 @@ export default function DashboardPage() {
           </Card>
           <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
         </div>
+        
         <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
-            <PortfolioChart dict={dict.portfolioChart} data={chartData} />
-            <div>
-              <h2 className="text-2xl font-bold mb-4">{dict.livePrices.title}</h2>
-              <LivePrices dict={dict} portfolioAssets={userData.portfolio} />
-            </div>
-        </div>
-        <Card>
+          <PortfolioChart dict={dict.portfolioChart} data={chartData} />
+          <Card>
             <AssetList dict={dict} portfolioAssets={userData.portfolio} />
-        </Card>
+          </Card>
+        </div>
       </main>
     </>
   );
