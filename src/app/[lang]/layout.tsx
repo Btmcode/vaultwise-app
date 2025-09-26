@@ -1,3 +1,4 @@
+
 import type { Metadata } from 'next';
 import { getDictionary } from '@/app/dictionaries';
 import '../globals.css';
@@ -7,11 +8,6 @@ import { Inter } from 'next/font/google';
 import { Providers } from '@/components/providers';
 
 const inter = Inter({ subsets: ['latin'] });
-
-type LayoutProps = {
-  params: { lang: 'tr' | 'en' };
-  children: React.ReactNode;
-};
 
 // This function is async and correctly awaits params
 export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en' } }): Promise<Metadata> {
@@ -30,7 +26,6 @@ export default function RootLayout({
   children: React.ReactNode;
   params: { lang: 'tr' | 'en' };
 }) {
-  const dict = getDictionary(params.lang);
   return (
     <html lang={params.lang} suppressHydrationWarning>
       <head />
