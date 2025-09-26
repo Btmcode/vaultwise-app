@@ -37,25 +37,37 @@ export default function DepositPage() {
     setIbanAccounts(getIbanAccounts());
   }, []);
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, '');
+    if (rawValue) {
+        const numericValue = parseInt(rawValue, 10);
+        setAmount(numericValue.toLocaleString('tr-TR'));
+    } else {
+        setAmount('');
+    }
+  };
+
   const handleDeposit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-
-    if (!selectedIban || !amount || parseFloat(amount) <= 0) {
+    
+    const numericAmount = parseFloat(amount.replace(/\./g, ''));
+    
+    if (!selectedIban || !amount || isNaN(numericAmount) || numericAmount <= 0) {
       toast({
         variant: "destructive",
         title: depositDict.toast.error.title,
         description: depositDict.toast.error.invalidInput,
       });
-      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     // Simulate API call
     setTimeout(() => {
       toast({
         title: depositDict.toast.success.title,
-        description: depositDict.toast.success.description.replace('{amount}', parseFloat(amount).toLocaleString('tr-TR')),
+        description: depositDict.toast.success.description.replace('{amount}', numericAmount.toLocaleString('tr-TR')),
       });
       setAmount('');
       setSelectedIban(null);
@@ -83,10 +95,10 @@ export default function DepositPage() {
                   <Label htmlFor="amount">{depositDict.amountLabel}</Label>
                   <Input
                     id="amount"
-                    type="number"
-                    placeholder="1000"
+                    type="text"
+                    placeholder="1.000"
                     value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    onChange={handleAmountChange}
                   />
                 </div>
                 <div className="grid gap-2">

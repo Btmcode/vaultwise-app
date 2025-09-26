@@ -37,25 +37,44 @@ export default function WithdrawPage() {
     setIbanAccounts(getIbanAccounts());
   }, []);
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^\d.]/g, '');
+    const parts = rawValue.split('.');
+    if (parts.length > 2) {
+        return; 
+    }
+    let integerPart = parts[0];
+    if (integerPart) {
+        integerPart = parseInt(integerPart.replace(/[^\d]/g, ''), 10).toLocaleString('en-US');
+    }
+    let formattedValue = integerPart;
+    if (parts.length > 1) {
+        formattedValue += '.' + parts[1].substring(0, 2);
+    }
+    setAmount(formattedValue);
+  };
+
   const handleWithdraw = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
 
-    if (!selectedIban || !amount || parseFloat(amount) <= 0) {
+    const numericAmount = parseFloat(amount.replace(/,/g, ''));
+
+    if (!selectedIban || !amount || isNaN(numericAmount) || numericAmount <= 0) {
       toast({
         variant: "destructive",
         title: withdrawDict.toast.error.title,
         description: withdrawDict.toast.error.invalidInput,
       });
-      setIsLoading(false);
       return;
     }
+
+    setIsLoading(true);
 
     // Simulate API call
     setTimeout(() => {
       toast({
         title: withdrawDict.toast.success.title,
-        description: withdrawDict.toast.success.description.replace('{amount}', parseFloat(amount).toLocaleString('en-US')),
+        description: withdrawDict.toast.success.description.replace('{amount}', numericAmount.toLocaleString('en-US')),
       });
       setAmount('');
       setSelectedIban(null);
@@ -83,10 +102,10 @@ export default function WithdrawPage() {
                   <Label htmlFor="amount">{withdrawDict.amountLabel}</Label>
                   <Input
                     id="amount"
-                    type="number"
+                    type="text"
                     placeholder="100"
                     value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
+                    onChange={handleAmountChange}
                   />
                 </div>
                 <div className="grid gap-2">
