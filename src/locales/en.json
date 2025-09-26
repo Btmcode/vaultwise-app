@@ -179,6 +179,17 @@
         "buy": "Buy",
         "sell": "Sell"
     },
+    "aiMarketAnalysis": {
+        "title": "AI Market Analysis",
+        "description": "Get an AI-powered analysis of the current market.",
+        "buttonText": "Generate Analysis",
+        "buttonLoadingText": "Generating...",
+        "noData": "Market data is not available to generate an analysis.",
+        "generationFailed": "Failed to generate analysis. Please try again.",
+        "general": "An unexpected error occurred while generating the analysis.",
+        "errorTitle": "Analysis Error",
+        "dataSourceError": "Data source error, analysis cannot be generated."
+    },
     "profilePage": {
         "title": "Profile",
         "cardTitle": "Personal Information",
@@ -348,5 +359,3 @@
         }
     }
 }
-
-    

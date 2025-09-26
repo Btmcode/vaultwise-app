@@ -34,7 +34,7 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
               <AssetDistribution dict={dict} />
             </Suspense>
              <Suspense fallback={<Skeleton className="h-48" />}>
-                <AIMarketAnalysis lang={lang} dict={dict.livePrices} />
+                <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
             </Suspense>
           </div>
           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">

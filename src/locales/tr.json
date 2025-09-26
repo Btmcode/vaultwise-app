@@ -179,6 +179,17 @@
         "buy": "Alış",
         "sell": "Satış"
     },
+    "aiMarketAnalysis": {
+        "title": "Yapay Zeka Piyasa Analizi",
+        "description": "Mevcut piyasanın yapay zeka destekli bir analizini alın.",
+        "buttonText": "Analiz Oluştur",
+        "buttonLoadingText": "Oluşturuluyor...",
+        "noData": "Analiz oluşturmak için piyasa verisi mevcut değil.",
+        "generationFailed": "Analiz oluşturulamadı. Lütfen tekrar deneyin.",
+        "general": "Analiz oluşturulurken beklenmedik bir hata oluştu.",
+        "errorTitle": "Analiz Hatası",
+        "dataSourceError": "Veri kaynağı hatası, analiz oluşturulamıyor."
+    },
     "profilePage": {
         "title": "Profil",
         "cardTitle": "Kişisel Bilgiler",
@@ -348,5 +359,3 @@
         }
     }
 }
-
-    
