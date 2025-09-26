@@ -126,7 +126,7 @@
             "toastErrorTitle": "Hata",
             "toastErrorDescription": "Öneri oluşturulamadı. Lütfen tekrar deneyin."
         },
-        "growth": "geçen aydan +%2.1"
+        "growth": "geçen haftadan beri"
     },
     "assetDistribution": {
         "title": "Varlık Dağılımı",
@@ -186,7 +186,21 @@
         "nameLabel": "Tam Ad",
         "emailLabel": "E-posta Adresi",
         "changePicture": "Resmi Değiştir",
-        "saveButton": "Değişiklikleri Kaydet"
+        "saveButton": "Değişiklikleri Kaydet",
+        "toast": {
+            "success": {
+                "title": "Profil Güncellendi",
+                "description": "Kişisel bilgileriniz başarıyla kaydedildi."
+            },
+            "error": {
+                "title": "Güncelleme Başarısız",
+                "description": "Değişiklikleriniz kaydedilemedi. Lütfen tekrar deneyin."
+            },
+            "featureNotAvailable": {
+                 "title": "Özellik Mevcut Değil",
+                 "description": "Profil resmini değiştirme henüz uygulanmadı."
+            }
+        }
     },
     "settingsPage": {
         "title": "Ayarlar",
@@ -251,6 +265,16 @@
                     "emptyFields": "Hesap sahibi ve IBAN alanları boş bırakılamaz.",
                     "invalidIban": "Lütfen geçerli bir IBAN girin."
                 }
+            }
+        },
+         "toast": {
+            "saveSuccess": {
+                "title": "Ayarlar Kaydedildi",
+                "description": "Yeni ayarlarınız başarıyla kaydedildi."
+            },
+            "saveError": {
+                "title": "Kaydetme Başarısız",
+                "description": "Ayarlarınız kaydedilirken bir sorun oluştu. Lütfen tekrar deneyin."
             }
         }
     },

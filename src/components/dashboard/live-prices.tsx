@@ -54,32 +54,40 @@ export function LivePrices({ dict }: { dict: any }) {
  const formatPrice = (price: number | undefined, symbol: string) => {
     if (price === undefined || isNaN(price)) return "...";
 
-    let currency = 'TRY';
-    let locale = 'tr-TR';
+    let currency = 'USD';
+    let locale = 'en-US';
+    let currencyDisplay = 'symbol';
+    let currencyText = ' USD';
     
-    if (symbol.includes('USD') || symbol === 'BTC' || symbol === 'PAXG' || symbol === 'XAUT' || symbol === 'XAU_ONS' || symbol === 'XAG_ONS') {
-        currency = 'USD';
-        locale = 'en-US';
-    } else if (symbol.includes('EUR')) {
+    if (symbol.includes('EUR')) {
         currency = 'EUR';
         locale = 'de-DE';
-    }
-
-    if (symbol === 'USD_TRY') {
+        currencyText = ' EUR';
+    } else if (symbol.includes('TL') || symbol === 'USD_TRY' || symbol === 'XAU') {
         currency = 'TRY';
         locale = 'tr-TR';
+        currencyDisplay = 'code';
+        currencyText = ' TRY';
     }
-    
-    const style = (currency === 'TRY') ? 'decimal' : 'currency';
-    
+
     const formatted = new Intl.NumberFormat(locale, {
-      style: style,
-      currency: currency,
+      style: 'decimal',
       maximumFractionDigits: symbol === 'USD_TRY' ? 4 : 2,
       minimumFractionDigits: 2,
     }).format(price);
 
-    return style === 'decimal' ? `₺${formatted}` : formatted;
+    // Return text instead of symbol for TRY
+    if (currency === 'TRY') {
+      return `${formatted} TRY`;
+    }
+    
+    // For USD and EUR, use Intl with symbol
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: currency,
+      maximumFractionDigits: symbol === 'USD_TRY' ? 4 : 2,
+      minimumFractionDigits: 2,
+    }).format(price);
   };
   
   const getIcon = (symbol: string) => {

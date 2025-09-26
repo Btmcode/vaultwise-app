@@ -126,7 +126,7 @@
             "toastErrorTitle": "Error",
             "toastErrorDescription": "Could not generate suggestion. Please try again."
         },
-        "growth": "+2.1% from last month"
+        "growth": "since last week"
     },
     "assetDistribution": {
         "title": "Asset Distribution",
@@ -186,7 +186,21 @@
         "nameLabel": "Full Name",
         "emailLabel": "Email Address",
         "changePicture": "Change Picture",
-        "saveButton": "Save Changes"
+        "saveButton": "Save Changes",
+        "toast": {
+            "success": {
+                "title": "Profile Updated",
+                "description": "Your personal information has been saved."
+            },
+             "error": {
+                "title": "Update Failed",
+                "description": "Could not save your changes. Please try again."
+            },
+            "featureNotAvailable": {
+                 "title": "Feature Not Available",
+                 "description": "Changing profile picture is not yet implemented."
+            }
+        }
     },
     "settingsPage": {
         "title": "Settings",
@@ -251,6 +265,16 @@
                     "emptyFields": "Account holder and IBAN fields cannot be empty.",
                     "invalidIban": "Please enter a valid IBAN."
                 }
+            }
+        },
+        "toast": {
+            "saveSuccess": {
+                "title": "Settings Saved",
+                "description": "Your new settings have been successfully saved."
+            },
+            "saveError": {
+                "title": "Error Saving",
+                "description": "There was a problem saving your settings. Please try again."
             }
         }
     },

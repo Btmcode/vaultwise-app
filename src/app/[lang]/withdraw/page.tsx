@@ -140,6 +140,10 @@ export default function WithdrawPage() {
       setIsLoading(false);
     }, 1000);
   };
+  
+  const formatTRY = (value: number) => {
+    return `${value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TRY`;
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -159,7 +163,7 @@ export default function WithdrawPage() {
                         <Wallet className="h-10 w-10 text-muted-foreground" />
                         <div>
                             <p className="text-sm text-muted-foreground">{withdrawDict.summary.availableBalance}</p>
-                            <p className="text-2xl font-bold">{userProfile.availableBalanceTRY.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY'})}</p>
+                            <p className="text-2xl font-bold">{formatTRY(userProfile.availableBalanceTRY)}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -238,8 +242,8 @@ export default function WithdrawPage() {
             <h3 className="text-lg font-semibold text-foreground">{withdrawDict.info.title}</h3>
             <ul className="list-disc list-inside space-y-2">
               <li>{withdrawDict.info.personalAccount}</li>
-              <li>{withdrawDict.info.limit24h.replace('{amount}', remaining24h.toLocaleString('tr-TR'))}</li>
-              <li>{withdrawDict.info.limit30d.replace('{amount}', remaining30d.toLocaleString('tr-TR'))}</li>
+              <li>{withdrawDict.info.limit24h.replace('{amount}', formatTRY(remaining24h))}</li>
+              <li>{withdrawDict.info.limit30d.replace('{amount}', formatTRY(remaining30d))}</li>
               <li>{withdrawDict.info.minWithdrawal.replace('{amount}', '10')}</li>
               <li>{withdrawDict.info.supportedBanks}</li>
               <li>{withdrawDict.info.otherBanks}</li>

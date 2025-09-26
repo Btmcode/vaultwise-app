@@ -59,6 +59,14 @@ export default function SettingsPage() {
 
   const settingsDict = dict.settingsPage;
 
+  const handleGenericSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    toast({
+        title: settingsDict.toast.saveSuccess.title,
+        description: settingsDict.toast.saveSuccess.description,
+    });
+  };
+
   const handleFeedbackSubmit = async () => {
     if (feedbackText.trim().length < 10) {
       toast({
@@ -211,86 +219,90 @@ export default function SettingsPage() {
                     </CardContent>
                 </Card>
 
-                <Card>
-                    <CardHeader>
-                        <CardTitle>{settingsDict.account.title}</CardTitle>
-                        <CardDescription>{settingsDict.account.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid gap-4">
-                         <div className="grid gap-2">
-                            <label htmlFor="current-password">{settingsDict.account.currentPassword}</label>
-                            <div className="relative">
-                                <Input id="current-password" name="current-password" type={showCurrentPassword ? "text" : "password"} autoComplete="current-password" />
-                                <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                                    onClick={() => setShowCurrentPassword((prev) => !prev)}
-                                >
-                                    {showCurrentPassword ? <EyeOff /> : <Eye />}
-                                </Button>
+                <form onSubmit={handleGenericSave}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>{settingsDict.account.title}</CardTitle>
+                            <CardDescription>{settingsDict.account.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="grid gap-4">
+                            <div className="grid gap-2">
+                                <label htmlFor="current-password">{settingsDict.account.currentPassword}</label>
+                                <div className="relative">
+                                    <Input id="current-password" name="current-password" type={showCurrentPassword ? "text" : "password"} autoComplete="current-password" />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                                        onClick={() => setShowCurrentPassword((prev) => !prev)}
+                                    >
+                                        {showCurrentPassword ? <EyeOff /> : <Eye />}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                         <div className="grid gap-2">
-                            <label htmlFor="new-password">{settingsDict.account.newPassword}</label>
-                            <div className="relative">
-                                <Input id="new-password" name="new-password" type={showNewPassword ? "text" : "password"} autoComplete="new-password"/>
-                                 <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                                    onClick={() => setShowNewPassword((prev) => !prev)}
-                                >
-                                    {showNewPassword ? <EyeOff /> : <Eye />}
-                                </Button>
+                            <div className="grid gap-2">
+                                <label htmlFor="new-password">{settingsDict.account.newPassword}</label>
+                                <div className="relative">
+                                    <Input id="new-password" name="new-password" type={showNewPassword ? "text" : "password"} autoComplete="new-password"/>
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                                        onClick={() => setShowNewPassword((prev) => !prev)}
+                                    >
+                                        {showNewPassword ? <EyeOff /> : <Eye />}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                         <div className="grid gap-2">
-                            <label htmlFor="confirm-new-password">{settingsDict.account.confirmNewPassword}</label>
-                            <div className="relative">
-                                <Input id="confirm-new-password" name="confirm-new-password" type={showConfirmNewPassword ? "text" : "password"} autoComplete="new-password" />
-                                 <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="icon"
-                                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                                    onClick={() => setShowConfirmNewPassword((prev) => !prev)}
-                                >
-                                    {showConfirmNewPassword ? <EyeOff /> : <Eye />}
-                                </Button>
+                            <div className="grid gap-2">
+                                <label htmlFor="confirm-new-password">{settingsDict.account.confirmNewPassword}</label>
+                                <div className="relative">
+                                    <Input id="confirm-new-password" name="confirm-new-password" type={showConfirmNewPassword ? "text" : "password"} autoComplete="new-password" />
+                                    <Button
+                                        type="button"
+                                        variant="ghost"
+                                        size="icon"
+                                        className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
+                                        onClick={() => setShowConfirmNewPassword((prev) => !prev)}
+                                    >
+                                        {showConfirmNewPassword ? <EyeOff /> : <Eye />}
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    </CardContent>
-                    <CardFooter className="border-t px-6 py-4">
-                        <Button>{settingsDict.account.saveButton}</Button>
-                    </CardFooter>
-                </Card>
+                        </CardContent>
+                        <CardFooter className="border-t px-6 py-4">
+                            <Button type="submit">{settingsDict.account.saveButton}</Button>
+                        </CardFooter>
+                    </Card>
+                </form>
 
-                 <Card>
-                    <CardHeader>
-                        <CardTitle>{settingsDict.notifications.title}</CardTitle>
-                        <CardDescription>{settingsDict.notifications.description}</CardDescription>
-                    </CardHeader>
-                    <CardContent className="grid gap-4">
-                        <div className="flex items-center space-x-2">
-                            <Switch id="price-alerts" defaultChecked />
-                            <label htmlFor="price-alerts">{settingsDict.notifications.priceAlerts}</label>
-                        </div>
-                         <div className="flex items-center space-x-2">
-                            <Switch id="auto-save-updates" />
-                            <label htmlFor="auto-save-updates">{settingsDict.notifications.autoSaveUpdates}</label>
-                        </div>
-                         <div className="flex items-center space-x-2">
-                            <Switch id="newsletter" defaultChecked />
-                            <label htmlFor="newsletter">{settingsDict.notifications.newsletter}</label>
-                        </div>
-                    </CardContent>
-                    <CardFooter className="border-t px-6 py-4">
-                        <Button>{settingsDict.notifications.saveButton}</Button>
-                    </CardFooter>
-                </Card>
+                <form onSubmit={handleGenericSave}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>{settingsDict.notifications.title}</CardTitle>
+                            <CardDescription>{settingsDict.notifications.description}</CardDescription>
+                        </CardHeader>
+                        <CardContent className="grid gap-4">
+                            <div className="flex items-center space-x-2">
+                                <Switch id="price-alerts" defaultChecked />
+                                <label htmlFor="price-alerts">{settingsDict.notifications.priceAlerts}</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Switch id="auto-save-updates" />
+                                <label htmlFor="auto-save-updates">{settingsDict.notifications.autoSaveUpdates}</label>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                                <Switch id="newsletter" defaultChecked />
+                                <label htmlFor="newsletter">{settingsDict.notifications.newsletter}</label>
+                            </div>
+                        </CardContent>
+                        <CardFooter className="border-t px-6 py-4">
+                            <Button type="submit">{settingsDict.notifications.saveButton}</Button>
+                        </CardFooter>
+                    </Card>
+                </form>
 
                 <Card>
                     <CardHeader>

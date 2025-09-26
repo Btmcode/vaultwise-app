@@ -20,13 +20,25 @@ export default function ProfilePage() {
   
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
   const profileDict = dict.profilePage;
+  const toastDict = profileDict.toast;
 
   const handleChangePicture = () => {
     toast({
-        title: "Feature not available",
-        description: "Changing profile picture is not yet implemented.",
+        title: toastDict.featureNotAvailable.title,
+        description: toastDict.featureNotAvailable.description,
     });
   };
+
+  const handleSaveChanges = (e: React.FormEvent) => {
+    e.preventDefault();
+    // In a real app, you would have form state and validation here.
+    // For now, just show a success toast.
+    toast({
+        title: toastDict.success.title,
+        description: toastDict.success.description,
+    });
+  };
+
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -37,38 +49,40 @@ export default function ProfilePage() {
         </div>
         <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
           <div className="grid gap-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>{profileDict.cardTitle}</CardTitle>
-                <CardDescription>{profileDict.cardDescription}</CardDescription>
-              </CardHeader>
-              <CardContent>
-                <form className="grid gap-4">
-                  <div className="flex items-center gap-4">
-                    {userAvatar && (
-                        <Avatar className="h-20 w-20">
-                          <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} className="object-cover" />
-                          <AvatarFallback>AV</AvatarFallback>
-                        </Avatar>
-                    )}
-                    <Button variant="outline" onClick={handleChangePicture}>{profileDict.changePicture}</Button>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                     <div className="grid gap-2">
-                        <label htmlFor="name">{profileDict.nameLabel}</label>
-                        <Input id="name" name="name" defaultValue="Ali Veli" autoComplete="name" />
+            <form onSubmit={handleSaveChanges}>
+                <Card>
+                <CardHeader>
+                    <CardTitle>{profileDict.cardTitle}</CardTitle>
+                    <CardDescription>{profileDict.cardDescription}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="grid gap-4">
+                    <div className="flex items-center gap-4">
+                        {userAvatar && (
+                            <Avatar className="h-20 w-20">
+                            <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} className="object-cover" />
+                            <AvatarFallback>AV</AvatarFallback>
+                            </Avatar>
+                        )}
+                        <Button type="button" variant="outline" onClick={handleChangePicture}>{profileDict.changePicture}</Button>
                     </div>
-                    <div className="grid gap-2">
-                        <label htmlFor="email">{profileDict.emailLabel}</label>
-                        <Input id="email" name="email" type="email" defaultValue="ali.veli@example.com" autoComplete="email" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div className="grid gap-2">
+                            <label htmlFor="name">{profileDict.nameLabel}</label>
+                            <Input id="name" name="name" defaultValue="Ali Veli" autoComplete="name" />
+                        </div>
+                        <div className="grid gap-2">
+                            <label htmlFor="email">{profileDict.emailLabel}</label>
+                            <Input id="email" name="email" type="email" defaultValue="ali.veli@example.com" autoComplete="email" />
+                        </div>
                     </div>
-                  </div>
-                </form>
-              </CardContent>
-              <CardFooter className="border-t px-6 py-4">
-                <Button>{profileDict.saveButton}</Button>
-              </CardFooter>
-            </Card>
+                    </div>
+                </CardContent>
+                <CardFooter className="border-t px-6 py-4">
+                    <Button type="submit">{profileDict.saveButton}</Button>
+                </CardFooter>
+                </Card>
+            </form>
           </div>
         </div>
       </main>
