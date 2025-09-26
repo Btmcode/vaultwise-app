@@ -40,7 +40,8 @@ const calculateChange = (item: any): number => {
         const lastOpen = parseNumber(item.forex.lastOpen);
         const lastClose = parseNumber(item.forex.lastClose);
         if (lastOpen > 0) {
-            return ((lastClose - lastOpen) / lastOpen) * 100;
+            const change = ((lastClose - lastOpen) / lastOpen) * 100;
+             return isFinite(change) ? change : 0;
         }
     }
     // Veri eksikse geri dönüş değeri
@@ -71,24 +72,25 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
-                // `item.name` alanını sembol olarak kullan
                 const symbol = item.name;
+                if (!symbol) return;
 
-                // Doğru fiyatları `forex.groups` içinden al
-                const buyPrice = item.forex?.groups?.[0]?.bid ? parseNumber(item.forex.groups[0].bid) : 0;
-                const sellPrice = item.forex?.groups?.[0]?.ask ? parseNumber(item.forex.groups[0].ask) : 0;
+                // Use optional chaining for safe access
+                const group = item.forex?.groups?.[0];
+
+                // Prioritize forex.groups, fallback to public_bid/ask
+                const buyPrice = group ? parseNumber(group.bid) : parseNumber(item.public_bid);
+                const sellPrice = group ? parseNumber(group.ask) : parseNumber(item.public_ask);
                 
-                // Değişimi `forex.lastOpen` ve `forex.lastClose` ile hesapla
+                // Calculate change percentage
                 const change24h = calculateChange(item);
 
-                if (symbol) {
-                     processedAssets[symbol] = {
-                        symbol: symbol,
-                        buyPrice,
-                        sellPrice,
-                        change24h: isFinite(change24h) ? change24h : 0,
-                    };
-                }
+                processedAssets[symbol] = {
+                    symbol: symbol,
+                    buyPrice,
+                    sellPrice,
+                    change24h,
+                };
             });
             
             setLiveAssets(processedAssets);
