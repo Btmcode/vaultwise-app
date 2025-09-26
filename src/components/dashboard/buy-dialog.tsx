@@ -28,7 +28,7 @@ import { useLivePrices } from "@/hooks/useLivePrices";
 export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAsset?: AssetSymbol }) {
   const [isOpen, setIsOpen] = useState(false);
   const [asset, setAsset] = useState<AssetSymbol | null>(preselectedAsset || null);
-  const [amountTry, setAmountTry] = useState("");
+  const [amountTl, setAmountTl] = useState("");
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
@@ -36,22 +36,22 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
   useEffect(() => {
     if (isOpen) {
       setAsset(preselectedAsset || null);
-      setAmountTry(""); // Reset amount when dialog is reopened
+      setAmountTl(""); // Reset amount when dialog is reopened
     }
   }, [isOpen, preselectedAsset]);
   
   const assetDetails = asset ? liveAssets[asset] : null;
-  const usdTryRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8; // Fallback rate
+  const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8; // Fallback rate
 
   const amountAsset =
-    assetDetails && amountTry
-      ? (parseFloat(amountTry) / usdTryRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
+    assetDetails && amountTl
+      ? (parseFloat(amountTl) / usdTlRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
       : "0";
 
   const buyDialogDict = dict.portfolioSummary.buyDialog;
 
   const handleBuy = () => {
-    if (!asset || !amountTry || parseFloat(amountTry) <= 0) {
+    if (!asset || !amountTl || parseFloat(amountTl) <= 0) {
       toast({
         variant: "destructive",
         title: buyDialogDict.toastInvalidTitle,
@@ -113,12 +113,12 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
             <Input
               id="amount"
               type="number"
-              value={amountTry}
-              onChange={(e) => setAmountTry(e.target.value)}
+              value={amountTl}
+              onChange={(e) => setAmountTl(e.target.value)}
               placeholder={buyDialogDict.amountPlaceholder}
             />
           </div>
-          {assetDetails && amountTry && (
+          {assetDetails && amountTl && (
             <div className="text-sm text-muted-foreground text-center">
               {buyDialogDict.approximate.replace('{amount}', amountAsset).replace('{symbol}', assetDetails.symbol)}
             </div>
@@ -131,3 +131,5 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
     </Dialog>
   );
 }
+
+    

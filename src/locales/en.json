@@ -17,7 +17,7 @@
         "XAG_TL": "Silver/TL",
         "XAG_USD": "Silver/USD",
         "XAG_EUR": "Silver/EUR",
-        "USD_TRY": "USD/TRY"
+        "USD_TRY": "USD/TL"
     },
     "header": {
         "myAccount": "My Account",
@@ -73,10 +73,10 @@
         "buyDialog": {
             "title": "Buy Asset",
             "shortTitle": "Buy",
-            "description": "Enter the amount in TRY to see how much of the selected asset you can buy.",
+            "description": "Enter the amount in TL to see how much of the selected asset you can buy.",
             "assetLabel": "Asset",
             "assetPlaceholder": "Select an asset",
-            "amountLabel": "Amount (TRY)",
+            "amountLabel": "Amount (TL)",
             "amountPlaceholder": "e.g., 1000",
             "approximate": "You will get ~{amount} {symbol}",
             "buyButton": "Buy Now",
@@ -93,14 +93,14 @@
             "assetPlaceholder": "Select an asset to sell",
             "amountLabel": "Amount to Sell (in Asset unit)",
             "amountPlaceholder": "e.g., 0.5",
-            "approximate": "You will receive ~{try} TRY",
+            "approximate": "You will receive ~{tl} TL",
             "sellButton": "Sell Now",
             "toastInvalidTitle": "Invalid Input",
             "toastInvalidDescription": "Please select an asset and enter a valid amount.",
             "toastInsufficientTitle": "Insufficient Balance",
             "toastInsufficientDescription": "You only have {amount} {symbol} to sell.",
             "toastSuccessTitle": "Sale Successful",
-            "toastSuccessDescription": "You have successfully sold {amount} {symbol} for ~{try} TRY. The funds will be transferred to your account."
+            "toastSuccessDescription": "You have successfully sold {amount} {symbol} for ~{tl} TL. The funds will be transferred to your account."
         },
         "autoSaveDialog": {
             "title": "AI Auto-Save",
@@ -283,7 +283,7 @@
         "description": "Add funds to your VaultWise account.",
         "cardTitle": "Deposit Details",
         "cardDescription": "Select the account and enter the amount you want to deposit.",
-        "amountLabel": "Amount (TRY)",
+        "amountLabel": "Amount (TL)",
         "ibanLabel": "From Bank Account",
         "ibanPlaceholder": "Select a saved IBAN",
         "noIban": "No saved IBANs. Please add one in Settings.",
@@ -295,7 +295,7 @@
         "toast": {
             "success": {
                 "title": "Deposit Initiated",
-                "description": "Your deposit of {amount} TRY has been initiated. It may take 1-2 business days to reflect in your account."
+                "description": "Your deposit of {amount} TL has been initiated. It may take 1-2 business days to reflect in your account."
             },
             "error": {
                 "title": "Deposit Failed",
@@ -312,7 +312,7 @@
         },
         "cardTitle": "Withdrawal Details",
         "cardDescription": "Enter the amount to withdraw and select the destination account.",
-        "amountLabel": "Amount (TRY)",
+        "amountLabel": "Amount (TL)",
         "ibanLabel": "To Bank Account",
         "ibanPlaceholder": "Select a saved IBAN",
         "noIban": "No saved IBANs. Please add one in Settings.",
@@ -321,26 +321,26 @@
         "netAmountLabel": "Net Amount to Receive",
         "fastInfo": {
             "title": "FAST Transfer",
-            "description": "You can withdraw up to 100,000 TRY 24/7, fast and free of charge with FAST."
+            "description": "You can withdraw up to 100,000 TL 24/7, fast and free of charge with FAST."
         },
         "info": {
             "title": "Information",
             "personalAccount": "You can only withdraw funds to a bank account registered in your own name on VaultWise.",
-            "limit24h": "Remaining 24-hour withdrawal limit: {amount} TRY",
-            "limit30d": "Remaining 30-day withdrawal limit: {amount} TRY",
-            "minWithdrawal": "Bank transfer is only available for withdrawal amounts of {amount} TRY or more.",
+            "limit24h": "Remaining 24-hour withdrawal limit: {amount} TL",
+            "limit30d": "Remaining 30-day withdrawal limit: {amount} TL",
+            "minWithdrawal": "Bank transfer is only available for withdrawal amounts of {amount} TL or more.",
             "supportedBanks": "You can withdraw money 24/7 via bank transfer from VaultWise to Akbank, Türkiye İş Bankası, VakıfBank, Yapı Kredi, and Ziraat Bankası accounts.",
             "otherBanks": "Withdrawal requests to other banks made on weekdays between 9:00 - 16:45 will be processed on the same day, while requests made on weekends and public holidays will be processed on the next business day."
         },
         "toast": {
             "success": {
                 "title": "Withdrawal Initiated",
-                "description": "Your withdrawal of {amount} TRY has been initiated and will be in your account shortly."
+                "description": "Your withdrawal of {amount} TL has been initiated and will be in your account shortly."
             },
             "error": {
                 "title": "Withdrawal Failed",
                 "invalidInput": "Please select an IBAN and enter a valid amount.",
-                "minAmount": "Minimum withdrawal amount is {min} TRY.",
+                "minAmount": "Minimum withdrawal amount is {min} TL.",
                 "insufficientBalance": "Insufficient balance. The amount you want to withdraw exceeds your available balance.",
                 "limit24h": "You have exceeded your daily withdrawal limit.",
                 "limit30d": "You have exceeded your monthly withdrawal limit."
@@ -348,3 +348,5 @@
         }
     }
 }
+
+    

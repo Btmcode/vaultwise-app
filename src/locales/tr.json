@@ -17,7 +17,7 @@
         "XAG_TL": "Gümüş/TL",
         "XAG_USD": "Gümüş/USD",
         "XAG_EUR": "Gümüş/EUR",
-        "USD_TRY": "USD/TRY"
+        "USD_TRY": "USD/TL"
     },
     "header": {
         "myAccount": "Hesabım",
@@ -73,10 +73,10 @@
         "buyDialog": {
             "title": "Varlık Satın Al",
             "shortTitle": "Al",
-            "description": "Ne kadar varlık alabileceğinizi görmek için tutarı TRY cinsinden girin.",
+            "description": "Ne kadar varlık alabileceğinizi görmek için tutarı TL cinsinden girin.",
             "assetLabel": "Varlık",
             "assetPlaceholder": "Bir varlık seçin",
-            "amountLabel": "Tutar (TRY)",
+            "amountLabel": "Tutar (TL)",
             "amountPlaceholder": "Örn: 1000",
             "approximate": "Yaklaşık {amount} {symbol} alacaksınız",
             "buyButton": "Şimdi Al",
@@ -93,14 +93,14 @@
             "assetPlaceholder": "Satmak için bir varlık seçin",
             "amountLabel": "Satılacak Tutar (Varlık birimi)",
             "amountPlaceholder": "Örn: 0.5",
-            "approximate": "Yaklaşık {try} TRY alacaksınız",
+            "approximate": "Yaklaşık {tl} TL alacaksınız",
             "sellButton": "Şimdi Sat",
             "toastInvalidTitle": "Geçersiz Giriş",
             "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
             "toastInsufficientTitle": "Yetersiz Bakiye",
             "toastInsufficientDescription": "Satmak için sadece {amount} {symbol} varlığınız var.",
             "toastSuccessTitle": "Satış Başarılı",
-            "toastSuccessDescription": "{amount} {symbol} varlığını yaklaşık {try} TRY karşılığında başarıyla sattınız. Para hesabınıza aktarılacaktır."
+            "toastSuccessDescription": "{amount} {symbol} varlığını yaklaşık {tl} TL karşılığında başarıyla sattınız. Para hesabınıza aktarılacaktır."
         },
         "autoSaveDialog": {
             "title": "AI ile Oto-Tasarruf",
@@ -283,7 +283,7 @@
         "description": "VaultWise hesabınıza para ekleyin.",
         "cardTitle": "Yatırma Detayları",
         "cardDescription": "Hesabı seçin ve yatırmak istediğiniz tutarı girin.",
-        "amountLabel": "Tutar (TRY)",
+        "amountLabel": "Tutar (TL)",
         "ibanLabel": "Banka Hesabından",
         "ibanPlaceholder": "Kayıtlı bir IBAN seçin",
         "noIban": "Kayıtlı IBAN yok. Lütfen Ayarlar'dan bir tane ekleyin.",
@@ -295,7 +295,7 @@
         "toast": {
             "success": {
                 "title": "Yatırma İşlemi Başlatıldı",
-                "description": "{amount} TRY tutarındaki yatırma işleminiz başlatıldı. Hesabınıza yansıması 1-2 iş günü sürebilir."
+                "description": "{amount} TL tutarındaki yatırma işleminiz başlatıldı. Hesabınıza yansıması 1-2 iş günü sürebilir."
             },
             "error": {
                 "title": "Yatırma Başarısız",
@@ -312,7 +312,7 @@
         },
         "cardTitle": "Çekme Detayları",
         "cardDescription": "Çekilecek tutarı girin ve hedef hesabı seçin.",
-        "amountLabel": "Tutar (TRY)",
+        "amountLabel": "Tutar (TL)",
         "ibanLabel": "Banka Hesabına",
         "ibanPlaceholder": "Kayıtlı bir IBAN seçin",
         "noIban": "Kayıtlı IBAN yok. Lütfen Ayarlar'dan bir tane ekleyin.",
@@ -326,21 +326,21 @@
         "info": {
             "title": "Bilgilendirme",
             "personalAccount": "VaultWise'da yalnızca kendi adınıza kayıtlı bir banka hesabına para çekebilirsiniz.",
-            "limit24h": "24 saatlik para çekme limitinizden kalan: {amount} TRY",
-            "limit30d": "30 günlük para çekme limitinizden kalan: {amount} TRY",
-            "minWithdrawal": "Banka transferi yalnızca {amount} TRY ve üzeri para çekme işlemleri için geçerlidir.",
+            "limit24h": "24 saatlik para çekme limitinizden kalan: {amount} TL",
+            "limit30d": "30 günlük para çekme limitinizden kalan: {amount} TL",
+            "minWithdrawal": "Banka transferi yalnızca {amount} TL ve üzeri para çekme işlemleri için geçerlidir.",
             "supportedBanks": "VaultWise'dan Akbank, Türkiye İş Bankası, VakıfBank, Yapı Kredi ve Ziraat Bankası hesaplarına 7/24 havale ile para çekebilirsiniz.",
             "otherBanks": "Diğer bankalara hafta içi 9.00 - 16.45 saatleri arasında vereceğiniz çekim talepleri aynı gün, hafta sonu ve resmi tatillerdeki çekim talepleri ilk iş gününde gerçekleşecektir."
         },
         "toast": {
             "success": {
                 "title": "Çekme İşlemi Başlatıldı",
-                "description": "{amount} TRY tutarındaki çekme talebiniz alınmıştır ve kısa süre içinde hesabınıza yansıyacaktır."
+                "description": "{amount} TL tutarındaki çekme talebiniz alınmıştır ve kısa süre içinde hesabınıza yansıyacaktır."
             },
             "error": {
                 "title": "Çekme Başarısız",
                 "invalidInput": "Lütfen bir IBAN seçin ve geçerli bir tutar girin.",
-                "minAmount": "Minimum çekme tutarı {min} TRY'dir.",
+                "minAmount": "Minimum çekme tutarı {min} TL'dir.",
                 "insufficientBalance": "Yetersiz bakiye. Çekmek istediğiniz tutar mevcut bakiyenizden fazla.",
                 "limit24h": "Günlük para çekme limitinizi aştınız.",
                 "limit30d": "Aylık para çekme limitinizi aştınız."
@@ -348,3 +348,5 @@
         }
     }
 }
+
+    

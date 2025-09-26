@@ -56,18 +56,13 @@ export function LivePrices({ dict }: { dict: any }) {
 
     let currency = 'USD';
     let locale = 'en-US';
-    let currencyDisplay = 'symbol';
-    let currencyText = ' USD';
     
     if (symbol.includes('EUR')) {
         currency = 'EUR';
         locale = 'de-DE';
-        currencyText = ' EUR';
     } else if (symbol.includes('TL') || symbol === 'USD_TRY' || symbol === 'XAU') {
         currency = 'TRY';
         locale = 'tr-TR';
-        currencyDisplay = 'code';
-        currencyText = ' TRY';
     }
 
     const formatted = new Intl.NumberFormat(locale, {
@@ -76,9 +71,9 @@ export function LivePrices({ dict }: { dict: any }) {
       minimumFractionDigits: 2,
     }).format(price);
 
-    // Return text instead of symbol for TRY
+    // Return text instead of symbol for TL
     if (currency === 'TRY') {
-      return `${formatted} TRY`;
+      return `${formatted} TL`;
     }
     
     // For USD and EUR, use Intl with symbol
@@ -181,3 +176,5 @@ export function LivePrices({ dict }: { dict: any }) {
     </div>
   );
 }
+
+    

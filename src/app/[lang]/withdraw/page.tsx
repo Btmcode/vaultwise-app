@@ -22,7 +22,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, Info, Banknote, Landmark, Wallet } from 'lucide-react';
 import Link from 'next/link';
 
-const TRANSACTION_FEE = 1; // 1 TRY
+const TRANSACTION_FEE = 1; // 1 TL
 const WITHDRAWAL_LIMIT_24H = 25000000;
 const WITHDRAWAL_LIMIT_30D = 99999584.99;
 
@@ -141,8 +141,8 @@ export default function WithdrawPage() {
     }, 1000);
   };
   
-  const formatTRY = (value: number) => {
-    return `${value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TRY`;
+  const formatTL = (value: number) => {
+    return `${value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
   }
 
   return (
@@ -163,7 +163,7 @@ export default function WithdrawPage() {
                         <Wallet className="h-10 w-10 text-muted-foreground" />
                         <div>
                             <p className="text-sm text-muted-foreground">{withdrawDict.summary.availableBalance}</p>
-                            <p className="text-2xl font-bold">{formatTRY(userProfile.availableBalanceTRY)}</p>
+                            <p className="text-2xl font-bold">{formatTL(userProfile.availableBalanceTRY)}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -191,9 +191,9 @@ export default function WithdrawPage() {
                 </div>
                  <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="text-muted-foreground">{withdrawDict.transactionFeeLabel}</div>
-                    <div className="text-right font-medium">{TRANSACTION_FEE.toLocaleString('tr-TR')} TRY</div>
+                    <div className="text-right font-medium">{TRANSACTION_FEE.toLocaleString('tr-TR')} TL</div>
                     <div className="text-muted-foreground">{withdrawDict.netAmountLabel}</div>
-                    <div className="text-right font-semibold text-primary">{netAmount > 0 ? netAmount.toLocaleString('tr-TR') : '0'} TRY</div>
+                    <div className="text-right font-semibold text-primary">{netAmount > 0 ? netAmount.toLocaleString('tr-TR') : '0'} TL</div>
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="iban-select">{withdrawDict.ibanLabel}</Label>
@@ -242,8 +242,8 @@ export default function WithdrawPage() {
             <h3 className="text-lg font-semibold text-foreground">{withdrawDict.info.title}</h3>
             <ul className="list-disc list-inside space-y-2">
               <li>{withdrawDict.info.personalAccount}</li>
-              <li>{withdrawDict.info.limit24h.replace('{amount}', formatTRY(remaining24h))}</li>
-              <li>{withdrawDict.info.limit30d.replace('{amount}', formatTRY(remaining30d))}</li>
+              <li>{withdrawDict.info.limit24h.replace('{amount}', formatTL(remaining24h))}</li>
+              <li>{withdrawDict.info.limit30d.replace('{amount}', formatTL(remaining30d))}</li>
               <li>{withdrawDict.info.minWithdrawal.replace('{amount}', '10')}</li>
               <li>{withdrawDict.info.supportedBanks}</li>
               <li>{withdrawDict.info.otherBanks}</li>
@@ -255,3 +255,5 @@ export default function WithdrawPage() {
     </div>
   );
 }
+
+    

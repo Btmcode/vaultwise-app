@@ -43,11 +43,11 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
   
   const assetDetails = asset ? liveAssets[asset] : null;
   const portfolioAsset = asset ? portfolioAssets.find(pa => pa.assetSymbol === asset) : null;
-  const usdTryRate = liveAssets['USD_TRY']?.sellPrice ?? 32.8; // Fallback rate
+  const usdTlRate = liveAssets['USD_TRY']?.sellPrice ?? 32.8; // Fallback rate
   
-  const amountTry =
+  const amountTl =
     assetDetails && amountAsset
-      ? (parseFloat(amountAsset) * (assetDetails.price ?? assetDetails.sellPrice ?? 1) * usdTryRate).toFixed(2)
+      ? (parseFloat(amountAsset) * (assetDetails.price ?? assetDetails.sellPrice ?? 1) * usdTlRate).toFixed(2)
       : "0";
 
   const sellDialogDict = dict.portfolioSummary.sellDialog;
@@ -73,7 +73,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
     
     toast({
       title: sellDialogDict.toastSuccessTitle,
-      description: sellDialogDict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset).replace('{try}', amountTry),
+      description: sellDialogDict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset).replace('{tl}', amountTl),
     });
     setIsOpen(false);
     // State is reset via useEffect on isOpen change
@@ -130,7 +130,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
           </div>
           {assetDetails && amountAsset && (
             <div className="text-sm text-muted-foreground text-center">
-              {sellDialogDict.approximate.replace('{try}', amountTry)}
+              {sellDialogDict.approximate.replace('{tl}', amountTl)}
             </div>
           )}
         </div>
@@ -141,3 +141,5 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
     </Dialog>
   );
 }
+
+    
