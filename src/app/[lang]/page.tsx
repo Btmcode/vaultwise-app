@@ -15,10 +15,13 @@ import { LivePricesProvider } from "@/hooks/useLivePrices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { getUserDoc } from '@/lib/firebase/firestore';
 import type { FirestoreUser } from "@/lib/types";
+import { useParams } from "next/navigation";
 
 export const dynamic = 'force-dynamic';
 
-export default function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
+export default function Home() {
+  const params = useParams();
+  const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
   const [userData, setUserData] = useState<FirestoreUser | null>(null);
   const [loading, setLoading] = useState(true);
