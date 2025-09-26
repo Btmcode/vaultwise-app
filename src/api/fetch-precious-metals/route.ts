@@ -8,30 +8,17 @@ const nameToSymbolMap: Record<string, string> = {
     'Altın/ONS': 'XAU_ONS',
     'USD/KG': 'XAU_USD_KG',
     'EUR/KG': 'XAU_EUR_KG',
-    'GÜMÜŞ GRAM': 'XAG_TL',
+    'GÜMÜŞ GRAM': 'XAG_TL', // This might need verification from the new endpoint's data
     'GÜM/ONS': 'XAG_ONS',
     'GÜM/USD': 'XAG_USD',
     'GÜM/EUR': 'XAG_EUR',
+    'Gram Gümüş': 'XAG_TL',
 };
 
 type ApiProduct = {
     name: string;
-    forex?: {
-        groups?: {
-            ask: string; // Satış
-            bid: string; // Alış
-        }[];
-    };
-};
-
-type ApiTabData = {
-    products: ApiProduct[];
-};
-
-type ApiTabGroupData = {
-    tabGroup: {
-        tabs: ApiTabData[];
-    };
+    public_bid: string;
+    public_ask: string;
 };
 
 type FormattedAsset = {
@@ -42,14 +29,14 @@ type FormattedAsset = {
 };
 
 const parseNumber = (str: string): number | null => {
-    // Replaces comma with dot for decimal conversion
-    const num = parseFloat(str.replace(',', '.'));
+    // The API returns strings like "2,450.12", which needs to be parsed correctly.
+    const num = parseFloat(str.replace(/\./g, '').replace(',', '.'));
     return isNaN(num) ? null : num;
 };
 
-// Fetches and processes products from a single tab group ID
-async function fetchTabGroupProducts(tabGroupId: number): Promise<FormattedAsset[]> {
-    const url = `https://saglamoglualtin.com/component/tab-group/${tabGroupId}`;
+
+export async function GET() {
+    const url = "https://saglamoglualtin.com/marge/products";
     const headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
         "Accept": "application/json",
@@ -57,43 +44,7 @@ async function fetchTabGroupProducts(tabGroupId: number): Promise<FormattedAsset
         "X-Requested-With": "XMLHttpRequest"
     };
 
-    const response = await axios.get<ApiTabGroupData>(url, { headers, timeout: 10000 });
-    const processedProducts: FormattedAsset[] = [];
-
-    if (!response.data || !response.data.tabGroup || !response.data.tabGroup.tabs) {
-        return [];
-    }
-
-    for (const tab of response.data.tabGroup.tabs) {
-        for (const prod of tab.products) {
-            const symbol = nameToSymbolMap[prod.name];
-            if (!symbol) continue; // Skip if the product is not in our map
-
-            const forexGroup = prod.forex?.groups?.[0];
-            if (!forexGroup) continue; // Skip if there's no price data
-
-            const sellPrice = parseNumber(forexGroup.ask); // Satış
-            const buyPrice = parseNumber(forexGroup.bid);  // Alış
-
-            // Filter out products with invalid or zero prices
-            if (buyPrice !== null && sellPrice !== null && buyPrice > 0 && sellPrice > 0) {
-                // Calculate percentage change based on the spread
-                const change24h = ((sellPrice - buyPrice) / buyPrice) * 100;
-
-                processedProducts.push({
-                    symbol: symbol,
-                    buyPrice: buyPrice,
-                    sellPrice: sellPrice,
-                    change24h: isFinite(change24h) ? change24h : 0, // Ensure change is a finite number
-                });
-            }
-        }
-    }
-    return processedProducts;
-}
-
-export async function GET() {
-    // Fallback data in case all API requests fail
+    // Fallback data in case the API request fails
     const fallbackPrices: Record<string, { buyPrice?: number; sellPrice?: number; change24h: number }> = {
         "XAU": { "buyPrice": 2450.12, "sellPrice": 2455.50, "change24h": 0.22 },
         "XAU_ONS": { "buyPrice": 2329.43, "sellPrice": 2331.00, "change24h": 0.07 },
@@ -102,35 +53,50 @@ export async function GET() {
         "XAG_ONS": { "buyPrice": 29.58, "sellPrice": 29.65, "change24h": 0.24 },
         "XAG_TL": { "buyPrice": 31.0, "sellPrice": 31.10, "change24h": 0.32 },
     };
-    
-    console.log("Fetching data from tab group endpoints...");
 
     try {
-        const tabGroupIds = [1, 2];
-        const results = await Promise.allSettled(
-            tabGroupIds.map(id => fetchTabGroupProducts(id))
-        );
+        const response = await axios.get<{ products: ApiProduct[] }>(url, { headers, timeout: 10000 });
+        const processedProducts: FormattedAsset[] = [];
 
-        const allProducts = results
-            .filter(result => result.status === 'fulfilled')
-            .flatMap(result => (result as PromiseFulfilledResult<FormattedAsset[]>).value);
+        if (!response.data || !response.data.products) {
+            console.warn('API response is missing "products" key. Using fallback data.');
+            return NextResponse.json(fallbackPrices);
+        }
 
-        if (allProducts.length === 0) {
-            console.warn('API requests to tab groups returned no valid data. Using fallback data.');
+        for (const prod of response.data.products) {
+            const symbol = nameToSymbolMap[prod.name];
+            if (!symbol) continue;
+
+            const buyPrice = parseNumber(prod.public_bid);
+            const sellPrice = parseNumber(prod.public_ask);
+
+            if (buyPrice !== null && sellPrice !== null && buyPrice > 0 && sellPrice > 0) {
+                const change24h = ((sellPrice - buyPrice) / buyPrice) * 100;
+
+                processedProducts.push({
+                    symbol: symbol,
+                    buyPrice: buyPrice,
+                    sellPrice: sellPrice,
+                    change24h: isFinite(change24h) ? change24h : 0,
+                });
+            }
+        }
+        
+        if (processedProducts.length === 0) {
+             console.warn('API requests returned no valid products after filtering. Using fallback data.');
             return NextResponse.json(fallbackPrices);
         }
 
         const formattedData: Record<string, FormattedAsset> = {};
-        for (const product of allProducts) {
+        for (const product of processedProducts) {
             formattedData[product.symbol] = product;
         }
-
-        // Merge fetched data with fallback data to ensure critical assets are always present
+        
+        // Merge with fallback to ensure any unmapped but critical assets are present
         return NextResponse.json({ ...fallbackPrices, ...formattedData });
 
     } catch (error) {
-        console.error('Error fetching data from Saglamoglu tab group API:', error);
-        // On any critical error, return the fallback data to ensure app stability
+        console.error('Error fetching data from Saglamoglu marge/products API:', error);
         return NextResponse.json(fallbackPrices);
     }
 }
