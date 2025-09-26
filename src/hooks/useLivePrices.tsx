@@ -30,8 +30,7 @@ export function LivePricesProvider({ children }: ProviderProps) {
             const response = await axios.get(url);
             if (response.data && Object.keys(response.data).length > 0) {
                  // On success, clear any previous error and update assets
-                setError(null);
-                setLiveAssets(prevAssets => ({ ...prevAssets, ...response.data }));
+                return response.data;
             } else {
                  throw new Error(`Received empty data from ${url}`);
             }
@@ -42,11 +41,10 @@ export function LivePricesProvider({ children }: ProviderProps) {
         }
     }, []);
 
-    const fetchAllData = useCallback(async (isInitial: boolean) => {
+    const fetchAllData = async (isInitial: boolean) => {
         if (isInitial) {
             setLoading(true);
         } else {
-            // For manual refresh, clear old errors
             setError(null);
         }
         
@@ -55,27 +53,35 @@ export function LivePricesProvider({ children }: ProviderProps) {
             fetchData('/api/prices/crypto'),
         ]);
 
-        const isAnySuccess = results.some(res => res.status === 'fulfilled');
-        const allFailed = results.every(res => res.status === 'rejected');
+        const successfulResults = results
+            .filter(res => res.status === 'fulfilled')
+            .map(res => (res as PromiseFulfilledResult<any>).value);
 
-        if(isAnySuccess){
+        if(successfulResults.length > 0){
+            const combinedAssets = successfulResults.reduce((acc, current) => ({ ...acc, ...current }), {});
+            setLiveAssets(prev => ({...prev, ...combinedAssets}));
             setLastUpdated(new Date().toLocaleString());
+            setError(null); // Clear previous errors on partial success
         }
 
+        const allFailed = results.every(res => res.status === 'rejected');
         if (allFailed) {
             const firstError = results[0] as PromiseRejectedResult;
             setError(`Failed to load all price data. Please try again. (${firstError.reason?.message})`);
+        } else if (results.some(res => res.status === 'rejected')) {
+             setError(`Failed to load some price data. Displayed data might be incomplete.`);
         }
+
 
         if (isInitial) {
             setLoading(false);
         }
-    }, [fetchData]);
+    };
 
 
     useEffect(() => {
         fetchAllData(true);
-    }, [fetchAllData]);
+    }, []);
 
     const refreshData = useCallback(() => {
         setLoading(true);
