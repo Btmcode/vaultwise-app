@@ -240,11 +240,3 @@ export const BankIcon = (props: SVGProps<SVGSVGElement>) => (
         <path d="M5.5 10H3" />
     </svg>
 );
-    
-
-    
-
-    
-
-
-

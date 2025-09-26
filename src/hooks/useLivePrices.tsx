@@ -7,7 +7,7 @@ type LiveAssetData = {
     buyPrice: number;
     sellPrice: number;
     change24h: number;
-    price?: number; // for crypto if ever needed
+    price?: number; 
 };
 
 interface LivePricesContextType {
@@ -28,7 +28,7 @@ const parsePrice = (price: string | number | undefined): number => {
     if (price === null || price === undefined) return 0;
     if (typeof price === 'number') return price;
     if (typeof price === 'string') {
-        const num = parseFloat(price.replace(/\./g, '').replace(',', '.'));
+        const num = parseFloat(price.toString().replace(/\./g, '').replace(',', '.'));
         return isNaN(num) ? 0 : num;
     }
     return 0;
@@ -46,32 +46,49 @@ export function LivePricesProvider({ children }: ProviderProps) {
         setError(null);
         
         try {
-            const response = await fetch('/api/fetch-precious-metals', { cache: 'no-store'});
-            if (!response.ok) {
-                const errorBody = await response.json().catch(() => ({error: `Request failed with status ${response.status}`}));
-                throw new Error(errorBody.error || `Request failed`);
-            }
-            const data = await response.json();
+            const [metalsResponse, cryptoResponse] = await Promise.all([
+                fetch('/api/fetch-precious-metals', { cache: 'no-store'}),
+                fetch('/api/prices/crypto', { cache: 'no-store'})
+            ]);
             
-            if (!Array.isArray(data)) {
-                 throw new Error("Invalid data format received from API.");
+            if (!metalsResponse.ok) {
+                const errorBody = await metalsResponse.json().catch(() => ({error: `Metals request failed with status ${metalsResponse.status}`}));
+                throw new Error(errorBody.error || `Metals request failed`);
+            }
+             if (!cryptoResponse.ok) {
+                const errorBody = await cryptoResponse.json().catch(() => ({error: `Crypto request failed with status ${cryptoResponse.status}`}));
+                throw new Error(errorBody.error || `Crypto request failed`);
+            }
+
+            const metalsData = await metalsResponse.json();
+            const cryptoData = await cryptoResponse.json();
+            
+            if (!Array.isArray(metalsData)) {
+                 throw new Error("Invalid data format received from metals API.");
             }
 
             const processedAssets: Record<string, LiveAssetData> = {};
-            data.forEach((item: any) => {
-                const symbol = item.Urun; 
+            
+            metalsData.forEach((item: any) => {
+                const symbol = item['Ürün']; 
                 if (!symbol) return;
                 
-                const buyPrice = parsePrice(item.Alis);
-                const sellPrice = parsePrice(item.Satis);
-                const change24h = parsePrice(item.DegisimYuzde);
-
                 processedAssets[symbol] = {
                     symbol: symbol,
-                    buyPrice,
-                    sellPrice,
-                    change24h,
+                    buyPrice: parsePrice(item.Alis),
+                    sellPrice: parsePrice(item.Satis),
+                    change24h: parsePrice(item.Degisim)
                 };
+            });
+
+            Object.keys(cryptoData).forEach(symbol => {
+                 processedAssets[symbol] = {
+                    symbol: symbol,
+                    price: cryptoData[symbol].price,
+                    buyPrice: cryptoData[symbol].price, // Use price for buy/sell
+                    sellPrice: cryptoData[symbol].price,
+                    change24h: cryptoData[symbol].change24h
+                 }
             });
             
             setLiveAssets(processedAssets);

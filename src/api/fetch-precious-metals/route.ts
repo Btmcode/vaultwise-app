@@ -18,7 +18,8 @@ export async function GET() {
         snapshot.forEach(doc => {
             const docData = doc.data();
             data.push({
-                ...docData, // Spread all fields from the document
+                "Ürün": doc.id, // Use document ID as the product name
+                ...docData,
             });
         });
 

@@ -10,28 +10,40 @@ import {
   SilverIcon,
   InfoIcon,
   GoldBarIcon,
+  BtcIcon,
+  PaxgIcon,
+  XautIcon,
+  UsdTryIcon,
 } from "@/components/icons";
 
 const assetOrder: string[] = [
   "HAS ALTIN",
   "Altın/ONS",
-  "USD/KG",
-  "EUR/KG",
-  "GÜM/ONS",
-  "GÜM/TL",
-  "GÜM/USD",
-  "GÜM/EUR",
+  "Altın USD/Kg",
+  "Altın EUR/Kg",
+  "Gümüş/ONS",
+  "Gümüş/TL",
+  "Gümüş/USD",
+  "Gümüş/EUR",
+  "Bitcoin",
+  "PAX Gold",
+  "Tether Gold",
+  "USD/TRY",
 ];
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   "HAS ALTIN": GoldBarIcon,
   "Altın/ONS": GoldIcon,
-  "USD/KG": GoldIcon,
-  "EUR/KG": GoldIcon,
-  "GÜM/ONS": SilverIcon,
-  "GÜM/TL": SilverIcon,
-  "GÜM/USD": SilverIcon,
-  "GÜM/EUR": SilverIcon,
+  "Altın USD/Kg": GoldIcon,
+  "Altın EUR/Kg": GoldIcon,
+  "Gümüş/ONS": SilverIcon,
+  "Gümüş/TL": SilverIcon,
+  "Gümüş/USD": SilverIcon,
+  "Gümüş/EUR": SilverIcon,
+  "Bitcoin": BtcIcon,
+  "PAX Gold": PaxgIcon,
+  "Tether Gold": XautIcon,
+  "USD/TRY": UsdTryIcon,
 };
 
 export function LivePrices({ dict }: { dict: any }) {
@@ -57,30 +69,75 @@ export function LivePrices({ dict }: { dict: any }) {
       currency = "TRY";
       locale = "tr-TR";
     }
-
-    const formatted = new Intl.NumberFormat(locale, {
-      style: "decimal",
-      maximumFractionDigits: symbol === "USD_TRY" ? 4 : 2,
-      minimumFractionDigits: 2,
-    }).format(price);
     
-    if (currency === "TRY") {
-      return `${formatted} TL`;
+    const options: Intl.NumberFormatOptions = {
+        style: 'decimal',
+        maximumFractionDigits: symbol === "USD/TRY" ? 4 : 2,
+        minimumFractionDigits: 2,
+    };
+    
+    if(currency !== 'TRY'){
+        options.style = 'currency';
+        options.currency = currency;
     }
+    
+    const formatted = new Intl.NumberFormat(locale, options).format(price);
 
-    return new Intl.NumberFormat(locale, {
-      style: "currency",
-      currency: currency,
-      maximumFractionDigits: symbol === "USD_TRY" ? 4 : 2,
-      minimumFractionDigits: 2,
-    }).format(price);
+    return currency === "TRY" ? `${formatted} TL` : formatted;
   };
 
   const getIcon = (symbol: string) => {
+    // Handle mapping from API symbols to display names for icons
+    if (symbol === "BTC") return BtcIcon;
+    if (symbol === "PAXG") return PaxgIcon;
+    if (symbol === "XAUT") return XautIcon;
     return iconMap[symbol] || InfoIcon;
   };
   
-  const displayAssets = assetOrder.map(symbol => liveAssets[symbol]).filter(Boolean);
+  const displayAssets = assetOrder.map(symbol => {
+      if (liveAssets[symbol]) return liveAssets[symbol];
+      // Handle mapping for crypto
+      if (symbol === 'Bitcoin' && liveAssets['BTC']) return { ...liveAssets['BTC'], symbol: 'Bitcoin' };
+      if (symbol === 'PAX Gold' && liveAssets['PAXG']) return { ...liveAssets['PAXG'], symbol: 'PAX Gold' };
+      if (symbol === 'Tether Gold' && liveAssets['XAUT']) return { ...liveAssets['XAUT'], symbol: 'Tether Gold' };
+      return null;
+  }).filter(Boolean);
+
+  const renderCardContent = (item: any) => {
+    const symbol = item.symbol;
+    const isCrypto = symbol === 'Bitcoin' || symbol === 'PAX Gold' || symbol === 'Tether Gold';
+    
+    if (isCrypto) {
+      return (
+        <div className="flex flex-col justify-center">
+            <p className="font-semibold text-lg whitespace-nowrap">{symbol}</p>
+             <p className="font-mono text-xl font-bold whitespace-nowrap text-left">{formatPrice(item.price, symbol)}</p>
+        </div>
+      );
+    }
+
+    return (
+       <div className="flex flex-col justify-center">
+        <p className="font-semibold text-base whitespace-nowrap">
+          {symbol}
+        </p>
+        <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
+          <span className="font-medium whitespace-nowrap">
+            {livePricesDict.buy}:
+          </span>
+          <span className="font-mono text-right whitespace-nowrap">
+            {formatPrice(item.buyPrice, symbol)}
+          </span>
+          <span className="font-medium whitespace-nowrap">
+            {livePricesDict.sell}:
+          </span>
+          <span className="font-mono text-right whitespace-nowrap">
+            {formatPrice(item.sellPrice, symbol)}
+          </span>
+        </div>
+      </div>
+    );
+  }
 
   if (loading && displayAssets.length === 0) {
     return (
@@ -88,9 +145,9 @@ export function LivePrices({ dict }: { dict: any }) {
         <div className="flex justify-end items-center">
           <Skeleton className="h-8 w-1/4" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, index) => (
-            <Skeleton key={index} className="h-[140px] w-full" />
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {Array.from({ length: 12 }).map((_, index) => (
+            <Skeleton key={index} className="h-[100px] w-full" />
           ))}
         </div>
       </div>
@@ -135,51 +192,26 @@ export function LivePrices({ dict }: { dict: any }) {
           </Button>
         </div>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {displayAssets.map((item) => {
           if (!item) return null;
 
           const symbol = item.symbol;
           const Icon = getIcon(symbol);
-          const buyPrice = item.buyPrice;
-          const sellPrice = item.sellPrice;
           const change24h = item.change24h || 0;
 
           return (
             <div
               key={symbol}
               className={cn(
-                "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border transition-colors duration-300",
+                "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border-2 transition-colors duration-300",
                 getChangeBgColor(change24h)
               )}
             >
               <div className="flex items-start justify-between gap-2">
                 <div className="flex items-center gap-3">
-                  <Icon
-                    className={cn(
-                      "h-10 w-10 flex-shrink-0",
-                      symbol === "HAS ALTIN" && "h-12 w-12"
-                    )}
-                  />
-                  <div className="flex flex-col justify-center">
-                    <p className="font-semibold text-base whitespace-nowrap">
-                      {symbol}
-                    </p>
-                    <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
-                      <span className="font-medium whitespace-nowrap">
-                        {livePricesDict.buy}:
-                      </span>
-                      <span className="font-mono text-right whitespace-nowrap">
-                        {formatPrice(buyPrice, symbol)}
-                      </span>
-                      <span className="font-medium whitespace-nowrap">
-                        {livePricesDict.sell}:
-                      </span>
-                      <span className="font-mono text-right whitespace-nowrap">
-                        {formatPrice(sellPrice, symbol)}
-                      </span>
-                    </div>
-                  </div>
+                  <Icon className={cn("h-10 w-10 flex-shrink-0")} />
+                  {renderCardContent(item)}
                 </div>
                 <div
                   className={cn(
@@ -190,6 +222,10 @@ export function LivePrices({ dict }: { dict: any }) {
                   {change24h >= 0 ? "+" : ""}
                   {change24h.toFixed(2)}%
                 </div>
+              </div>
+              <div className="flex gap-2">
+                  <Button size="sm" className="w-full bg-primary/90 hover:bg-primary text-primary-foreground">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                  <Button variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
               </div>
             </div>
           );

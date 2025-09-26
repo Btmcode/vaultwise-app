@@ -15,7 +15,7 @@ import { getUserDoc } from '@/lib/firebase/firestore';
 
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = getDictionary(lang);
+  const dict = await getDictionary(lang);
   const userData = await getUserDoc();
 
   if (!userData) {
