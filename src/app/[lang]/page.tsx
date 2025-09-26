@@ -13,11 +13,43 @@ import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { getUserDoc } from '@/lib/firebase/firestore';
+import { getFirestore }from 'firebase-admin/firestore';
+import { getAdminApp } from '@/lib/firebase/server';
+
+
+async function getPreciousMetalsData() {
+    try {
+        const adminApp = getAdminApp();
+        const db = getFirestore(adminApp);
+        
+        const snapshot = await db.collection('precious_metals').get();
+
+        if (snapshot.empty) {
+            return { error: 'No precious metals data found in database.' };
+        }
+
+        const data: any[] = [];
+        snapshot.forEach(doc => {
+            data.push({
+                "id": doc.id,
+                ...doc.data()
+            });
+        });
+
+        return data;
+
+    } catch (error: any) {
+        console.error('Error fetching data from Firestore:', error.message);
+        return { error: 'Failed to fetch data from Firestore: ' + error.message };
+    }
+}
 
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
   const dict = await getDictionary(lang);
   const userData = await getUserDoc();
+  const preciousMetalsData = await getPreciousMetalsData();
+
 
   if (!userData) {
     // This can be a more user-friendly loading or error state
@@ -35,46 +67,53 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
-      <Header lang={lang} dict={dict.header} />
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-        <LivePricesProvider>
-          <div className="w-full">
-            <Suspense fallback={<Skeleton className="h-48" />}>
-              <LivePrices dict={dict} />
-            </Suspense>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-            <Suspense fallback={<Skeleton className="h-48" />}>
-              <PortfolioSummary dict={dict} portfolioAssets={portfolio} />
-            </Suspense>
-            <Suspense fallback={<Skeleton className="h-48" />}>
-              <AssetDistribution dict={dict} portfolioAssets={portfolio} />
-            </Suspense>
-             <Suspense fallback={<Skeleton className="h-48" />}>
-                <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
-            </Suspense>
-          </div>
-          <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-            <Card className="xl:col-span-2">
-              <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                <PortfolioChart dict={dict.portfolioChart} />
-              </Suspense>
-            </Card>
-            <Card>
-              <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} transactions={transactions} />
-              </Suspense>
-            </Card>
-          </div>
-          <div className="grid gap-4 md:gap-8">
-            <Card>
-              <Suspense fallback={<Skeleton className="h-96" />}>
-                <AssetList dict={dict} portfolioAssets={portfolio} />
-              </Suspense>
-            </Card>
-          </div>
-        </LivePricesProvider>
-      </main>
+        <Header lang={lang} dict={dict.header} />
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+            <div className="p-4 bg-muted rounded-lg">
+                <h2 className="text-lg font-semibold mb-2">Firestore Veri Testi (`precious_metals`):</h2>
+                <pre className="text-xs bg-card p-4 rounded-md overflow-x-auto">
+                    {JSON.stringify(preciousMetalsData, null, 2)}
+                </pre>
+            </div>
+            
+            <LivePricesProvider>
+            <div className="w-full">
+                <Suspense fallback={<Skeleton className="h-48" />}>
+                <LivePrices dict={dict} />
+                </Suspense>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+                <Suspense fallback={<Skeleton className="h-48" />}>
+                <PortfolioSummary dict={dict} portfolioAssets={portfolio} />
+                </Suspense>
+                <Suspense fallback={<Skeleton className="h-48" />}>
+                <AssetDistribution dict={dict} portfolioAssets={portfolio} />
+                </Suspense>
+                <Suspense fallback={<Skeleton className="h-48" />}>
+                    <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
+                </Suspense>
+            </div>
+            <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
+                <Card className="xl:col-span-2">
+                <Suspense fallback={<Skeleton className="h-[350px]" />}>
+                    <PortfolioChart dict={dict.portfolioChart} />
+                </Suspense>
+                </Card>
+                <Card>
+                <Suspense fallback={<Skeleton className="h-[350px]" />}>
+                    <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} transactions={transactions} />
+                </Suspense>
+                </Card>
+            </div>
+            <div className="grid gap-4 md:gap-8">
+                <Card>
+                <Suspense fallback={<Skeleton className="h-96" />}>
+                    <AssetList dict={dict} portfolioAssets={portfolio} />
+                </Suspense>
+                </Card>
+            </div>
+            </LivePricesProvider>
+        </main>
     </div>
   );
 }
