@@ -5,7 +5,12 @@ import Link from 'next/link';
 import { Suspense } from 'react';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { HeroScene } from '@/components/landing/hero-scene';
+import dynamic from 'next/dynamic';
+
+const HeroScene = dynamic(() => import('@/components/landing/hero-scene').then(mod => mod.HeroScene), {
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-background" />
+});
 
 export default function LandingPage() {
   return (
