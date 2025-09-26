@@ -1,5 +1,6 @@
 
 "use client";
+import { useState } from "react";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
@@ -15,6 +16,10 @@ import {
   XautIcon,
   UsdTryIcon,
 } from "@/components/icons";
+import { BuyDialog } from "./buy-dialog";
+import { SellDialog } from "./sell-dialog";
+import type { AssetSymbol, PortfolioAsset } from "@/lib/types";
+
 
 const assetOrder: string[] = [
   "HAS ALTIN",
@@ -46,7 +51,7 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   "USD/TRY": UsdTryIcon,
 };
 
-const apiSymbolMap: Record<string, string> = {
+const apiSymbolMap: Record<string, AssetSymbol> = {
     "HAS ALTIN": "XAU",
     "Altın/ONS": "XAU_ONS",
     "Altın USD/Kg": "XAU_USD_KG",
@@ -61,9 +66,31 @@ const apiSymbolMap: Record<string, string> = {
     "USD/TRY": "USD_TRY",
 }
 
-export function LivePrices({ dict }: { dict: any }) {
+type LivePricesProps = {
+    dict: any;
+    portfolioAssets: PortfolioAsset[];
+};
+
+export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
   const { liveAssets, loading, error, lastUpdated, refreshData } = useLivePrices();
   const livePricesDict = dict.livePrices;
+
+  const [dialogState, setDialogState] = useState<{
+    type: 'buy' | 'sell';
+    asset: AssetSymbol;
+    isOpen: boolean;
+  } | null>(null);
+
+  const openDialog = (type: 'buy' | 'sell', asset: AssetSymbol) => {
+    setDialogState({ type, asset, isOpen: true });
+  };
+
+  const closeDialog = () => {
+    if (dialogState) {
+      setDialogState({ ...dialogState, isOpen: false });
+      setTimeout(() => setDialogState(null), 300);
+    }
+  };
 
   const getChangeBgColor = (change: number) => {
     if (change > 0) return "border-green-500/50";
@@ -113,7 +140,7 @@ export function LivePrices({ dict }: { dict: any }) {
       const apiSymbol = apiSymbolMap[displayName];
       const assetData = liveAssets[apiSymbol];
       if (assetData) {
-          return { ...assetData, displayName };
+          return { ...assetData, displayName, apiSymbol };
       }
       return null;
   }).filter(Boolean);
@@ -188,64 +215,87 @@ export function LivePrices({ dict }: { dict: any }) {
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-end items-center">
-        <div className="flex items-center gap-4">
-          <div className="text-sm text-muted-foreground">
-            {livePricesDict.lastUpdated}: {lastUpdated}
-          </div>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={refreshData}
-            disabled={loading}
-          >
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
-            />
-            {livePricesDict.refresh}
-          </Button>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {displayAssets.map((item) => {
-          if (!item) return null;
-
-          const displayName = item.displayName;
-          const Icon = getIcon(displayName);
-          const change24h = item.change24h || 0;
-
-          return (
-            <div
-              key={displayName}
-              className={cn(
-                "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border-2 transition-colors duration-300",
-                getChangeBgColor(change24h)
-              )}
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="flex items-center gap-3">
-                  <Icon className={cn("h-10 w-10 flex-shrink-0")} />
-                  {renderCardContent(item)}
-                </div>
-                <div
-                  className={cn(
-                    "text-sm font-bold pl-2 whitespace-nowrap",
-                    change24h > 0 ? "text-green-500" : "text-red-500"
-                  )}
-                >
-                  {change24h >= 0 ? "+" : ""}
-                  {change24h.toFixed(2)}%
-                </div>
-              </div>
-              <div className="flex gap-2">
-                  <Button size="sm" className="w-full bg-primary/90 hover:bg-primary text-primary-foreground">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
-                  <Button variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
-              </div>
+    <>
+        <div className="space-y-4">
+        <div className="flex justify-end items-center">
+            <div className="flex items-center gap-4">
+            <div className="text-sm text-muted-foreground">
+                {livePricesDict.lastUpdated}: {lastUpdated}
             </div>
-          );
-        })}
-      </div>
-    </div>
+            <Button
+                size="sm"
+                variant="outline"
+                onClick={refreshData}
+                disabled={loading}
+            >
+                <RefreshCw
+                className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
+                />
+                {livePricesDict.refresh}
+            </Button>
+            </div>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {displayAssets.map((item) => {
+            if (!item) return null;
+
+            const displayName = item.displayName;
+            const Icon = getIcon(displayName);
+            const change24h = item.change24h || 0;
+            const apiSymbol = item.apiSymbol as AssetSymbol;
+
+            return (
+                <div
+                key={displayName}
+                className={cn(
+                    "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border-2 transition-colors duration-300",
+                    getChangeBgColor(change24h)
+                )}
+                >
+                <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                    <Icon className={cn("h-10 w-10 flex-shrink-0")} />
+                    {renderCardContent(item)}
+                    </div>
+                    <div
+                    className={cn(
+                        "text-sm font-bold pl-2 whitespace-nowrap",
+                        change24h > 0 ? "text-green-500" : "text-red-500"
+                    )}
+                    >
+                    {change24h >= 0 ? "+" : ""}
+                    {change24h.toFixed(2)}%
+                    </div>
+                </div>
+                <div className="flex gap-2">
+                    <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-primary/90 hover:bg-primary text-primary-foreground">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                    <Button onClick={() => openDialog('sell', apiSymbol)} variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
+                </div>
+                </div>
+            );
+            })}
+        </div>
+        </div>
+        
+        {dialogState && dialogState.type === 'buy' && (
+            <BuyDialog
+                dict={dict}
+                portfolioAssets={portfolioAssets}
+                preselectedAsset={dialogState.asset}
+                isOpen={dialogState.isOpen}
+                onOpenChange={closeDialog}
+            />
+        )}
+
+        {dialogState && dialogState.type === 'sell' && (
+            <SellDialog
+                dict={dict}
+                portfolioAssets={portfolioAssets}
+                preselectedAsset={dialogState.asset}
+                isOpen={dialogeState.isOpen}
+                onOpenChange={closeDialog}
+            />
+        )}
+    </>
   );
 }
