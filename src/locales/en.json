@@ -25,13 +25,22 @@
         "settings": "Settings",
         "logout": "Logout",
         "deposit": "Deposit",
-        "withdraw": "Withdraw"
+        "withdraw": "Withdraw",
+        "logoutSuccess": {
+            "title": "Logged Out",
+            "description": "You have been successfully logged out."
+        },
+        "logoutError": {
+            "title": "Logout Failed",
+            "description": "An error occurred while logging out. Please try again."
+        }
     },
     "loginPage": {
         "title": "Login to your Account",
         "description": "Enter your email below to login to your account.",
         "emailLabel": "Email",
         "passwordLabel": "Password",
+        "forgotPassword": "Forgot your password?",
         "buttonText": "Login",
         "signupText": "Don't have an account?",
         "signupLink": "Sign up",
@@ -64,6 +73,25 @@
                 "title": "Signup Failed",
                 "emailInUse": "This email address is already in use.",
                 "passwordLength": "Password must be at least 6 characters long.",
+                "default": "An unexpected error occurred. Please try again later."
+            }
+        }
+    },
+     "forgotPasswordPage": {
+        "title": "Forgot Password",
+        "description": "Enter your email and we'll send you a link to reset your password.",
+        "emailLabel": "Email",
+        "buttonText": "Send Reset Link",
+        "backToLogin": "Back to Login",
+        "toast": {
+            "success": {
+                "title": "Reset Link Sent",
+                "description": "Please check your email for password reset instructions."
+            },
+            "error": {
+                "title": "Reset Failed",
+                "noEmail": "Please enter your email address.",
+                "userNotFound": "No user found with this email address.",
                 "default": "An unexpected error occurred. Please try again later."
             }
         }
@@ -157,6 +185,11 @@
     "portfolioChart": {
         "title": "Portfolio Value",
         "description": "A summary of your portfolio's performance.",
+        "noData": "Not enough data to display chart.",
+        "tooltip": {
+            "value": "Value",
+            "date": "Date"
+        },
         "tabs": {
             "live": "Live",
             "1d": "1D",

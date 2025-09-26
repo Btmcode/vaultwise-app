@@ -66,7 +66,7 @@ export default function LoginPage() {
       });
       
       // Perform a full page reload to ensure the new session cookie is sent to the server.
-      window.location.href = `/${lang}`;
+      window.location.href = `/${lang}/dashboard`;
 
     } catch (error: any) {
       console.error('Login error:', error);
@@ -126,7 +126,12 @@ export default function LoginPage() {
               />
             </div>
             <div className="grid gap-2">
-                <Label htmlFor="password">{loginDict.passwordLabel}</Label>
+                <div className="flex items-center">
+                    <Label htmlFor="password">{loginDict.passwordLabel}</Label>
+                    <Link href={`/${lang}/forgot-password`} className="ml-auto inline-block text-sm underline">
+                        {loginDict.forgotPassword}
+                    </Link>
+                </div>
               <Input 
                 id="password" 
                 type="password" 

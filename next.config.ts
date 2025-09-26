@@ -9,6 +9,11 @@ const nextConfig: NextConfig = {
         destination: '/tr',
         permanent: false,
       },
+       {
+        source: '/dashboard',
+        destination: '/tr/dashboard',
+        permanent: false,
+      },
     ]
   },
   async headers() {

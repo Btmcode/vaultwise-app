@@ -65,7 +65,7 @@ export default function SignupPage() {
       });
 
       // Perform a full page reload to ensure the new session cookie is sent to the server.
-      window.location.href = `/${lang}`;
+      window.location.href = `/${lang}/dashboard`;
 
     } catch (error: any) {
       console.error('Signup error:', error);

@@ -1,71 +1,34 @@
-import { Header } from "@/components/header";
-import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
-import { AssetList } from "@/components/dashboard/asset-list";
-import { RecentTransactions } from "@/components/dashboard/recent-transactions";
-import { Suspense } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
-import { getDictionary } from "../dictionaries";
-import { AssetDistribution } from "@/components/dashboard/asset-distribution";
-import { LivePrices } from "@/components/dashboard/live-prices";
-import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
-import { getUserDoc } from '@/lib/firebase/firestore';
-import { redirect } from 'next/navigation';
-import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
-import { chartData } from "@/lib/data";
-
-export const dynamic = 'force-dynamic';
-
-export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = getDictionary(lang);
-  const userData = await getUserDoc();
-
-  if (!userData) {
-    redirect(`/${lang}/login`);
-  }
-  
-  const { portfolio, transactions } = userData;
-
-  return (
-    <div className="flex min-h-screen w-full flex-col bg-background">
-      <Header lang={lang} dict={dict.header} />
-      <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
-          <div className="w-full">
-              <Suspense fallback={<Skeleton className="h-48" />}>
-                  <LivePrices dict={dict} portfolioAssets={portfolio} />
-              </Suspense>
+<div className="flex min-h-screen w-full flex-col bg-background">
+      <main className="flex-1">
+        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-background">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
+              <div className="flex flex-col justify-center space-y-4">
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                    Secure Your Future with Precious Metals & Crypto
+                  </h1>
+                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                    VaultWise makes it easy to buy, sell, and manage a diversified portfolio of gold, silver, Bitcoin, and more. Start building your wealth today.
+                  </p>
+                </div>
+                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                  <a
+                    href="/tr/signup"
+                    className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                  >
+                    Get Started
+                  </a>
+                  <a
+                    href="#"
+                    className="inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+                  >
+                    Learn More
+                  </a>
+                </div>
+              </div>
+            </div>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
-              <Suspense fallback={<Skeleton className="h-48" />}>
-              <PortfolioSummary dict={dict} portfolioAssets={portfolio} />
-              </Suspense>
-              <Suspense fallback={<Skeleton className="h-48" />}>
-              <AssetDistribution dict={dict} portfolioAssets={portfolio} />
-              </Suspense>
-              <Suspense fallback={<Skeleton className="h-48" />}>
-                  <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
-              </Suspense>
-          </div>
-          <div className="grid gap-4 md:gap-8">
-                <Card className="xl:col-span-2">
-                    <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                        <PortfolioChart dict={dict.portfolioChart} data={chartData} />
-                    </Suspense>
-                </Card>
-          </div>
-          <div className="grid gap-4 md:gap-8 grid-cols-1 xl:grid-cols-3">
-              <Card className="xl:col-span-2">
-              <Suspense fallback={<Skeleton className="h-96" />}>
-                  <AssetList dict={dict} portfolioAssets={portfolio} />
-              </Suspense>
-              </Card>
-                  <Card>
-              <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                  <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} transactions={transactions} />
-              </Suspense>
-              </Card>
-          </div>
+        </section>
       </main>
     </div>
-  );
-}

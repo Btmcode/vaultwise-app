@@ -19,7 +19,6 @@ import { User, Settings, LogOut, Languages, Moon, Sun, Landmark, ArrowLeftRight 
 import { auth } from "@/lib/firebase/client";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
-import { logout } from "@/app/actions";
 import { useTransition } from "react";
 
 const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
@@ -39,34 +38,41 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   };
 
   const handleLogout = async () => {
-    // Sign out from the client-side auth state first.
-    try {
+    startTransition(async () => {
+      try {
+        // 1. Sign out from Firebase on the client
         await signOut(auth);
-    } catch (clientSignOutError) {
-        console.warn("Client-side signOut may have failed (this can be normal if session was already expired):", clientSignOutError);
-    }
 
-    // Use a transition to call the server action for a smoother UX
-    startTransition(() => {
-        logout(currentLang).catch(error => {
-             console.error("Logout Server Action Error:", error);
-             toast({
-                variant: "destructive",
-                title: "Logout Failed",
-                description: "An error occurred while logging out on the server. Please try again.",
-             });
+        // 2. Call the server-side API to clear the session cookie
+        const response = await fetch('/api/auth/logout', { method: 'POST' });
+
+        if (!response.ok) {
+          throw new Error('Server-side logout failed.');
+        }
+
+        // 3. Show success toast and redirect
+        toast({
+          title: dict.logoutSuccess.title,
+          description: dict.logoutSuccess.description,
         });
-    });
-     
-    toast({
-        title: "Success",
-        description: "You have been logged out.",
+
+        // Redirect to the landing page after a successful logout
+        window.location.href = `/${currentLang}`;
+
+      } catch (error) {
+        console.error("Logout Error:", error);
+        toast({
+          variant: "destructive",
+          title: dict.logoutError.title,
+          description: dict.logoutError.description,
+        });
+      }
     });
   };
 
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6 z-50">
-      <Link href={`/${currentLang}`} className="flex items-center gap-2 font-semibold" prefetch={false}>
+      <Link href={`/${currentLang}/dashboard`} className="flex items-center gap-2 font-semibold" prefetch={false}>
         <VaultWiseLogo className="h-8 w-8 text-primary" />
         <span className="text-xl font-bold">VaultWise</span>
       </Link>

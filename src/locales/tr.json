@@ -25,13 +25,22 @@
         "settings": "Ayarlar",
         "logout": "Çıkış Yap",
         "deposit": "Para Yatır",
-        "withdraw": "Para Çek"
+        "withdraw": "Para Çek",
+        "logoutSuccess": {
+            "title": "Çıkış Başarılı",
+            "description": "Başarıyla çıkış yaptınız."
+        },
+        "logoutError": {
+            "title": "Çıkış Başarısız",
+            "description": "Çıkış yaparken bir hata oluştu. Lütfen tekrar deneyin."
+        }
     },
     "loginPage": {
         "title": "Hesabınıza Giriş Yapın",
         "description": "Hesabınıza giriş yapmak için e-postanızı girin.",
         "emailLabel": "E-posta",
         "passwordLabel": "Şifre",
+        "forgotPassword": "Şifrenizi mi unuttunuz?",
         "buttonText": "Giriş Yap",
         "signupText": "Hesabınız yok mu?",
         "signupLink": "Kayıt Ol",
@@ -64,6 +73,25 @@
                 "title": "Kayıt Başarısız",
                 "emailInUse": "Bu e-posta adresi zaten kullanılıyor.",
                 "passwordLength": "Şifre en az 6 karakter uzunluğunda olmalıdır.",
+                "default": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+            }
+        }
+    },
+    "forgotPasswordPage": {
+        "title": "Şifremi Unuttum",
+        "description": "E-postanızı girin, şifrenizi sıfırlamanız için size bir bağlantı gönderelim.",
+        "emailLabel": "E-posta",
+        "buttonText": "Sıfırlama Bağlantısı Gönder",
+        "backToLogin": "Giriş Ekranına Geri Dön",
+        "toast": {
+            "success": {
+                "title": "Sıfırlama Bağlantısı Gönderildi",
+                "description": "Şifre sıfırlama talimatları için lütfen e-postanızı kontrol edin."
+            },
+            "error": {
+                "title": "Sıfırlama Başarısız",
+                "noEmail": "Lütfen e-posta adresinizi girin.",
+                "userNotFound": "Bu e-posta adresi ile kayıtlı bir kullanıcı bulunamadı.",
                 "default": "Beklenmedik bir hata oluştu. Lütfen daha sonra tekrar deneyin."
             }
         }
