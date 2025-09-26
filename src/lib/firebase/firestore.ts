@@ -10,7 +10,7 @@ import { revalidatePath } from 'next/cache';
 import { getAuth } from 'firebase-admin/auth';
 
 
-async function getCurrentUserId(): Promise<string | null> {
+async function getCurrentUserData(): Promise<{ uid: string; email: string | undefined } | null> {
   try {
     const adminApp = getAdminApp();
     const auth = getAuth(adminApp);
@@ -21,7 +21,7 @@ async function getCurrentUserId(): Promise<string | null> {
       return null;
     }
     const decodedToken = await auth.verifySessionCookie(sessionCookieValue, true);
-    return decodedToken.uid;
+    return { uid: decodedToken.uid, email: decodedToken.email };
   } catch (error) {
     console.error("Error verifying session cookie:", error);
     return null;
@@ -33,13 +33,14 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
     const adminApp = getAdminApp();
     const db = getFirestore(adminApp);
     
-    const userId = await getCurrentUserId();
-    if (!userId) {
-        console.log("Could not get current user ID. User may not be logged in.");
+    const currentUser = await getCurrentUserData();
+    if (!currentUser) {
+        console.log("Could not get current user. User may not be logged in.");
         return null;
     };
+    const { uid, email } = currentUser;
 
-    const userDocRef = db.collection('users').doc(userId);
+    const userDocRef = db.collection('users').doc(uid);
     const userDocSnap = await userDocRef.get();
 
     if (userDocSnap.exists) {
@@ -50,26 +51,23 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             date: tx.date.toDate().toISOString(),
         })) || [];
         
-        // Reset portfolio amount to 0 for display purposes as requested
-        const resetPortfolio = data.portfolio.map((asset: PortfolioAsset) => ({
-            ...asset,
-            amount: 0,
-        }));
-
-        return { ...data, portfolio: resetPortfolio, transactions, id: userDocSnap.id } as FirestoreUser;
+        return { ...data, transactions, id: userDocSnap.id } as FirestoreUser;
     } else {
-        console.log(`User document for ${userId} not found, creating one.`);
+        console.log(`User document for ${uid} not found, creating one.`);
         const newUser: Omit<FirestoreUser, 'id'> = {
-            name: 'Ali Veli',
-            email: 'ali.veli@example.com',
+            name: 'New User',
+            email: email || 'user@example.com',
             availableBalanceTRY: 150000.75,
             portfolio: [
-                { assetSymbol: "BTC", amount: 0 },
-                { assetSymbol: "XAU", amount: 0 },
-                { assetSymbol: "PAXG", amount: 0 },
+                { assetSymbol: "BTC", amount: 0.12 },
+                { assetSymbol: "XAU", amount: 5.5 },
+                { assetSymbol: "PAXG", amount: 2.1 },
             ],
             ibanAccounts: [],
-            transactions: [],
+            transactions: [
+                { id: "tx1", assetSymbol: "BTC", type: "Buy", amountUsd: 5000, date: new Date() },
+                { id: "tx2", assetSymbol: "XAU", type: "Sell", amountUsd: 1200, date: new Date() },
+            ],
         };
         await userDocRef.set(newUser);
         
@@ -94,11 +92,11 @@ export async function addIbanAccount(account: Omit<IbanAccount, 'id'>): Promise<
     const adminApp = getAdminApp();
     const db = getFirestore(adminApp);
     
-    const userId = await getCurrentUserId();
-    if (!userId) throw new Error("User not authenticated");
+    const currentUser = await getCurrentUserData();
+    if (!currentUser) throw new Error("User not authenticated");
 
     const newAccount: IbanAccount = { ...account, id: uuidv4() };
-    const userDocRef = db.collection('users').doc(userId);
+    const userDocRef = db.collection('users').doc(currentUser.uid);
     await userDocRef.update({
         ibanAccounts: FieldValue.arrayUnion(newAccount)
     });
@@ -109,8 +107,8 @@ export async function removeIbanAccount(accountId: string): Promise<void> {
     const adminApp = getAdminApp();
     const db = getFirestore(adminApp);
 
-    const userId = await getCurrentUserId();
-    if (!userId) throw new Error("User not authenticated");
+    const currentUser = await getCurrentUserData();
+    if (!currentUser) throw new Error("User not authenticated");
     
     const userDoc = await getUserDoc();
     if (!userDoc) throw new Error("User document not found");
@@ -118,7 +116,7 @@ export async function removeIbanAccount(accountId: string): Promise<void> {
     const accountToRemove = userDoc.ibanAccounts.find(acc => acc.id === accountId);
     if (!accountToRemove) return;
 
-    const userDocRef = db.collection('users').doc(userId);
+    const userDocRef = db.collection('users').doc(currentUser.uid);
     await userDocRef.update({
         ibanAccounts: FieldValue.arrayRemove(accountToRemove)
     });
