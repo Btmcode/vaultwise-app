@@ -1,7 +1,7 @@
 
 "use client";
 
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import {
   Card,
   CardContent,
@@ -17,7 +17,7 @@ const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3
 const NO_DATA_COLOR = "hsl(var(--muted))";
 
 const CustomTooltip = ({ active, payload, dict }: any) => {
-  if (active && payload && payload.length && payload[0].name !== 'no-data') {
+  if (active && payload && payload.length && payload[0].payload.name !== 'no-data') {
     const data = payload[0].payload;
     return (
       <div className="rounded-lg border bg-background p-2 shadow-sm">
@@ -88,38 +88,42 @@ export function AssetDistribution({ dict, portfolioAssets }: { dict: any, portfo
         <CardTitle>{assetDistributionDict.title}</CardTitle>
         <CardDescription>{assetDistributionDict.description}</CardDescription>
       </CardHeader>
-      <CardContent className="h-40">
-        <div className="w-full h-full">
-            <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                {hasRealData && <Tooltip content={<CustomTooltip dict={dict} />} />}
-                <Pie
-                    data={chartData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={70}
-                    fill="#8884d8"
-                    dataKey="value"
-                    strokeWidth={2}
-                >
-                    {chartData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={entry.name === 'no-data' ? NO_DATA_COLOR : COLORS[index % COLORS.length]} />
-                    ))}
-                </Pie>
-                {hasRealData && (
+      <CardContent className="h-40 relative">
+        <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={chartData} layout="vertical" margin={{ top: 5, right: 0, left: 0, bottom: 5 }}>
+            {hasRealData && <Tooltip cursor={{ fill: 'hsla(var(--muted))' }} content={<CustomTooltip dict={dict} />} />}
+            <XAxis type="number" hide />
+            <YAxis 
+                type="category" 
+                dataKey="name" 
+                hide 
+            />
+            <Bar dataKey="value" barSize={20} radius={[4, 4, 4, 4]}>
+                {chartData.map((entry, index) => (
+                    <Bar 
+                        key={`cell-${index}`} 
+                        dataKey="value"
+                        fill={entry.name === 'no-data' ? NO_DATA_COLOR : COLORS[index % COLORS.length]} 
+                        radius={4}
+                    />
+                ))}
+            </Bar>
+             {hasRealData && (
                     <Legend
                         verticalAlign="middle"
                         align="right"
                         layout="vertical"
                         iconSize={8}
                         iconType="circle"
-                        formatter={(value, entry) => <span className="text-xs text-muted-foreground">{dict.assetNames[value]}</span>}
+                        formatter={(value, entry) => {
+                             const dataPoint = chartData.find(d => d.name === entry.dataKey);
+                             const assetName = dataPoint ? dict.assetNames[dataPoint.name] : entry.dataKey;
+                             return <span className="text-xs text-muted-foreground">{assetName}</span>
+                        }}
                     />
                 )}
-                </PieChart>
-            </ResponsiveContainer>
-        </div>
+            </BarChart>
+        </ResponsiveContainer>
          {!hasRealData && (
             <div className="absolute inset-0 flex items-center justify-center -mt-4">
                 <p className="text-sm text-muted-foreground">{assetDistributionDict.noData}</p>
@@ -129,3 +133,4 @@ export function AssetDistribution({ dict, portfolioAssets }: { dict: any, portfo
     </Card>
   );
 }
+
