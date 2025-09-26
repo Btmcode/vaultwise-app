@@ -9,6 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { revalidatePath } from 'next/cache';
 import { getAuth } from 'firebase-admin/auth';
 
+export const runtime = 'nodejs';
 
 async function getCurrentUserData(): Promise<{ uid: string; email: string | undefined } | null> {
   try {

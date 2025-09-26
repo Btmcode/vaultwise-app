@@ -18,6 +18,7 @@ import {
 } from "@/ai/flows/market-analysis";
 import { cookies } from "next/headers";
 
+export const runtime = 'nodejs';
 
 export async function getAutomatedSavingsGoal(
   input: AutomatedSavingsGoalInput
