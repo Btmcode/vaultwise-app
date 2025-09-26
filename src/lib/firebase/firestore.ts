@@ -2,7 +2,7 @@
 'use server';
 
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
-import { db, auth } from './client';
+import { getFirebaseServices } from './client';
 import { revalidatePath } from 'next/cache';
 import type { IbanAccount, FirestoreUser, PortfolioAsset, Transaction } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,6 +18,9 @@ async function getCurrentUserId(): Promise<string> {
 
 // Function to get the user document from Firestore
 export async function getUserDoc(): Promise<FirestoreUser | null> {
+    const { db } = getFirebaseServices();
+    if (!db) return null;
+
     const userId = await getCurrentUserId();
     if (!userId) return null;
 
@@ -57,6 +60,9 @@ export async function getIbanAccounts(): Promise<IbanAccount[]> {
 }
 
 export async function addIbanAccount(account: Omit<IbanAccount, 'id'>): Promise<void> {
+    const { db } = getFirebaseServices();
+    if (!db) return;
+
     const userId = await getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
 
@@ -69,6 +75,9 @@ export async function addIbanAccount(account: Omit<IbanAccount, 'id'>): Promise<
 }
 
 export async function removeIbanAccount(accountId: string): Promise<void> {
+    const { db } = getFirebaseServices();
+    if (!db) return;
+
     const userId = await getCurrentUserId();
     if (!userId) throw new Error("User not authenticated");
     

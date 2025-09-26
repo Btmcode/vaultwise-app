@@ -3,7 +3,6 @@ import { initializeApp, getApps, getApp, type FirebaseOptions, type FirebaseApp 
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
 
-// This is the standard and most reliable way to handle public env variables in Next.js
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
@@ -14,37 +13,37 @@ const firebaseConfig: FirebaseOptions = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-let app: FirebaseApp;
-let auth: Auth;
-let db: Firestore;
-
-// This function ensures Firebase is initialized only once (singleton pattern)
-// and only on the client-side.
-function initializeFirebase() {
+function getFirebaseServices() {
   const isClient = typeof window !== 'undefined';
-  if (!isClient) return;
+  if (!isClient) {
+    // Return a dummy object or handle server-side logic if needed,
+    // but for client-only firebase, we can return nulls.
+    // However, our `firestore.ts` is a server module, so we need a different approach.
+    // The best approach is to have a single initialization pattern.
+  }
 
-  // Check if all necessary config values are present before initializing
-  if (firebaseConfig.apiKey && firebaseConfig.projectId) {
-    if (!getApps().length) {
-      // No apps initialized, so initialize a new one.
+  let app: FirebaseApp;
+  if (!getApps().length) {
+    if (firebaseConfig.apiKey && firebaseConfig.projectId) {
       app = initializeApp(firebaseConfig);
     } else {
-      // Use the already initialized app.
-      app = getApp();
+      console.warn(
+        'Firebase config is incomplete. Firebase services will be disabled. Please check your .env file or environment variables.'
+      );
+      // Return null or throw an error if config is essential
+      return { app: null, auth: null, db: null };
     }
-    
-    auth = getAuth(app);
-    db = getFirestore(app);
-
   } else {
-    console.warn(
-      'Firebase config is incomplete. Firebase services will be disabled on the client. Please check your .env file or Netlify environment variables.'
-    );
+    app = getApp();
   }
+
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  return { app, auth, db };
 }
 
-// Initialize on first load
-initializeFirebase();
-
-export { app, auth, db };
+// We will export the function to be called, rather than the instances.
+// This ensures initialization logic is run on demand.
+const { app, auth, db } = getFirebaseServices();
+export { app, auth, db, getFirebaseServices };
