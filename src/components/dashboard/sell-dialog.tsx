@@ -73,6 +73,11 @@ export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: Sel
 
   const sellDialogDict = dict.portfolioSummary.sellDialog;
   const assetName = asset ? dict.assetNames[asset] || asset : "";
+  
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/,/g, '.').replace(/[^\d.]/g, '');
+    setAmountAsset(rawValue);
+  };
 
   const setAmountPercentage = (percentage: number) => {
     if (portfolioAsset) {
@@ -151,30 +156,31 @@ export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: Sel
             </Select>
           </div>
           <div className="grid gap-2">
-             <div className="flex justify-between items-center">
-              <Label htmlFor="amount">
-                {sellDialogDict.amountLabel}
-              </Label>
-              {portfolioAsset && (
-                 <span className="text-xs text-muted-foreground">
-                    {dict.assetList.table.balance}: {portfolioAsset.amount} {portfolioAsset.assetSymbol}
-                </span>
-              )}
+             <div className="flex justify-between items-center mb-1">
+                <Label htmlFor="amount" className="text-sm font-medium">
+                    {sellDialogDict.amountLabel}
+                </Label>
+                <div className="flex items-center gap-1.5">
+                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs" onClick={() => setAmountPercentage(10)}>%10</Button>
+                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs" onClick={() => setAmountPercentage(25)}>%25</Button>
+                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs" onClick={() => setAmountPercentage(50)}>%50</Button>
+                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs" onClick={() => setAmountPercentage(75)}>%75</Button>
+                    <Button variant="outline" size="sm" className="h-7 px-2 text-xs" onClick={() => setAmountPercentage(100)}>Max</Button>
+                </div>
             </div>
             <Input
               id="amount"
-              type="number"
+              type="text"
               value={amountAsset}
-              onChange={(e) => setAmountAsset(e.target.value)}
+              onChange={handleAmountChange}
               placeholder={sellDialogDict.amountPlaceholder}
               max={portfolioAsset?.amount}
             />
-             <div className="flex gap-2 mt-1">
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(25)}>%25</Button>
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(50)}>%50</Button>
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(75)}>%75</Button>
-                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(100)}>Max</Button>
-            </div>
+            {portfolioAsset && (
+                <p className="text-xs text-muted-foreground mt-1">
+                    {dict.assetList.table.balance}: {portfolioAsset.amount} {portfolioAsset.assetSymbol}
+                </p>
+            )}
           </div>
           {assetDetails && numericAmountAsset > 0 && (
             <div className="text-sm text-muted-foreground text-center">
