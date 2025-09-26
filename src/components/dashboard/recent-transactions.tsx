@@ -6,9 +6,9 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { assets, transactions } from "@/lib/data";
+import { assets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
-import type { AssetSymbol, TransactionType } from "@/lib/types";
+import type { AssetSymbol, Transaction, TransactionType } from "@/lib/types";
 
 const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAU: GoldIcon,
@@ -50,7 +50,10 @@ const getTransactionTypeKey = (type: TransactionType, dict: any) => {
 }
 
 
-export function RecentTransactions({ recentTransactionsDict, assetNames }: { recentTransactionsDict: any, assetNames: any }) {
+export function RecentTransactions({ recentTransactionsDict, assetNames, transactions }: { recentTransactionsDict: any, assetNames: any, transactions: Transaction[] }) {
+  if (!transactions) {
+    transactions = [];
+  }
   return (
     <>
       <CardHeader>
@@ -59,7 +62,6 @@ export function RecentTransactions({ recentTransactionsDict, assetNames }: { rec
       </CardHeader>
       <CardContent className="grid gap-4">
         {transactions.map((tx) => {
-          const assetInfo = assets[tx.assetSymbol];
           const Icon = iconMap[tx.assetSymbol];
           const transactionTypeKey = tx.type.toLowerCase().replace('-','_');
           return (

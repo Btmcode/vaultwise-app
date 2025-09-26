@@ -10,7 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast";
-import { getIbanAccounts, type IbanAccount } from '@/lib/data';
+import { getIbanAccounts } from '@/lib/firebase/firestore';
+import type { IbanAccount } from '@/lib/types';
 import {
   Select,
   SelectContent,
@@ -32,10 +33,17 @@ export default function DepositPage() {
   const [selectedIban, setSelectedIban] = useState<string | null>(null);
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingIbans, setIsLoadingIbans] = useState(true);
   const { toast } = useToast();
 
   useEffect(() => {
-    setIbanAccounts(getIbanAccounts());
+    async function fetchIbans() {
+        setIsLoadingIbans(true);
+        const accounts = await getIbanAccounts();
+        setIbanAccounts(accounts);
+        setIsLoadingIbans(false);
+    }
+    fetchIbans();
   }, []);
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -113,7 +121,9 @@ export default function DepositPage() {
                 </div>
                 <div className="grid gap-2">
                   <Label htmlFor="iban-select">{depositDict.ibanLabel}</Label>
-                  {ibanAccounts.length > 0 ? (
+                  {isLoadingIbans ? (
+                     <div className="text-center py-4"><Loader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground"/></div>
+                  ) : ibanAccounts.length > 0 ? (
                     <Select onValueChange={setSelectedIban} value={selectedIban || undefined}>
                       <SelectTrigger id="iban-select">
                         <SelectValue placeholder={depositDict.ibanPlaceholder} />
@@ -132,7 +142,7 @@ export default function DepositPage() {
                     </p>
                   )}
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading || ibanAccounts.length === 0}>
+                <Button type="submit" className="w-full" disabled={isLoading || isLoadingIbans || ibanAccounts.length === 0}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   {depositDict.button}
                 </Button>

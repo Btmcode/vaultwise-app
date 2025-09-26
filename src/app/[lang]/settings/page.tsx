@@ -14,7 +14,8 @@ import { Eye, EyeOff, Loader2, Trash2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { analyzeFeedback } from "@/app/actions";
 import { Textarea } from '@/components/ui/textarea';
-import { getIbanAccounts, addIbanAccount, removeIbanAccount, type IbanAccount } from '@/lib/data';
+import { getIbanAccounts, addIbanAccount, removeIbanAccount } from '@/lib/firebase/firestore';
+import type { IbanAccount } from '@/lib/types';
 import { BankIcon } from '@/components/icons';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
@@ -47,10 +48,17 @@ export default function SettingsPage() {
   const [newAccountHolder, setNewAccountHolder] = useState("");
   const [newIban, setNewIban] = useState("");
   const [isAddingIban, setIsAddingIban] = useState(false);
+  const [isLoadingIbans, setIsLoadingIbans] = useState(true);
 
 
   useEffect(() => {
-    setIbanAccounts(getIbanAccounts());
+    const fetchIbans = async () => {
+        setIsLoadingIbans(true);
+        const accounts = await getIbanAccounts();
+        setIbanAccounts(accounts);
+        setIsLoadingIbans(false);
+    }
+    fetchIbans();
   }, []);
 
   if (!dict) {
@@ -96,7 +104,7 @@ export default function SettingsPage() {
     }
   };
 
-  const handleAddIban = (e: React.FormEvent) => {
+  const handleAddIban = async (e: React.FormEvent) => {
     e.preventDefault();
     if (newAccountHolder.trim() === "" || newIban.trim() === "") {
         toast({
@@ -117,8 +125,11 @@ export default function SettingsPage() {
         setIsAddingIban(false);
         return;
     }
-    const updatedAccounts = addIbanAccount({ accountHolder: newAccountHolder, iban: newIban });
+    await addIbanAccount({ accountHolder: newAccountHolder, iban: newIban });
+    // Refetch accounts
+    const updatedAccounts = await getIbanAccounts();
     setIbanAccounts(updatedAccounts);
+
     setNewAccountHolder("");
     setNewIban("");
     toast({
@@ -128,8 +139,10 @@ export default function SettingsPage() {
     setIsAddingIban(false);
   };
 
-  const handleDeleteIban = (accountId: string) => {
-    const updatedAccounts = removeIbanAccount(accountId);
+  const handleDeleteIban = async (accountId: string) => {
+    await removeIbanAccount(accountId);
+    // Refetch accounts
+    const updatedAccounts = await getIbanAccounts();
     setIbanAccounts(updatedAccounts);
     toast({
         variant: "destructive",
@@ -181,7 +194,9 @@ export default function SettingsPage() {
                         </form>
                          <div className="mt-6 space-y-4">
                             <h3 className="text-md font-medium">{settingsDict.iban.savedAccounts}</h3>
-                            {ibanAccounts.length > 0 ? (
+                            {isLoadingIbans ? (
+                                <div className="text-center py-4"><Loader2 className="mx-auto h-6 w-6 animate-spin text-muted-foreground"/></div>
+                            ) : ibanAccounts.length > 0 ? (
                                 ibanAccounts.map(account => (
                                 <div key={account.id} className="flex items-center justify-between p-3 bg-muted rounded-lg">
                                     <div className="flex items-center gap-4">

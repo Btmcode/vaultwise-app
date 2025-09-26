@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -30,23 +31,26 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
-import type { AssetSymbol } from "@/lib/types";
+import type { AssetSymbol, PortfolioAsset, FirestoreUser } from "@/lib/types";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Loader2 } from "lucide-react";
-import { userProfile } from "@/lib/data";
+import { getUserProfile } from "@/lib/firebase/firestore";
+
 
 type BuyDialogProps = {
   dict: any;
+  portfolioAssets: PortfolioAsset[];
   preselectedAsset?: AssetSymbol;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 };
 
-export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyDialogProps) {
+export function BuyDialog({ dict, portfolioAssets, preselectedAsset, isOpen, onOpenChange }: BuyDialogProps) {
   const [asset, setAsset] = useState<AssetSymbol | undefined>(preselectedAsset);
   const [amountTl, setAmountTl] = useState("");
   const [isConfirming, setIsConfirming] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [userProfile, setUserProfile] = useState<Omit<FirestoreUser, 'portfolio' | 'ibanAccounts' | 'transactions'> | null>(null);
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
@@ -56,17 +60,26 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
       setAmountTl("");
       setIsConfirming(false);
       setIsLoading(false);
+      
+      const fetchProfile = async () => {
+          const profile = await getUserProfile();
+          setUserProfile(profile);
+      }
+      fetchProfile();
     }
   }, [isOpen, preselectedAsset]);
   
   const assetDetails = asset ? liveAssets[asset] : null;
   const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8;
   const numericAmountTl = parseFloat(amountTl.replace(/\./g, '').replace(',', '.')) || 0;
+  const availableBalance = userProfile?.availableBalanceTRY ?? 0;
 
-  const amountAsset =
-    assetDetails && numericAmountTl > 0 && asset
+  const amountAsset = useMemo(() => 
+    (assetDetails && numericAmountTl > 0 && asset)
       ? (numericAmountTl / usdTlRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
-      : "0";
+      : "0"
+  , [assetDetails, numericAmountTl, asset, usdTlRate]);
+
 
   const buyDialogDict = dict.portfolioSummary.buyDialog;
   const assetName = asset ? dict.assetNames[asset] || asset : "";
@@ -82,7 +95,7 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
   };
   
   const setAmountPercentage = (percentage: number) => {
-    const calculatedAmount = userProfile.availableBalanceTRY * (percentage / 100);
+    const calculatedAmount = availableBalance * (percentage / 100);
     setAmountTl(Math.floor(calculatedAmount).toLocaleString('tr-TR'));
   };
 
@@ -95,11 +108,11 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
       });
       return;
     }
-     if (numericAmountTl > userProfile.availableBalanceTRY) {
+     if (numericAmountTl > availableBalance) {
       toast({
         variant: "destructive",
         title: buyDialogDict.toastInsufficientTitle,
-        description: buyDialogDict.toastInsufficientDescription.replace('{balance}', userProfile.availableBalanceTRY.toLocaleString('tr-TR')),
+        description: buyDialogDict.toastInsufficientDescription.replace('{balance}', availableBalance.toLocaleString('tr-TR')),
       });
       return;
     }
@@ -176,7 +189,7 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
               placeholder={buyDialogDict.amountPlaceholder}
             />
             <p className="text-xs text-muted-foreground mt-1">
-                {dict.withdrawPage.summary.availableBalance}: {userProfile.availableBalanceTRY.toLocaleString('tr-TR')} TL
+                {dict.withdrawPage.summary.availableBalance}: {availableBalance.toLocaleString('tr-TR')} TL
             </p>
           </div>
           {assetDetails && numericAmountTl > 0 && (

@@ -12,10 +12,27 @@ import { AssetDistribution } from "@/components/dashboard/asset-distribution";
 import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
+import { getUserDoc } from '@/lib/firebase/firestore';
 
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
   const dict = await getDictionary(lang);
+  const userData = await getUserDoc();
+
+  if (!userData) {
+    // This can be a more user-friendly loading or error state
+    return (
+        <div className="flex min-h-screen w-full flex-col bg-background">
+            <Header lang={lang} dict={dict.header} />
+            <main className="flex flex-1 items-center justify-center">
+                <p>Loading user data or user not found...</p>
+            </main>
+        </div>
+    )
+  }
+  
+  const { portfolio, transactions } = userData;
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header lang={lang} dict={dict.header} />
@@ -28,10 +45,10 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
           </div>
           <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             <Suspense fallback={<Skeleton className="h-48" />}>
-              <PortfolioSummary dict={dict} />
+              <PortfolioSummary dict={dict} portfolioAssets={portfolio} />
             </Suspense>
             <Suspense fallback={<Skeleton className="h-48" />}>
-              <AssetDistribution dict={dict} />
+              <AssetDistribution dict={dict} portfolioAssets={portfolio} />
             </Suspense>
              <Suspense fallback={<Skeleton className="h-48" />}>
                 <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
@@ -45,14 +62,14 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
             </Card>
             <Card>
               <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} />
+                <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} transactions={transactions} />
               </Suspense>
             </Card>
           </div>
           <div className="grid gap-4 md:gap-8">
             <Card>
               <Suspense fallback={<Skeleton className="h-96" />}>
-                <AssetList dict={dict} />
+                <AssetList dict={dict} portfolioAssets={portfolio} />
               </Suspense>
             </Card>
           </div>

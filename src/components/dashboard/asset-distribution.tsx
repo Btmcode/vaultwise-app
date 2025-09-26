@@ -9,9 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { portfolioAssets } from "@/lib/data";
 import { useMemo } from "react";
 import { useLivePrices } from "@/hooks/useLivePrices";
+import type { PortfolioAsset } from "@/lib/types";
 
 const COLORS = ["hsl(var(--chart-1))", "hsl(var(--chart-2))", "hsl(var(--chart-3))", "hsl(var(--chart-4))", "hsl(var(--chart-5))"];
 
@@ -46,12 +46,12 @@ const CustomTooltip = ({ active, payload, dict }: any) => {
 };
 
 
-export function AssetDistribution({ dict }: { dict: any }) {
+export function AssetDistribution({ dict, portfolioAssets }: { dict: any, portfolioAssets: PortfolioAsset[] }) {
     const assetDistributionDict = dict.assetDistribution;
     const { liveAssets } = useLivePrices();
 
     const chartData = useMemo(() => {
-        if (Object.keys(liveAssets).length === 0) return [];
+        if (Object.keys(liveAssets).length === 0 || !portfolioAssets) return [];
         
         const enrichedAssets = portfolioAssets.map(pa => {
             const liveAsset = liveAssets[pa.assetSymbol];
@@ -72,7 +72,7 @@ export function AssetDistribution({ dict }: { dict: any }) {
             percent: (asset.valueUsd / totalValue) * 100
         })).filter(asset => asset.value > 0);
 
-    }, [liveAssets]);
+    }, [liveAssets, portfolioAssets]);
 
   return (
     <Card>

@@ -1,6 +1,7 @@
+
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -29,21 +30,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { portfolioAssets } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
-import type { AssetSymbol } from "@/lib/types";
+import type { AssetSymbol, PortfolioAsset } from "@/lib/types";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Loader2 } from "lucide-react";
 
 type SellDialogProps = {
   dict: any;
+  portfolioAssets: PortfolioAsset[];
   preselectedAsset?: AssetSymbol;
   isOpen: boolean;
   onOpenChange: (isOpen: boolean) => void;
 };
 
 
-export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: SellDialogProps) {
+export function SellDialog({ dict, portfolioAssets, preselectedAsset, isOpen, onOpenChange }: SellDialogProps) {
   const [asset, setAsset] = useState<AssetSymbol | undefined>(preselectedAsset);
   const [amountAsset, setAmountAsset] = useState("");
   const [isConfirming, setIsConfirming] = useState(false);
@@ -53,10 +54,10 @@ export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: Sel
 
   useEffect(() => {
     if (isOpen) {
-      setAsset(preselectedAsset);
-      setAmountAsset("");
-      setIsConfirming(false);
-      setIsLoading(false);
+        setAsset(preselectedAsset);
+        setAmountAsset("");
+        setIsConfirming(false);
+        setIsLoading(false);
     }
   }, [isOpen, preselectedAsset]);
   
@@ -174,7 +175,6 @@ export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: Sel
               value={amountAsset}
               onChange={handleAmountChange}
               placeholder={sellDialogDict.amountPlaceholder}
-              max={portfolioAsset?.amount}
             />
             {portfolioAsset && (
                 <p className="text-xs text-muted-foreground mt-1">

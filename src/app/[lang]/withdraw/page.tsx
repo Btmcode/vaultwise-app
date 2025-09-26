@@ -10,7 +10,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast";
-import { getIbanAccounts, type IbanAccount, userProfile, transactions } from '@/lib/data';
+import { getIbanAccounts, getTransactions, getUserProfile } from '@/lib/firebase/firestore';
+import type { IbanAccount, Transaction, UserProfile } from '@/lib/types';
 import {
   Select,
   SelectContent,
@@ -37,27 +38,43 @@ export default function WithdrawPage() {
   const [amount, setAmount] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  
+  const [profile, setProfile] = useState<Omit<UserProfile, 'portfolio' | 'ibanAccounts' | 'transactions'> | null>(null);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [isLoadingData, setIsLoadingData] = useState(true);
 
   const [withdrawn24h, setWithdrawn24h] = useState(0);
   const [withdrawn30d, setWithdrawn30d] = useState(0);
 
   useEffect(() => {
-    setIbanAccounts(getIbanAccounts());
+    const fetchData = async () => {
+        setIsLoadingData(true);
+        const [accounts, userTransactions, userProfile] = await Promise.all([
+            getIbanAccounts(),
+            getTransactions(),
+            getUserProfile()
+        ]);
+        setIbanAccounts(accounts);
+        setTransactions(userTransactions);
+        setProfile(userProfile);
 
-    const now = new Date();
-    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+        const now = new Date();
+        const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+        const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
 
-    const withdrawalsLast24h = transactions
-      .filter(tx => tx.type === 'Withdraw' && new Date(tx.date) > twentyFourHoursAgo)
-      .reduce((sum, tx) => sum + tx.amountUsd, 0);
+        const withdrawalsLast24h = userTransactions
+            .filter(tx => tx.type === 'Withdraw' && new Date(tx.date) > twentyFourHoursAgo)
+            .reduce((sum, tx) => sum + tx.amountUsd, 0);
 
-    const withdrawalsLast30d = transactions
-      .filter(tx => tx.type === 'Withdraw' && new Date(tx.date) > thirtyDaysAgo)
-      .reduce((sum, tx) => sum + tx.amountUsd, 0);
+        const withdrawalsLast30d = userTransactions
+            .filter(tx => tx.type === 'Withdraw' && new Date(tx.date) > thirtyDaysAgo)
+            .reduce((sum, tx) => sum + tx.amountUsd, 0);
 
-    setWithdrawn24h(withdrawalsLast24h);
-    setWithdrawn30d(withdrawalsLast30d);
+        setWithdrawn24h(withdrawalsLast24h);
+        setWithdrawn30d(withdrawalsLast30d);
+        setIsLoadingData(false);
+    }
+    fetchData();
   }, []);
 
   const numericAmount = useMemo(() => parseFloat(amount.replace(/\./g, '').replace(',', '.')) || 0, [amount]);
@@ -65,7 +82,6 @@ export default function WithdrawPage() {
 
   const remaining24h = useMemo(() => Math.max(0, WITHDRAWAL_LIMIT_24H - withdrawn24h), [withdrawn24h]);
   const remaining30d = useMemo(() => Math.max(0, WITHDRAWAL_LIMIT_30D - withdrawn30d), [withdrawn30d]);
-
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/[^\d]/g, '');
@@ -98,7 +114,7 @@ export default function WithdrawPage() {
         return;
     }
 
-    if (numericAmount > userProfile.availableBalanceTRY) {
+    if (profile && numericAmount > profile.availableBalanceTRY) {
         toast({
             variant: "destructive",
             title: withdrawDict.toast.error.title,
@@ -145,6 +161,17 @@ export default function WithdrawPage() {
     return `${value.toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} TL`;
   }
 
+  if (isLoadingData) {
+      return (
+        <div className="flex min-h-screen w-full flex-col bg-background">
+            <Header lang={lang} dict={dict.header} />
+            <main className="flex flex-1 items-center justify-center">
+                <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+            </main>
+        </div>
+      )
+  }
+
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
       <Header lang={lang} dict={dict.header} />
@@ -163,7 +190,7 @@ export default function WithdrawPage() {
                         <Wallet className="h-10 w-10 text-muted-foreground" />
                         <div>
                             <p className="text-sm text-muted-foreground">{withdrawDict.summary.availableBalance}</p>
-                            <p className="text-2xl font-bold">{formatTL(userProfile.availableBalanceTRY)}</p>
+                            <p className="text-2xl font-bold">{formatTL(profile?.availableBalanceTRY ?? 0)}</p>
                         </div>
                     </div>
                 </CardContent>
@@ -255,5 +282,3 @@ export default function WithdrawPage() {
     </div>
   );
 }
-
-    

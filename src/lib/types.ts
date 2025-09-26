@@ -2,6 +2,7 @@
 
 
 
+
 export type AssetSymbol = "XAU" | "XAG" | "BTC" | "PAXG" | "XAUT" | "XAU_ONS" | "XAU_USD_KG" | "XAU_EUR_KG" | "XAG_ONS" | "XAG_TL" | "XAG_USD" | "XAG_EUR" | "USD_TRY";
 
 export type Asset = {
@@ -71,5 +72,13 @@ export type UserProfile = {
     email: string;
     availableBalanceTRY: number;
 };
-
     
+export type FirestoreUser = {
+    id: string;
+    name: string;
+    email: string;
+    availableBalanceTRY: number;
+    portfolio: PortfolioAsset[];
+    ibanAccounts: IbanAccount[];
+    transactions: Transaction[];
+};

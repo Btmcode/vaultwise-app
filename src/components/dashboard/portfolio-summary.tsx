@@ -9,7 +9,8 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { portfolioAssets, chartData } from "@/lib/data";
+import { chartData } from "@/lib/data";
+import type { PortfolioAsset } from "@/lib/types";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BuyDialog } from "./buy-dialog";
@@ -18,13 +19,13 @@ import { useLivePrices } from "@/hooks/useLivePrices";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 
-export function PortfolioSummary({ dict }: { dict: any }) {
+export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfolioAssets: PortfolioAsset[] }) {
   const { liveAssets, loading } = useLivePrices();
-  const [isBuyOpen, setIsBuyOpen] = useState(false);
-  const [isSellOpen, setIsSellOpen] = useState(false);
+  const [buyDialogOpen, setBuyDialogOpen] = useState(false);
+  const [sellDialogOpen, setSellDialogOpen] = useState(false);
 
   const { totalValue, percentageChange } = useMemo(() => {
-    if (loading || Object.keys(liveAssets).length === 0) {
+    if (loading || Object.keys(liveAssets).length === 0 || !portfolioAssets) {
       return { totalValue: 0, percentageChange: 0 };
     }
 
@@ -42,15 +43,15 @@ export function PortfolioSummary({ dict }: { dict: any }) {
     const change = ((currentValue - startValue) / startValue) * 100;
 
     return { totalValue: currentValue, percentageChange: change };
-  }, [liveAssets, loading]);
+  }, [liveAssets, loading, portfolioAssets]);
 
   const formattedValue = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
   }).format(totalValue);
   
-  const buyDialog = dict.portfolioSummary.buyDialog;
-  const sellDialog = dict.portfolioSummary.sellDialog;
+  const buyDialogDict = dict.portfolioSummary.buyDialog;
+  const sellDialogDict = dict.portfolioSummary.sellDialog;
 
   return (
     <Card className="flex flex-col">
@@ -79,11 +80,11 @@ export function PortfolioSummary({ dict }: { dict: any }) {
         )}
       </CardContent>
       <CardFooter className="flex gap-2">
-        <Button onClick={() => setIsBuyOpen(true)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialog.shortTitle}</Button>
-        <Button onClick={() => setIsSellOpen(true)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialog.shortTitle}</Button>
+        <Button onClick={() => setBuyDialogOpen(true)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
+        <Button onClick={() => setSellDialogOpen(true)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
         
-        <BuyDialog dict={dict} isOpen={isBuyOpen} onOpenChange={setIsBuyOpen} />
-        <SellDialog dict={dict} isOpen={isSellOpen} onOpenChange={setIsSellOpen} />
+        <BuyDialog dict={dict} portfolioAssets={portfolioAssets} isOpen={buyDialogOpen} onOpenChange={setBuyDialogOpen} />
+        <SellDialog dict={dict} portfolioAssets={portfolioAssets} isOpen={sellDialogOpen} onOpenChange={setSellDialogOpen} />
       </CardFooter>
     </Card>
   );

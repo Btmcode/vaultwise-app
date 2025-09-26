@@ -9,9 +9,8 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { portfolioAssets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
-import type { AssetSymbol } from "@/lib/types";
+import type { AssetSymbol, PortfolioAsset } from "@/lib/types";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -51,12 +50,10 @@ const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
 
 const HIDE_THRESHOLD = 1.00; // Hide assets with value less than $1.00
 
-export function AssetList({ dict }: { dict: any }) {
+export function AssetList({ dict, portfolioAssets }: { dict: any, portfolioAssets: PortfolioAsset[] }) {
   const assetListDict = dict.assetList;
   const assetNames = dict.assetNames;
-  const buyDialogDict = dict.portfolioSummary.buyDialog;
-  const sellDialogDict = dict.portfolioSummary.sellDialog;
-
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [hideLowBalances, setHideLowBalances] = useState(false);
   const { liveAssets, loading } = useLivePrices();
@@ -74,11 +71,14 @@ export function AssetList({ dict }: { dict: any }) {
   const closeDialog = () => {
     if (dialogState) {
       setDialogState({ ...dialogState, isOpen: false });
+      // A small delay to prevent the dialog from disappearing abruptly before closing animation
+      setTimeout(() => setDialogState(null), 300);
     }
   };
 
 
   const enrichedAssets = useMemo(() => {
+    if (!portfolioAssets) return [];
     return portfolioAssets.map(pa => {
       const liveAsset = liveAssets[pa.assetSymbol];
       const price = liveAsset?.price ?? liveAsset?.buyPrice ?? 0;
@@ -89,7 +89,7 @@ export function AssetList({ dict }: { dict: any }) {
         valueUsd,
       };
     });
-  }, [liveAssets]);
+  }, [liveAssets, portfolioAssets]);
 
   const filteredAssets = useMemo(() => {
     return enrichedAssets
@@ -158,8 +158,8 @@ export function AssetList({ dict }: { dict: any }) {
                   </div>
                 </div>
                 <div className="flex gap-2 justify-end w-full md:w-auto">
-                   <Button onClick={() => openDialog('buy', pa.assetSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
-                   <Button onClick={() => openDialog('sell', pa.assetSymbol)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
+                   <Button onClick={() => openDialog('buy', pa.assetSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                   <Button onClick={() => openDialog('sell', pa.assetSymbol)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
                 </div>
               </div>
               {index < filteredAssets.length - 1 && <Separator className="mt-6" />}
@@ -176,6 +176,7 @@ export function AssetList({ dict }: { dict: any }) {
       {dialogState && dialogState.type === 'buy' && (
           <BuyDialog
               dict={dict}
+              portfolioAssets={portfolioAssets}
               preselectedAsset={dialogState.asset}
               isOpen={dialogState.isOpen}
               onOpenChange={closeDialog}
@@ -185,6 +186,7 @@ export function AssetList({ dict }: { dict: any }) {
       {dialogState && dialogState.type === 'sell' && (
           <SellDialog
               dict={dict}
+              portfolioAssets={portfolioAssets}
               preselectedAsset={dialogState.asset}
               isOpen={dialogState.isOpen}
               onOpenChange={closeDialog}
