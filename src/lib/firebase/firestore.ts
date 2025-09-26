@@ -17,13 +17,14 @@ async function getCurrentUserData(): Promise<{ uid: string; email: string | unde
     const sessionCookieValue = cookies().get('firebase-session')?.value;
     
     if (!sessionCookieValue) {
-      console.log("No session cookie found.");
+      // This is a normal case for a logged-out user.
       return null;
     }
     const decodedToken = await auth.verifySessionCookie(sessionCookieValue, true);
     return { uid: decodedToken.uid, email: decodedToken.email };
   } catch (error) {
-    console.error("Error verifying session cookie:", error);
+    // This can happen if the cookie is expired or invalid. Also a normal case.
+    console.log("Could not verify session cookie:", error);
     return null;
   }
 }
