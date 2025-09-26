@@ -200,7 +200,7 @@ export function BuyDialog({ dict, portfolioAssets, preselectedAsset, isOpen, onO
         </div>
         <DialogFooter>
           <AlertDialog open={isConfirming} onOpenChange={setIsConfirming}>
-            <Button onClick={handleBuyAttempt} className="w-full bg-primary text-primary-foreground hover:bg-primary/80">
+            <Button onClick={handleBuyAttempt} className="w-full bg-accent text-accent-foreground hover:bg-accent/90">
                 {buyDialogDict.buyButton}
             </Button>
             <AlertDialogContent>
@@ -219,7 +219,7 @@ export function BuyDialog({ dict, portfolioAssets, preselectedAsset, isOpen, onO
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                 <AlertDialogCancel>{buyDialogDict.confirm.cancel}</AlertDialogCancel>
-                <AlertDialogAction onClick={handleConfirmBuy} disabled={isLoading}>
+                <AlertDialogAction onClick={handleConfirmBuy} disabled={isLoading} className="bg-accent text-accent-foreground hover:bg-accent/90">
                     {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {buyDialogDict.confirm.confirm}
                 </AlertDialogAction>

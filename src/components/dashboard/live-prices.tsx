@@ -1,17 +1,11 @@
 
 "use client";
 import { useState } from "react";
-import Autoplay from "embla-carousel-autoplay";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
 import {
   GoldIcon,
   SilverIcon,
@@ -29,46 +23,34 @@ import type { AssetSymbol, PortfolioAsset } from "@/lib/types";
 const assetOrder: string[] = [
   "HAS ALTIN",
   "Altın/ONS",
-  "Altın USD/Kg",
-  "Altın EUR/Kg",
-  "Gümüş/ONS",
-  "Gümüş/TL",
-  "Gümüş/USD",
-  "Gümüş/EUR",
   "Bitcoin",
   "PAX Gold",
   "Tether Gold",
   "USD/TRY",
+  "Gümüş/ONS",
+  "Gümüş/TL",
 ];
 
 const apiSymbolMap: Record<string, AssetSymbol> = {
     "HAS ALTIN": "XAU",
     "Altın/ONS": "XAU_ONS",
-    "Altın USD/Kg": "XAU_USD_KG",
-    "Altın EUR/Kg": "XAU_EUR_KG",
-    "Gümüş/ONS": "XAG_ONS",
-    "Gümüş/TL": "XAG_TL",
-    "Gümüş/USD": "XAG_USD",
-    "Gümüş/EUR": "XAG_EUR",
     "Bitcoin": "BTC",
     "PAX Gold": "PAXG",
     "Tether Gold": "XAUT",
     "USD/TRY": "USD_TRY",
+    "Gümüş/ONS": "XAG_ONS",
+    "Gümüş/TL": "XAG_TL",
 }
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
     "HAS ALTIN": GoldIcon,
     "Altın/ONS": GoldIcon,
-    "Altın USD/Kg": GoldIcon,
-    "Altın EUR/Kg": GoldIcon,
-    "Gümüş/ONS": SilverIcon,
-    "Gümüş/TL": SilverIcon,
-    "Gümüş/USD": SilverIcon,
-    "Gümüş/EUR": SilverIcon,
     "Bitcoin": BtcIcon,
     "PAX Gold": PaxgIcon,
     "Tether Gold": XautIcon,
     "USD/TRY": UsdTryIcon,
+    "Gümüş/ONS": SilverIcon,
+    "Gümüş/TL": SilverIcon,
 };
 
 type LivePricesProps = {
@@ -97,10 +79,10 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
     }
   };
 
-  const getChangeBgColor = (change: number) => {
-    if (change > 0) return "border-green-500/50";
-    if (change < 0) return "border-red-500/50";
-    return "border-border";
+  const getChangeColor = (change: number) => {
+    if (change > 0) return "text-green-500";
+    if (change < 0) return "text-red-500";
+    return "text-muted-foreground";
   };
 
   const formatPrice = (price: number | undefined, symbol: string) => {
@@ -109,10 +91,7 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
     let currency = "USD";
     let locale = "en-US";
     
-    if (symbol.includes("EUR")) {
-      currency = "EUR";
-      locale = "de-DE";
-    } else if (symbol.includes("TL") || symbol === "HAS ALTIN") {
+    if (symbol.includes("TL") || symbol === "HAS ALTIN") {
       currency = "TRY";
       locale = "tr-TR";
     } else if (symbol === "USD/TRY") {
@@ -149,147 +128,74 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
       return null;
   }).filter(Boolean);
 
-  const renderCardContent = (item: any) => {
-    const displayName = item.displayName;
-    const isCrypto = displayName === 'Bitcoin' || displayName === 'PAX Gold' || displayName === 'Tether Gold';
-    
-    if (isCrypto || displayName === 'USD/TRY') {
-      return (
-        <div className="flex flex-col justify-center">
-            <p className="font-semibold text-lg whitespace-nowrap">{displayName}</p>
-             <p className="font-mono text-xl font-bold whitespace-nowrap text-left">{formatPrice(item.price, displayName)}</p>
-        </div>
-      );
+  const renderContent = () => {
+    if (loading && displayAssets.length === 0) {
+      return Array.from({ length: 8 }).map((_, index) => (
+        <Skeleton key={index} className="h-[120px] w-full" />
+      ));
     }
 
-    return (
-       <div className="flex flex-col justify-center">
-        <p className="font-semibold text-base whitespace-nowrap">
-          {displayName}
-        </p>
-        <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
-          <span className="font-medium whitespace-nowrap">
-            {livePricesDict.buy}:
-          </span>
-          <span className="font-mono text-right whitespace-nowrap">
-            {formatPrice(item.buyPrice, displayName)}
-          </span>
-          <span className="font-medium whitespace-nowrap">
-            {livePricesDict.sell}:
-          </span>
-          <span className="font-mono text-right whitespace-nowrap">
-            {formatPrice(item.sellPrice, displayName)}
-          </span>
-        </div>
-      </div>
-    );
+    if (error) {
+        return (
+             <div className="col-span-full text-red-500 p-4 rounded-md bg-red-50 border border-red-200">
+                {livePricesDict.error}: {error}
+            </div>
+        )
+    }
+
+    return displayAssets.map((item) => {
+        if (!item) return null;
+
+        const displayName = item.displayName;
+        const Icon = getIcon(displayName);
+        const change24h = item.change24h || 0;
+        const apiSymbol = item.apiSymbol as AssetSymbol;
+        const price = item.price ?? item.buyPrice ?? item.sellPrice;
+
+        return (
+            <div key={displayName} className="flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border transition-colors duration-300 h-full">
+                <div className="flex items-start justify-between gap-2">
+                    <div className="flex items-center gap-3">
+                        <Icon className="h-10 w-10 flex-shrink-0" />
+                        <div>
+                            <p className="font-semibold text-lg">{displayName}</p>
+                            <p className={cn("font-mono font-bold whitespace-nowrap text-left", getChangeColor(change24h))}>
+                                {formatPrice(price, displayName)}
+                            </p>
+                        </div>
+                    </div>
+                     <div className={cn("text-sm font-bold pl-2 whitespace-nowrap", getChangeColor(change24h))}>
+                        {change24h >= 0 ? "+" : ""}
+                        {change24h.toFixed(2)}%
+                    </div>
+                </div>
+                 <div className="flex gap-2">
+                    <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-green-600 text-white hover:bg-green-700">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                    <Button onClick={() => openDialog('sell', apiSymbol)} variant="destructive" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
+                </div>
+            </div>
+        );
+    });
   }
 
-  if (loading && displayAssets.length === 0) {
-    return (
-      <div className="space-y-4">
-        <div className="flex justify-end items-center">
-          <Skeleton className="h-8 w-1/4" />
-        </div>
-        <Carousel className="w-full">
-            <CarouselContent>
-                {Array.from({ length: 12 }).map((_, index) => (
-                    <CarouselItem key={index} className="basis-1/1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
-                        <Skeleton key={index} className="h-[100px] w-full" />
-                    </CarouselItem>
-                ))}
-            </CarouselContent>
-        </Carousel>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="space-y-4">
-        <div className="flex justify-end items-center">
-          <Button size="sm" variant="outline" onClick={refreshData} disabled={loading}>
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
-            />
-            {livePricesDict.refresh}
-          </Button>
-        </div>
-        <div className="text-red-500 p-4 rounded-md bg-red-50 border border-red-200">
-          {livePricesDict.error}: {error}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
         <div className="space-y-4">
-        <div className="flex justify-end items-center">
-            <div className="flex items-center gap-4">
-            <div className="text-sm text-muted-foreground">
-                {livePricesDict.lastUpdated}: {lastUpdated}
+            <div className="flex justify-end items-center">
+                <div className="flex items-center gap-4">
+                <div className="text-sm text-muted-foreground">
+                    {livePricesDict.lastUpdated}: {lastUpdated}
+                </div>
+                <Button size="sm" variant="outline" onClick={refreshData} disabled={loading}>
+                    <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
+                    {livePricesDict.refresh}
+                </Button>
+                </div>
             </div>
-            <Button
-                size="sm"
-                variant="outline"
-                onClick={refreshData}
-                disabled={loading}
-            >
-                <RefreshCw
-                className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`}
-                />
-                {livePricesDict.refresh}
-            </Button>
+             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {renderContent()}
             </div>
-        </div>
-        <Carousel 
-            className="w-full"
-            opts={{ align: "start", loop: true }}
-            plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
-        >
-            <CarouselContent className="-ml-4">
-                {displayAssets.map((item) => {
-                if (!item) return null;
-
-                const displayName = item.displayName;
-                const Icon = getIcon(displayName);
-                const change24h = item.change24h || 0;
-                const apiSymbol = item.apiSymbol as AssetSymbol;
-
-                return (
-                    <CarouselItem key={displayName} className="basis-1/1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4">
-                        <div
-                            className={cn(
-                                "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border-2 transition-colors duration-300 h-full",
-                                getChangeBgColor(change24h)
-                            )}
-                        >
-                            <div className="flex items-start justify-between gap-2">
-                                <div className="flex items-center gap-3">
-                                <Icon className={cn("h-10 w-10 flex-shrink-0")} />
-                                {renderCardContent(item)}
-                                </div>
-                                <div
-                                className={cn(
-                                    "text-sm font-bold pl-2 whitespace-nowrap",
-                                    change24h >= 0 ? "text-green-500" : "text-red-500"
-                                )}
-                                >
-                                {change24h >= 0 ? "+" : ""}
-                                {change24h.toFixed(2)}%
-                                </div>
-                            </div>
-                            <div className="flex gap-2">
-                                <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
-                                <Button onClick={() => openDialog('sell', apiSymbol)} variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
-                            </div>
-                        </div>
-                    </CarouselItem>
-                );
-                })}
-            </CarouselContent>
-        </Carousel>
         </div>
         
         {dialogState && dialogState.type === 'buy' && (

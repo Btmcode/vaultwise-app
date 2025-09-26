@@ -159,8 +159,8 @@ export function AssetList({ dict, portfolioAssets }: { dict: any, portfolioAsset
                   </div>
                 </div>
                 <div className="flex gap-2 justify-end w-full md:w-auto">
-                   <Button onClick={() => openDialog('buy', pa.assetSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
-                   <Button onClick={() => openDialog('sell', pa.assetSymbol)} variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
+                   <Button onClick={() => openDialog('buy', pa.assetSymbol)} size="sm" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                   <Button onClick={() => openDialog('sell', pa.assetSymbol)} variant="destructive" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
                 </div>
               </div>
               {index < filteredAssets.length - 1 && <Separator className="mt-6" />}
