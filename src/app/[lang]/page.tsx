@@ -1,4 +1,3 @@
-
 'use client';
 
 import Link from 'next/link';
@@ -48,7 +47,7 @@ export default function LandingPage() {
           <Button variant="ghost" asChild>
             <Link href={`/${lang}/login`}>{landingDict.login}</Link>
           </Button>
-          <Button asChild className="bg-cta text-white hover:bg-cta/90">
+          <Button asChild>
             <Link href={`/${lang}/signup`}>{landingDict.signup}</Link>
           </Button>
         </nav>
