@@ -10,8 +10,8 @@ const nameToSymbolMap: Record<string, string> = {
     'EUR/KG': 'XAU_EUR_KG',
     'GÜMÜŞ GRAM': 'XAG_TL',
     'GÜM/ONS': 'XAG_ONS',
-    'GÜM/USD': 'XAG_USD', // Additional mapping
-    'GÜM/EUR': 'XAG_EUR', // Additional mapping
+    'GÜM/USD': 'XAG_USD',
+    'GÜM/EUR': 'XAG_EUR',
 };
 
 type ApiProduct = {
