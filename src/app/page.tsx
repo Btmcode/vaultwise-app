@@ -50,29 +50,27 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-background to-secondary/30">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
-              <div className="flex flex-col justify-center space-y-6">
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                  Geleceğiniz İçin <span className="text-primary">Akıllıca</span> Biriktirin.
-                </h1>
-                <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                  VaultWise, değerli metaller ve dijital varlıkları tek bir güvenli platformda birleştirerek birikim yapmanın en modern yolunu sunar.
-                </p>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row">
-                  <Button size="lg" asChild>
-                    <Link href="/tr/signup">Hemen Başla</Link>
-                  </Button>
-                  <Button size="lg" variant="outline" asChild>
-                     <Link href="#features">Daha Fazla Bilgi</Link>
-                  </Button>
-                </div>
-              </div>
-              <div className="flex items-center justify-center">
-                 <PriceTicker />
+        <section className="w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-background to-secondary/30 relative overflow-hidden">
+          <div className="container px-4 md:px-6 text-center">
+            <div className="flex flex-col justify-center space-y-6">
+              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                Geleceğiniz İçin <span className="text-primary">Akıllıca</span> Biriktirin.
+              </h1>
+              <p className="max-w-[700px] mx-auto text-muted-foreground md:text-xl">
+                VaultWise, değerli metaller ve dijital varlıkları tek bir güvenli platformda birleştirerek birikim yapmanın en modern yolunu sunar.
+              </p>
+              <div className="flex justify-center flex-col gap-2 min-[400px]:flex-row">
+                <Button size="lg" asChild>
+                  <Link href="/tr/signup">Hemen Başla</Link>
+                </Button>
+                <Button size="lg" variant="outline" asChild>
+                    <Link href="#features">Daha Fazla Bilgi</Link>
+                </Button>
               </div>
             </div>
+          </div>
+           <div className="absolute bottom-0 left-0 right-0 h-24">
+              <PriceTicker />
           </div>
         </section>
 

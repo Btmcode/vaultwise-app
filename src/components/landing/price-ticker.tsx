@@ -2,13 +2,6 @@
 'use client';
 
 import * as React from 'react';
-import Autoplay from 'embla-carousel-autoplay';
-
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from '@/components/ui/carousel';
 import { useLivePricesForLanding } from '@/hooks/use-live-prices-landing';
 import {
   BtcIcon,
@@ -21,6 +14,8 @@ import {
 import { cn } from '@/lib/utils';
 import { Skeleton } from '../ui/skeleton';
 import type { AssetSymbol } from '@/lib/types';
+import { ChevronDown, ChevronUp } from 'lucide-react';
+
 
 const assetOrder: AssetSymbol[] = ['BTC', 'XAU', 'XAG', 'PAXG', 'XAUT', 'USD_TRY'];
 
@@ -45,10 +40,6 @@ const assetDetails: Record<
 
 export function PriceTicker() {
   const { liveAssets, loading, error } = useLivePricesForLanding();
-
-  const plugin = React.useRef(
-    Autoplay({ delay: 2000, stopOnInteraction: true })
-  );
 
   const formatPrice = (price: number | undefined, symbol: AssetSymbol) => {
     if (price === undefined || isNaN(price)) return '...';
@@ -86,52 +77,45 @@ export function PriceTicker() {
     return <div className="text-destructive text-center">{error}</div>
   }
 
-  return (
-    <Carousel
-      className="w-full max-w-md mx-auto"
-      plugins={[plugin.current]}
-      onMouseEnter={plugin.current.stop}
-      onMouseLeave={plugin.current.reset}
-      opts={{
-        loop: true,
-        align: 'start',
-      }}
-    >
-      <CarouselContent>
-        {orderedAssets.map((asset) => {
-          const details = assetDetails[asset.symbol as AssetSymbol];
-          const Icon = details.icon;
-          const price = asset.price ?? asset.sellPrice;
-          const change = asset.change24h;
+  const TickerContent = () => (
+    <>
+      {orderedAssets.map((asset) => {
+        const details = assetDetails[asset.symbol as AssetSymbol];
+        const Icon = details.icon;
+        const price = asset.price ?? asset.sellPrice;
+        const change = asset.change24h;
 
-          return (
-            <CarouselItem key={asset.symbol} className="md:basis-1/2 lg:basis-1/2">
-              <div className="p-1">
-                <div className="flex items-center gap-4 rounded-lg border bg-card/50 p-4 backdrop-blur-sm">
-                  <Icon className="h-10 w-10 flex-shrink-0" />
-                  <div className="flex-1">
-                    <p className="font-semibold text-card-foreground">
-                      {details.name}
-                    </p>
-                    <p className="text-lg font-bold text-card-foreground">
-                      {formatPrice(price, asset.symbol as AssetSymbol)}
-                    </p>
-                  </div>
-                  <div
-                    className={cn(
-                      'text-sm font-semibold',
-                      change >= 0 ? 'text-green-500' : 'text-red-500'
-                    )}
-                  >
-                    {change >= 0 ? '+' : ''}
-                    {change.toFixed(2)}%
-                  </div>
-                </div>
-              </div>
-            </CarouselItem>
-          );
-        })}
-      </CarouselContent>
-    </Carousel>
+        return (
+          <div key={asset.symbol} className="flex-shrink-0 flex items-center justify-center gap-4 px-8 py-2 mx-4 rounded-full border bg-background/50 backdrop-blur-sm shadow-sm">
+            <Icon className="h-6 w-6" />
+            <div className="flex items-baseline gap-3">
+                <span className="font-semibold text-sm">{details.name}</span>
+                <span className="font-mono text-sm">{formatPrice(price, asset.symbol as AssetSymbol)}</span>
+            </div>
+            <div
+              className={cn(
+                'flex items-center text-sm font-semibold',
+                change >= 0 ? 'text-green-500' : 'text-red-500'
+              )}
+            >
+              {change >= 0 ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {change.toFixed(2)}%
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+
+
+  return (
+    <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
+        <div className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll">
+            <TickerContent />
+        </div>
+        <div className="flex items-center justify-center md:justify-start [&_li]:mx-8 [&_img]:max-w-none animate-infinite-scroll" aria-hidden="true">
+            <TickerContent />
+        </div>
+    </div>
   );
 }
