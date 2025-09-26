@@ -10,17 +10,19 @@ function Crystal() {
   const meshRef = useRef<THREE.Mesh>(null!);
 
   useFrame((state, delta) => {
-    // Slowly rotate the crystal
-    meshRef.current.rotation.y += delta * 0.1;
-    meshRef.current.rotation.x += delta * 0.05;
+    if (meshRef.current) {
+        // Slowly rotate the crystal
+        meshRef.current.rotation.y += delta * 0.1;
+        meshRef.current.rotation.x += delta * 0.05;
 
-    // Use GSAP for a smooth hover effect (optional, can be expanded)
-    const { pointer } = state;
-    gsap.to(meshRef.current.scale, {
-      x: 1 + pointer.x * 0.1,
-      y: 1 - pointer.y * 0.1,
-      duration: 0.5,
-    });
+        // Use GSAP for a smooth hover effect
+        const { pointer } = state;
+        gsap.to(meshRef.current.scale, {
+          x: 1 + pointer.x * 0.1,
+          y: 1 - pointer.y * 0.1,
+          duration: 0.5,
+        });
+    }
   });
 
   return (
@@ -48,7 +50,6 @@ export default function HeroScene() {
       <PerspectiveCamera makeDefault position={[0, 0, 8]} fov={50} />
       <ambientLight intensity={0.5} />
       
-      {/* Main spotlight shining on the crystal */}
       <SpotLight
         position={[10, 10, 10]}
         angle={0.3}
@@ -57,16 +58,15 @@ export default function HeroScene() {
         castShadow
         shadow-mapSize-width={2048}
         shadow-mapSize-height={2048}
-        color="#90CAF9" // Soft Lavender
+        color="#90CAF9" 
       />
 
-      {/* A secondary fill light */}
       <SpotLight
         position={[-10, -5, -10]}
         angle={0.5}
         penumbra={1}
         intensity={1.5}
-        color="#304FFE" // Sapphire Blue
+        color="#304FFE"
       />
 
       <Crystal />
