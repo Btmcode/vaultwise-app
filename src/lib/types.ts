@@ -1,5 +1,6 @@
 
 
+
 export type AssetSymbol = "XAU" | "XAG" | "BTC" | "PAXG" | "XAUT" | "XAU_ONS" | "XAU_USD_KG" | "XAU_EUR_KG" | "XAG_ONS" | "XAG_TL" | "XAG_USD" | "XAG_EUR" | "USD_TRY";
 
 export type Asset = {
@@ -16,13 +17,12 @@ export type PortfolioAsset = {
   amount: number; // in asset units
 };
 
-export type TransactionType = "Buy" | "Sell" | "Auto-Save";
+export type TransactionType = "Buy" | "Sell" | "Auto-Save" | "Deposit" | "Withdraw";
 
 export type Transaction = {
   id: string;
   assetSymbol: AssetSymbol;
   type: TransactionType;
-  amountAsset: number;
   amountUsd: number;
   date: Date;
 };
@@ -64,3 +64,9 @@ export type IbanAccount = {
   iban: string;
 };
 
+export type UserProfile = {
+    id: string;
+    name: string;
+    email: string;
+    availableBalanceTRY: number;
+};

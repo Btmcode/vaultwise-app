@@ -10,7 +10,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from "@/hooks/use-toast";
-import { getIbanAccounts, type IbanAccount } from '@/lib/data';
+import { getIbanAccounts, type IbanAccount, userProfile, transactions } from '@/lib/data';
 import {
   Select,
   SelectContent,
@@ -19,10 +19,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Loader2, Info, Banknote, Landmark } from 'lucide-react';
+import { Loader2, Info, Banknote, Landmark, Wallet } from 'lucide-react';
 import Link from 'next/link';
 
 const TRANSACTION_FEE = 1; // 1 TRY
+const WITHDRAWAL_LIMIT_24H = 25000000;
+const WITHDRAWAL_LIMIT_30D = 99999584.99;
 
 export default function WithdrawPage() {
   const params = useParams();
@@ -36,12 +38,34 @@ export default function WithdrawPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
+  const [withdrawn24h, setWithdrawn24h] = useState(0);
+  const [withdrawn30d, setWithdrawn30d] = useState(0);
+
   useEffect(() => {
     setIbanAccounts(getIbanAccounts());
+
+    const now = new Date();
+    const twentyFourHoursAgo = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+    const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+
+    const withdrawalsLast24h = transactions
+      .filter(tx => tx.type === 'Withdraw' && new Date(tx.date) > twentyFourHoursAgo)
+      .reduce((sum, tx) => sum + tx.amountUsd, 0);
+
+    const withdrawalsLast30d = transactions
+      .filter(tx => tx.type === 'Withdraw' && new Date(tx.date) > thirtyDaysAgo)
+      .reduce((sum, tx) => sum + tx.amountUsd, 0);
+
+    setWithdrawn24h(withdrawalsLast24h);
+    setWithdrawn30d(withdrawalsLast30d);
   }, []);
 
   const numericAmount = useMemo(() => parseFloat(amount.replace(/\./g, '').replace(',', '.')) || 0, [amount]);
   const netAmount = useMemo(() => numericAmount > 0 ? numericAmount - TRANSACTION_FEE : 0, [numericAmount]);
+
+  const remaining24h = useMemo(() => Math.max(0, WITHDRAWAL_LIMIT_24H - withdrawn24h), [withdrawn24h]);
+  const remaining30d = useMemo(() => Math.max(0, WITHDRAWAL_LIMIT_30D - withdrawn30d), [withdrawn30d]);
+
 
   const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value.replace(/[^\d]/g, '');
@@ -55,15 +79,52 @@ export default function WithdrawPage() {
 
   const handleWithdraw = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!selectedIban || !amount || isNaN(numericAmount) || numericAmount <= 10) {
+
+    if (!selectedIban || isNaN(numericAmount) || numericAmount <= 0) {
       toast({
         variant: "destructive",
         title: withdrawDict.toast.error.title,
-        description: withdrawDict.toast.error.invalidInput.replace('{min}', '10'),
+        description: withdrawDict.toast.error.invalidInput,
       });
       return;
     }
+    
+    if (numericAmount < 10) {
+        toast({
+            variant: "destructive",
+            title: withdrawDict.toast.error.title,
+            description: withdrawDict.toast.error.minAmount.replace('{min}', '10'),
+        });
+        return;
+    }
+
+    if (numericAmount > userProfile.availableBalanceTRY) {
+        toast({
+            variant: "destructive",
+            title: withdrawDict.toast.error.title,
+            description: withdrawDict.toast.error.insufficientBalance,
+        });
+        return;
+    }
+
+    if (numericAmount > remaining24h) {
+        toast({
+            variant: "destructive",
+            title: withdrawDict.toast.error.title,
+            description: withdrawDict.toast.error.limit24h,
+        });
+        return;
+    }
+
+     if (numericAmount > remaining30d) {
+        toast({
+            variant: "destructive",
+            title: withdrawDict.toast.error.title,
+            description: withdrawDict.toast.error.limit30d,
+        });
+        return;
+    }
+
 
     setIsLoading(true);
 
@@ -73,6 +134,7 @@ export default function WithdrawPage() {
         title: withdrawDict.toast.success.title,
         description: withdrawDict.toast.success.description.replace('{amount}', netAmount.toLocaleString('tr-TR')),
       });
+      // In a real app, you would update the user's balance and transaction history here.
       setAmount('');
       setSelectedIban(null);
       setIsLoading(false);
@@ -88,6 +150,20 @@ export default function WithdrawPage() {
           <p className="text-muted-foreground">{withdrawDict.description}</p>
         </div>
         <div className="mx-auto grid w-full max-w-3xl items-start gap-6">
+            <Card>
+                <CardHeader>
+                    <CardTitle>{withdrawDict.summary.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex items-center gap-4">
+                        <Wallet className="h-10 w-10 text-muted-foreground" />
+                        <div>
+                            <p className="text-sm text-muted-foreground">{withdrawDict.summary.availableBalance}</p>
+                            <p className="text-2xl font-bold">{userProfile.availableBalanceTRY.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY'})}</p>
+                        </div>
+                    </div>
+                </CardContent>
+            </Card>
           <Card>
             <CardHeader>
               <CardTitle>{withdrawDict.cardTitle}</CardTitle>
@@ -162,8 +238,8 @@ export default function WithdrawPage() {
             <h3 className="text-lg font-semibold text-foreground">{withdrawDict.info.title}</h3>
             <ul className="list-disc list-inside space-y-2">
               <li>{withdrawDict.info.personalAccount}</li>
-              <li>{withdrawDict.info.limit24h.replace('{amount}', '25,000,000.00')}</li>
-              <li>{withdrawDict.info.limit30d.replace('{amount}', '99,999,584.99')}</li>
+              <li>{withdrawDict.info.limit24h.replace('{amount}', remaining24h.toLocaleString('tr-TR'))}</li>
+              <li>{withdrawDict.info.limit30d.replace('{amount}', remaining30d.toLocaleString('tr-TR'))}</li>
               <li>{withdrawDict.info.minWithdrawal.replace('{amount}', '10')}</li>
               <li>{withdrawDict.info.supportedBanks}</li>
               <li>{withdrawDict.info.otherBanks}</li>
@@ -175,5 +251,3 @@ export default function WithdrawPage() {
     </div>
   );
 }
-
-    

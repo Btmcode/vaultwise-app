@@ -292,6 +292,10 @@
     "withdrawPage": {
         "title": "Para Çek",
         "description": "VaultWise hesabınızdan bankanıza para transfer edin.",
+        "summary": {
+            "title": "Hesap Özeti",
+            "availableBalance": "Kullanılabilir Bakiye"
+        },
         "cardTitle": "Çekme Detayları",
         "cardDescription": "Çekilecek tutarı girin ve hedef hesabı seçin.",
         "amountLabel": "Tutar (TRY)",
@@ -321,7 +325,11 @@
             },
             "error": {
                 "title": "Çekme Başarısız",
-                "invalidInput": "Lütfen bir IBAN seçin ve {min} TRY'den büyük geçerli bir tutar girin."
+                "invalidInput": "Lütfen bir IBAN seçin ve geçerli bir tutar girin.",
+                "minAmount": "Minimum çekme tutarı {min} TRY'dir.",
+                "insufficientBalance": "Yetersiz bakiye. Çekmek istediğiniz tutar mevcut bakiyenizden fazla.",
+                "limit24h": "Günlük para çekme limitinizi aştınız.",
+                "limit30d": "Aylık para çekme limitinizi aştınız."
             }
         }
     },
@@ -337,5 +345,3 @@
         "dataSourceError": "Veri kaynağı hatası nedeniyle analiz yapılamıyor."
     }
 }
-
-    

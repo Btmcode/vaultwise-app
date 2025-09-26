@@ -292,6 +292,10 @@
     "withdrawPage": {
         "title": "Withdraw Funds",
         "description": "Transfer funds from your VaultWise account to your bank.",
+        "summary": {
+            "title": "Account Summary",
+            "availableBalance": "Available Balance"
+        },
         "cardTitle": "Withdrawal Details",
         "cardDescription": "Enter the amount to withdraw and select the destination account.",
         "amountLabel": "Amount (TRY)",
@@ -321,7 +325,11 @@
             },
             "error": {
                 "title": "Withdrawal Failed",
-                "invalidInput": "Please select an IBAN and enter a valid amount greater than {min} TRY."
+                "invalidInput": "Please select an IBAN and enter a valid amount.",
+                "minAmount": "Minimum withdrawal amount is {min} TRY.",
+                "insufficientBalance": "Insufficient balance. The amount you want to withdraw exceeds your available balance.",
+                "limit24h": "You have exceeded your daily withdrawal limit.",
+                "limit30d": "You have exceeded your monthly withdrawal limit."
             }
         }
     },
@@ -337,5 +345,3 @@
         "dataSourceError": "Analysis cannot be performed due to a data source error."
     }
 }
-
-    

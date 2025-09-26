@@ -1,6 +1,6 @@
 
 
-import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol, AutoSavePlan, IbanAccount } from "@/lib/types";
+import type { Asset, PortfolioAsset, Transaction, ChartData, AssetSymbol, AutoSavePlan, IbanAccount, UserProfile } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 
 export const assets: Record<string, Omit<Asset, 'name'>> = {
@@ -41,6 +41,13 @@ export const assets: Record<string, Omit<Asset, 'name'>> = {
   USD_TRY: { symbol: "USD_TRY", buyPrice: 32.85, sellPrice: 32.80, change24h: 0.1 },
 };
 
+export const userProfile: UserProfile = {
+    id: 'user-123',
+    name: 'Ali Veli',
+    email: 'ali.veli@example.com',
+    availableBalanceTRY: 150000.75,
+};
+
 export const portfolioAssets: PortfolioAsset[] = [
   {
     assetSymbol: "BTC",
@@ -61,7 +68,6 @@ export const transactions: Transaction[] = [
     id: "1",
     assetSymbol: "BTC",
     type: "Buy",
-    amountAsset: 0.01,
     amountUsd: 681.23,
     date: new Date("2024-05-20T10:00:00Z"),
   },
@@ -69,7 +75,6 @@ export const transactions: Transaction[] = [
     id: "2",
     assetSymbol: "XAU",
     type: "Auto-Save",
-    amountAsset: 0.043,
     amountUsd: 100,
     date: new Date("2024-05-18T09:00:00Z"),
   },
@@ -77,7 +82,6 @@ export const transactions: Transaction[] = [
     id: "3",
     assetSymbol: "PAXG",
     type: "Buy",
-    amountAsset: 0.215,
     amountUsd: 500,
     date: new Date("2024-05-15T14:30:00Z"),
   },
@@ -85,9 +89,29 @@ export const transactions: Transaction[] = [
     id: "4",
     assetSymbol: "XAG",
     type: "Sell",
-    amountAsset: 10,
     amountUsd: 295.5,
     date: new Date("2024-05-12T11:00:00Z"),
+  },
+  {
+    id: "tx-withdraw-1",
+    assetSymbol: "USD_TRY",
+    type: "Withdraw",
+    amountUsd: 50000, // Simulating a TRY withdrawal
+    date: new Date(new Date().getTime() - 12 * 60 * 60 * 1000), // 12 hours ago
+  },
+  {
+    id: "tx-withdraw-2",
+    assetSymbol: "USD_TRY",
+    type: "Withdraw",
+    amountUsd: 20000,
+    date: new Date(new Date().getTime() - 3 * 24 * 60 * 60 * 1000), // 3 days ago
+  },
+  {
+    id: "tx-withdraw-3",
+    assetSymbol: "USD_TRY",
+    type: "Withdraw",
+    amountUsd: 100000,
+    date: new Date(new Date().getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
   },
 ];
 
@@ -242,4 +266,3 @@ export const chartData: ChartData = {
 };
 
 export const totalPortfolioValue = portfolioAssets.reduce((sum, asset) => sum + (asset.amount * findLatestPrice(asset.assetSymbol)), 0);
-
