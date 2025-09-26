@@ -45,14 +45,16 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
-  // When the dialog opens or the preselected asset changes, update the internal state.
-  useEffect(() => {
-    if (isOpen) {
+  // Reset state and set preselected asset when dialog opens
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open) {
       setAsset(preselectedAsset);
       setAmountAsset("");
       setIsConfirming(false);
+      setIsLoading(false);
     }
-  }, [isOpen, preselectedAsset]);
+  };
   
   const assetDetails = asset ? liveAssets[asset] : null;
   const portfolioAsset = asset ? portfolioAssets.find(pa => pa.assetSymbol === asset) : null;
@@ -105,7 +107,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
   const availableToSell = portfolioAssets.filter(pa => liveAssets[pa.assetSymbol]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
       </DialogTrigger>
@@ -124,7 +126,6 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
             <Select 
               onValueChange={(value) => setAsset(value as AssetSymbol)}
               value={asset}
-              disabled={!!preselectedAsset}
             >
               <SelectTrigger id="asset">
                 <SelectValue placeholder={sellDialogDict.assetPlaceholder} />
@@ -165,7 +166,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
             <AlertDialogContent>
                 <AlertDialogHeader>
                 <AlertDialogTitle>{sellDialogDict.confirm.title}</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription asChild>
                     <div className="space-y-2">
                         <div>{sellDialogDict.confirm.descriptionSell}</div>
                         <div className="p-4 bg-muted rounded-md text-muted-foreground">

@@ -44,14 +44,16 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
-  // When the dialog opens or the preselected asset changes, update the internal state.
-  useEffect(() => {
-    if (isOpen) {
+  // Reset state and set preselected asset when dialog opens
+  const handleOpenChange = (open: boolean) => {
+    setIsOpen(open);
+    if (open) {
       setAsset(preselectedAsset);
       setAmountTl("");
       setIsConfirming(false);
+      setIsLoading(false);
     }
-  }, [isOpen, preselectedAsset]);
+  };
   
   const assetDetails = asset ? liveAssets[asset] : null;
   const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8;
@@ -95,7 +97,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
     .map(symbol => ({ symbol: symbol as AssetSymbol, name: dict.assetNames[symbol] || symbol }));
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
         <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
       </DialogTrigger>
@@ -114,7 +116,6 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
             <Select 
               onValueChange={(value) => setAsset(value as AssetSymbol)} 
               value={asset}
-              disabled={!!preselectedAsset}
             >
               <SelectTrigger id="asset">
                 <SelectValue placeholder={buyDialogDict.assetPlaceholder} />
@@ -142,7 +143,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
           </div>
           {assetDetails && amountTl && (
             <div className="text-sm text-muted-foreground text-center">
-              {buyDialogDict.approximate.replace('{amount}', amountAsset).replace('{symbol}', assetDetails.symbol)}
+              {buyDialogDict.approximate.replace('{amount}', amountAsset).replace('{symbol}', asset || '')}
             </div>
           )}
         </div>
@@ -154,7 +155,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
             <AlertDialogContent>
                 <AlertDialogHeader>
                 <AlertDialogTitle>{buyDialogDict.confirm.title}</AlertDialogTitle>
-                <AlertDialogDescription>
+                <AlertDialogDescription asChild>
                     <div className="space-y-2">
                         <div>{buyDialogDict.confirm.description}</div>
                         <div className="p-4 bg-muted rounded-md text-muted-foreground">
