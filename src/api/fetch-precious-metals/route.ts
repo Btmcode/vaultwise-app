@@ -28,6 +28,7 @@ const nameToSymbolMap: Record<string, string> = {
 
 const parseNumber = (str: string): number | null => {
     // API'den gelen "2.450,12" gibi string'leri doğru şekilde ayrıştırır
+    if (!str) return null;
     const num = parseFloat(str.replace(/\./g, '').replace(',', '.'));
     return isNaN(num) ? null : num;
 };
@@ -57,9 +58,7 @@ export async function GET() {
         const processedProducts: Record<string, FormattedAsset> = {};
 
         for (const prod of data.products as ApiProduct[]) {
-            const symbol = nameToSymbolMap[prod.name];
-            if (!symbol) continue;
-
+            const symbol = nameToSymbolMap[prod.name] || prod.name;
             const buyPrice = parseNumber(prod.public_bid);
             const sellPrice = parseNumber(prod.public_ask);
             
