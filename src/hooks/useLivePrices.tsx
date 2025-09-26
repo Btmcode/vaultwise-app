@@ -71,8 +71,9 @@ export function LivePricesProvider({ children }: ProviderProps) {
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
                 const symbol = item['Ürün'];
-                const buyPrice = parseNumber(item['Alış']);
-                const sellPrice = parseNumber(item['Satış']);
+                // Use public_bid and public_ask for buy and sell prices respectively
+                const buyPrice = parseNumber(item['public_bid']);
+                const sellPrice = parseNumber(item['public_ask']);
                 const change24h = calculateChange(item);
 
                 if (symbol) {
@@ -94,6 +95,7 @@ export function LivePricesProvider({ children }: ProviderProps) {
         } finally {
             setLoading(false);
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -102,9 +104,9 @@ export function LivePricesProvider({ children }: ProviderProps) {
     }, [fetchAllData]);
 
     const refreshData = useCallback(() => {
-        if (loading) return;
+        // No need to check for loading here, as fetchAllData will handle it.
         fetchAllData();
-    }, [fetchAllData, loading]);
+    }, [fetchAllData]);
 
     const value = { liveAssets, loading, error, lastUpdated, refreshData };
 
