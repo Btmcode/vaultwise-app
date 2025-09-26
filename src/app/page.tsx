@@ -28,7 +28,7 @@ const features = [
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground overflow-x-hidden">
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/80 backdrop-blur-sm shadow-sm">
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/80 backdrop-blur-sm">
         <Link href="/" className="flex items-center justify-center" prefetch={false}>
           <VaultWiseLogo className="h-8 w-8 text-primary" />
           <span className="ml-2 text-xl font-bold">VaultWise</span>
@@ -45,10 +45,10 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-40 lg:pb-28 relative bg-gradient-to-b from-background to-secondary/30">
+        <section className="w-full pt-24 pb-12 md:pt-32 md:pb-20 lg:pt-40 lg:pb-28 relative">
            <div className="container px-4 md:px-6 z-10 text-center">
             <div className="flex flex-col justify-center items-center space-y-4">
-                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-foreground animate-fade-in-up">
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-foreground to-muted-foreground animate-fade-in-up">
                   Varlıklarınız. Hem Dijital. <br/> Hem Fiziksel Güvencede.
                 </h1>
                 <p className="max-w-[700px] text-muted-foreground md:text-xl animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
@@ -67,12 +67,12 @@ export default function LandingPage() {
         </section>
 
         {/* Price Ticker Section */}
-         <section className="w-full py-8 bg-secondary/30 border-y">
+         <section className="w-full py-8 bg-background border-y">
              <PriceTicker />
          </section>
 
         {/* Features Section */}
-        <section id="features" className="w-full py-20 md:py-32 bg-background">
+        <section id="features" className="w-full py-20 md:py-32 bg-secondary/30">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm font-medium">Neden VaultWise?</div>
@@ -83,7 +83,7 @@ export default function LandingPage() {
             </div>
             <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:grid-cols-3 md:gap-12">
               {features.map((feature, index) => (
-                <div key={index} className="grid gap-4 p-6 rounded-xl border bg-card hover:shadow-primary/10 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2">
+                <div key={index} className="grid gap-4 p-6 rounded-xl border bg-card text-left transition-all duration-300 transform hover:-translate-y-2 hover:shadow-primary/10 hover:shadow-2xl">
                   <div className="bg-primary/10 p-3 rounded-full w-fit">{feature.icon}</div>
                   <h3 className="text-xl font-bold">{feature.title}</h3>
                   <p className="text-sm text-muted-foreground">{feature.description}</p>

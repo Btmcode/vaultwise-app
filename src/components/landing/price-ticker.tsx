@@ -70,12 +70,12 @@ export function PriceTicker() {
       <div className="w-full inline-flex flex-nowrap overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
         <div className="flex items-center justify-center md:justify-start animate-infinite-scroll">
             {Array.from({length: 6}).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-64 mx-4 rounded-full" />
+                <Skeleton key={i} className="h-10 w-64 mx-4 rounded-lg" />
             ))}
         </div>
          <div className="flex items-center justify-center md:justify-start animate-infinite-scroll" aria-hidden="true">
              {Array.from({length: 6}).map((_, i) => (
-                <Skeleton key={i} className="h-10 w-64 mx-4 rounded-full" />
+                <Skeleton key={i} className="h-10 w-64 mx-4 rounded-lg" />
             ))}
         </div>
       </div>
@@ -97,7 +97,7 @@ export function PriceTicker() {
         const change = asset.change24h;
 
         return (
-          <div key={asset.symbol} className="flex-shrink-0 flex items-center justify-center gap-4 px-6 py-2 mx-4 rounded-full border bg-card/60 backdrop-blur-sm shadow-md transition-all hover:shadow-lg hover:border-primary/50">
+          <div key={asset.symbol} className="flex-shrink-0 flex items-center justify-center gap-4 px-6 py-2 mx-4 rounded-lg border bg-card/60 backdrop-blur-sm shadow-sm transition-all hover:shadow-md hover:border-primary/50">
             <Icon className="h-7 w-7" />
             <div className="flex flex-col items-start">
                 <span className="font-semibold text-sm">{details.name}</span>
