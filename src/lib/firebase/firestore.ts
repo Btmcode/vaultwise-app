@@ -57,9 +57,9 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             email: 'ali.veli@example.com',
             availableBalanceTRY: 150000.75,
             portfolio: [
-                { assetSymbol: "BTC", amount: 0.5 },
-                { assetSymbol: "XAU", amount: 10 },
-                { assetSymbol: "PAXG", amount: 5 },
+                { assetSymbol: "BTC", amount: 0 },
+                { assetSymbol: "XAU", amount: 0 },
+                { assetSymbol: "PAXG", amount: 0 },
             ],
             ibanAccounts: [],
             transactions: [
