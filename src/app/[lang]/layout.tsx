@@ -21,8 +21,7 @@ export default function LocaleLayout({
   params: { lang: 'tr' | 'en' };
 }) {
   return (
-     <html lang={params.lang} suppressHydrationWarning>
-      <body>
+     <>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
@@ -32,7 +31,6 @@ export default function LocaleLayout({
             {children}
           <Toaster />
         </ThemeProvider>
-      </body>
-    </html>
+    </>
   );
 }
