@@ -1,4 +1,3 @@
-
 'use client';
 import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from 'react';
 
@@ -20,11 +19,15 @@ interface LivePricesContextType {
 
 const LivePricesContext = createContext<LivePricesContextType | undefined>(undefined);
 
-interface ProviderProps {
-    children: ReactNode;
+export function useLivePrices() {
+    const context = useContext(LivePricesContext);
+    if (context === undefined) {
+        throw new Error('useLivePrices must be used within a LivePricesProvider');
+    }
+    return context;
 }
 
-export function LivePricesProvider({ children }: ProviderProps) {
+export function LivePricesProvider({ children }: {children: ReactNode}) {
     const [liveAssets, setLiveAssets] = useState<Record<string, LiveAssetData>>({});
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -102,12 +105,4 @@ export function LivePricesProvider({ children }: ProviderProps) {
             {children}
         </LivePricesContext.Provider>
     );
-}
-
-export function useLivePrices() {
-    const context = useContext(LivePricesContext);
-    if (context === undefined) {
-        throw new Error('useLivePrices must be used within a LivePricesProvider');
-    }
-    return context;
 }
