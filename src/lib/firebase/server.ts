@@ -59,6 +59,8 @@ export async function getCurrentUser(): Promise<DecodedIdToken | null> {
   } catch (error) {
     // This can happen if the cookie is expired or invalid. Also a normal case.
     console.log("Could not verify session cookie (it might be expired or invalid):", error);
+    // Clear the invalid cookie to prevent login loops
+    cookies().delete('firebase-session');
     return null;
   }
 }

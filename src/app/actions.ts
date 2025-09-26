@@ -17,6 +17,9 @@ import {
   type MarketAnalysisOutput,
 } from "@/ai/flows/market-analysis";
 import { cookies } from "next/headers";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
 
 export async function getAutomatedSavingsGoal(
   input: AutomatedSavingsGoalInput
@@ -41,6 +44,10 @@ export async function getMarketAnalysis(
   return analysis;
 }
 
-export async function logout() {
+export async function logout(lang: 'tr' | 'en') {
   cookies().delete("firebase-session");
+  // Revalidate the root layout to ensure all cached user data is cleared
+  revalidatePath('/', 'layout');
+  // Redirect to the login page for the current language
+  redirect(`/${lang}/login`);
 }

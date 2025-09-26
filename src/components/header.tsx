@@ -20,6 +20,7 @@ import { auth } from "@/lib/firebase/client";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
 import { logout } from "@/app/actions";
+import { useTransition } from "react";
 
 const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
 
@@ -28,7 +29,9 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   const router = useRouter();
   const { toast } = useToast();
   const params = useParams();
-  const currentLang = params.lang || 'tr';
+  const [isPending, startTransition] = useTransition();
+
+  const currentLang = (params.lang || 'tr') as 'tr' | 'en';
   const otherLang = currentLang === 'tr' ? 'en' : 'tr';
   
   const toggleTheme = () => {
@@ -36,35 +39,29 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   };
 
   const handleLogout = async () => {
+    // Sign out from the client-side auth state first.
     try {
-      // Always attempt to clear the server session first.
-      await logout();
-      
-      // Then, sign out from the client-side auth state.
-      // This might fail if the user was deleted, but that's okay.
-      try {
         await signOut(auth);
-      } catch (clientSignOutError) {
-        console.log("Client-side signOut failed (user might be deleted):", clientSignOutError);
-      }
+    } catch (clientSignOutError) {
+        console.warn("Client-side signOut may have failed (this can be normal if session was already expired):", clientSignOutError);
+    }
 
-      toast({
+    // Use a transition to call the server action for a smoother UX
+    startTransition(() => {
+        logout(currentLang).catch(error => {
+             console.error("Logout Server Action Error:", error);
+             toast({
+                variant: "destructive",
+                title: "Logout Failed",
+                description: "An error occurred while logging out on the server. Please try again.",
+             });
+        });
+    });
+     
+    toast({
         title: "Success",
         description: "You have been logged out.",
-      });
-
-      // Use Next.js router to redirect to the login page.
-      router.push(`/${currentLang}/login`);
-      router.refresh(); // Force a refresh to ensure middleware re-evaluates auth state.
-
-    } catch (error) {
-      console.error("Logout Error:", error);
-      toast({
-        variant: "destructive",
-        title: "Logout Failed",
-        description: "An error occurred while logging out. Please try again.",
-      });
-    }
+    });
   };
 
   return (
@@ -133,7 +130,7 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+              <DropdownMenuItem onClick={handleLogout} disabled={isPending} className="cursor-pointer">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>{dict.logout}</span>
               </DropdownMenuItem>

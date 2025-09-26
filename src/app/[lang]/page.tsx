@@ -1,9 +1,11 @@
 
+'use client';
+
 import { Header } from "@/components/header";
 import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
 import { AssetList } from "@/components/dashboard/asset-list";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDictionary } from "../dictionaries";
@@ -12,30 +14,47 @@ import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { getUserDoc } from '@/lib/firebase/firestore';
-import { getCurrentUser } from "@/lib/firebase/server";
-import { redirect } from "next/navigation";
+import type { FirestoreUser } from "@/lib/types";
 
 export const dynamic = 'force-dynamic';
 
-export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
-  const dict = await getDictionary(lang);
-  const user = await getCurrentUser();
+export default function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
+  const dict = getDictionary(lang);
+  const [userData, setUserData] = useState<FirestoreUser | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!user) {
-    redirect(`/${lang}/login`);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const data = await getUserDoc();
+        setUserData(data);
+      } catch (error) {
+        console.error("Failed to fetch user data:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchData();
+  }, []);
+
+
+  if (loading) {
+     return (
+        <div className="flex min-h-screen w-full flex-col bg-background">
+            <Header lang={lang} dict={dict.header} />
+            <main className="flex flex-1 items-center justify-center">
+                <Skeleton className="h-full w-full" />
+            </main>
+        </div>
+    )
   }
-
-  const userData = await getUserDoc();
-
+  
   if (!userData) {
-    // This can happen briefly if Firestore user doc creation is slow.
-    // Or if there's an issue with firestore rules/access.
-    // A redirect here can cause a loop if the user is authenticated but the doc is missing.
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <Header lang={lang} dict={dict.header} />
             <main className="flex flex-1 items-center justify-center">
-                <p>Loading user data or user not found...</p>
+                <p>Could not load user data. Please try logging in again.</p>
             </main>
         </div>
     )

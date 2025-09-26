@@ -115,6 +115,6 @@ export async function getUserProfile(): Promise<Omit<UserProfile, 'id'> | null> 
     if (!userDoc) return null;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { id, portfolio, ibanAccounts, transactions, ...profileData } = userDoc;
-    return profileData;
+    const { id, ...profileData } = userDoc;
+    return profileData as Omit<UserProfile, 'id'>;
 }
