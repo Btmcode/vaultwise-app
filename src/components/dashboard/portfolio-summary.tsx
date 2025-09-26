@@ -88,8 +88,8 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
         )}
       </CardContent>
       <CardFooter className="flex gap-2">
-        <Button onClick={() => setBuyDialogOpen(true)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
-        <Button onClick={() => setSellDialogOpen(true)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
+        <Button onClick={() => setBuyDialogOpen(true)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{buyDialogDict.shortTitle}</Button>
+        <Button onClick={() => setSellDialogOpen(true)} variant="secondary" size="sm" className="w-full">{sellDialogDict.shortTitle}</Button>
         
         <BuyDialog dict={dict} portfolioAssets={portfolioAssets} isOpen={buyDialogOpen} onOpenChange={setBuyDialogOpen} />
         <SellDialog dict={dict} portfolioAssets={portfolioAssets} isOpen={sellDialogOpen} onOpenChange={setSellDialogOpen} />

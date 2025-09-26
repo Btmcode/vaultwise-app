@@ -190,7 +190,7 @@ export function SellDialog({ dict, portfolioAssets, preselectedAsset, isOpen, on
         </div>
         <DialogFooter>
            <AlertDialog open={isConfirming} onOpenChange={setIsConfirming}>
-            <Button onClick={handleSellAttempt} variant="secondary" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">
+            <Button onClick={handleSellAttempt} variant="secondary" className="w-full">
                 {sellDialogDict.sellButton}
             </Button>
             <AlertDialogContent>

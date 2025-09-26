@@ -143,24 +143,24 @@ export function AssetList({ dict, portfolioAssets }: { dict: any, portfolioAsset
                 </div>
                 
                 <div className="flex-1 grid grid-cols-2 md:grid-cols-3 gap-4 w-full">
-                  <div className="text-left md:text-left">
+                  <div>
                     <p className="text-sm text-muted-foreground">{assetListDict.table.balance}</p>
                     <p className="font-medium">{formatAssetAmount(pa.amount, pa.assetSymbol)}</p>
                   </div>
 
-                  <div className="text-right md:text-left">
+                  <div>
                     <p className="text-sm text-muted-foreground">{assetListDict.table.price}</p>
                     <div className="font-medium">{loading ? '...' : formatCurrency(pa.price)}</div>
                   </div>
                   
-                  <div className="col-span-2 md:col-span-1 text-right">
-                    <p className="text-sm text-muted-foreground ">{assetListDict.table.value}</p>
+                  <div className="col-span-2 md:col-span-1 text-left md:text-right">
+                    <p className="text-sm text-muted-foreground">{assetListDict.table.value}</p>
                     <p className="font-semibold text-lg">{loading ? '...' : formatCurrency(pa.valueUsd)}</p>
                   </div>
                 </div>
                 <div className="flex gap-2 justify-end w-full md:w-auto">
-                   <Button onClick={() => openDialog('buy', pa.assetSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
-                   <Button onClick={() => openDialog('sell', pa.assetSymbol)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
+                   <Button onClick={() => openDialog('buy', pa.assetSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                   <Button onClick={() => openDialog('sell', pa.assetSymbol)} variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
                 </div>
               </div>
               {index < filteredAssets.length - 1 && <Separator className="mt-6" />}

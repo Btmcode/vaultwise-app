@@ -157,6 +157,11 @@
     "portfolioChart": {
         "title": "Portföy Değeri",
         "description": "Portföy performansınızın bir özeti.",
+        "noData": "Grafiği görüntülemek için yeterli veri yok.",
+        "tooltip": {
+            "value": "Değer",
+            "date": "Tarih"
+        },
         "tabs": {
             "live": "Canlı",
             "1d": "1G",

@@ -200,7 +200,7 @@ export function BuyDialog({ dict, portfolioAssets, preselectedAsset, isOpen, onO
         </div>
         <DialogFooter>
           <AlertDialog open={isConfirming} onOpenChange={setIsConfirming}>
-            <Button onClick={handleBuyAttempt} className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover-bg-green-600">
+            <Button onClick={handleBuyAttempt} className="w-full bg-primary text-primary-foreground hover:bg-primary/80">
                 {buyDialogDict.buyButton}
             </Button>
             <AlertDialogContent>

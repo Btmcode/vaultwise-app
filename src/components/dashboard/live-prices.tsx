@@ -258,7 +258,7 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
                     <div
                     className={cn(
                         "text-sm font-bold pl-2 whitespace-nowrap",
-                        change24h > 0 ? "text-green-500" : "text-red-500"
+                        change24h >= 0 ? "text-green-500" : "text-red-500"
                     )}
                     >
                     {change24h >= 0 ? "+" : ""}
@@ -266,7 +266,7 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
                     </div>
                 </div>
                 <div className="flex gap-2">
-                    <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-primary/90 hover:bg-primary text-primary-foreground">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                    <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
                     <Button onClick={() => openDialog('sell', apiSymbol)} variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
                 </div>
                 </div>

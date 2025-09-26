@@ -11,6 +11,8 @@ import { LivePrices } from "@/components/dashboard/live-prices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { getUserDoc } from '@/lib/firebase/firestore';
 import { redirect } from 'next/navigation';
+import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
+import { chartData } from "@/lib/data";
 
 export const dynamic = 'force-dynamic';
 
@@ -45,16 +47,11 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
               </Suspense>
           </div>
           <div className="grid gap-4 md:gap-8">
-                  <Card className="xl:col-span-2">
-                  <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                      <CardHeader>
-                          <CardTitle>{dict.portfolioChart.title}</CardTitle>
-                      </CardHeader>
-                      <CardContent className="h-[250px] w-full flex items-center justify-center text-muted-foreground">
-                          {dict.portfolioChart.description}
-                      </CardContent>
-                  </Suspense>
-              </Card>
+                <Card className="xl:col-span-2">
+                    <Suspense fallback={<Skeleton className="h-[350px]" />}>
+                        <PortfolioChart dict={dict.portfolioChart} data={chartData} />
+                    </Suspense>
+                </Card>
           </div>
           <div className="grid gap-4 md:gap-8 grid-cols-1 xl:grid-cols-3">
               <Card className="xl:col-span-2">
