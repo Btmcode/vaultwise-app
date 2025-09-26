@@ -1,6 +1,8 @@
 
 import admin from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
+import { cookies } from 'next/headers';
+import type { DecodedIdToken } from 'firebase-admin/auth';
 
 // This function initializes and returns the Firebase Admin App instance.
 // It ensures that the app is initialized only once across the entire server.
@@ -36,5 +38,27 @@ export function getAdminApp(): App {
     throw new Error(
       'Firebase Admin SDK could not be initialized. ' + error.message
     );
+  }
+}
+
+
+// This function retrieves and verifies the session cookie and returns the decoded user token.
+export async function getCurrentUser(): Promise<DecodedIdToken | null> {
+  const sessionCookieValue = cookies().get('firebase-session')?.value;
+  
+  if (!sessionCookieValue) {
+    // This is a normal case for a logged-out user.
+    return null;
+  }
+
+  try {
+    const adminApp = getAdminApp();
+    const auth = admin.auth(adminApp);
+    const decodedToken = await auth.verifySessionCookie(sessionCookieValue, true);
+    return decodedToken;
+  } catch (error) {
+    // This can happen if the cookie is expired or invalid. Also a normal case.
+    console.log("Could not verify session cookie (it might be expired or invalid):", error);
+    return null;
   }
 }

@@ -12,7 +12,7 @@ import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { getUserDoc } from '@/lib/firebase/firestore';
-import { getCurrentUser } from "@/lib/firebase/server-auth";
+import { getCurrentUser } from "@/lib/firebase/server";
 import { redirect } from "next/navigation";
 
 
@@ -27,7 +27,9 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
   const userData = await getUserDoc();
 
   if (!userData) {
-    // This can be a more user-friendly loading or error state
+    // This can happen briefly if Firestore user doc creation is slow.
+    // Or if there's an issue with firestore rules/access.
+    // A redirect here can cause a loop if the user is authenticated but the doc is missing.
     return (
         <div className="flex min-h-screen w-full flex-col bg-background">
             <Header lang={lang} dict={dict.header} />
