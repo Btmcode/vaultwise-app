@@ -91,6 +91,8 @@
             },
             "toastInvalidTitle": "Geçersiz Giriş",
             "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
+            "toastInsufficientTitle": "Yetersiz Bakiye",
+            "toastInsufficientDescription": "Bakiyenizde sadece {balance} TL bulunmaktadır.",
             "toastSuccessTitle": "Satın Alma Başarılı",
             "toastSuccessDescription": "Yaklaşık {amount} {symbol} başarıyla satın aldınız."
         },

@@ -33,6 +33,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { AssetSymbol } from "@/lib/types";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Loader2 } from "lucide-react";
+import { userProfile } from "@/lib/data";
 
 type BuyDialogProps = {
   dict: any;
@@ -60,7 +61,6 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
   
   const assetDetails = asset ? liveAssets[asset] : null;
   const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8;
-
   const numericAmountTl = parseFloat(amountTl.replace(/\./g, '').replace(',', '.')) || 0;
 
   const amountAsset =
@@ -80,6 +80,11 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
         setAmountTl('');
     }
   };
+  
+  const setAmountPercentage = (percentage: number) => {
+    const calculatedAmount = userProfile.availableBalanceTRY * (percentage / 100);
+    setAmountTl(Math.floor(calculatedAmount).toLocaleString('tr-TR'));
+  };
 
   const handleBuyAttempt = () => {
     if (!asset || !amountTl || numericAmountTl <= 0) {
@@ -87,6 +92,14 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
         variant: "destructive",
         title: buyDialogDict.toastInvalidTitle,
         description: buyDialogDict.toastInvalidDescription,
+      });
+      return;
+    }
+     if (numericAmountTl > userProfile.availableBalanceTRY) {
+      toast({
+        variant: "destructive",
+        title: buyDialogDict.toastInsufficientTitle,
+        description: buyDialogDict.toastInsufficientDescription.replace('{balance}', userProfile.availableBalanceTRY.toLocaleString('tr-TR')),
       });
       return;
     }
@@ -143,9 +156,14 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
             </Select>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="amount">
-              {buyDialogDict.amountLabel}
-            </Label>
+            <div className="flex justify-between items-center">
+              <Label htmlFor="amount">
+                {buyDialogDict.amountLabel}
+              </Label>
+               <span className="text-xs text-muted-foreground">
+                {dict.withdrawPage.summary.availableBalance}: {userProfile.availableBalanceTRY.toLocaleString('tr-TR')} TL
+              </span>
+            </div>
             <Input
               id="amount"
               type="text"
@@ -153,6 +171,12 @@ export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyD
               onChange={handleAmountChange}
               placeholder={buyDialogDict.amountPlaceholder}
             />
+             <div className="flex gap-2 mt-1">
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(25)}>%25</Button>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(50)}>%50</Button>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(75)}>%75</Button>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(100)}>Max</Button>
+            </div>
           </div>
           {assetDetails && numericAmountTl > 0 && (
             <div className="text-sm text-muted-foreground text-center">

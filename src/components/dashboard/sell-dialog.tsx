@@ -74,6 +74,13 @@ export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: Sel
   const sellDialogDict = dict.portfolioSummary.sellDialog;
   const assetName = asset ? dict.assetNames[asset] || asset : "";
 
+  const setAmountPercentage = (percentage: number) => {
+    if (portfolioAsset) {
+      const calculatedAmount = portfolioAsset.amount * (percentage / 100);
+      setAmountAsset(calculatedAmount.toString());
+    }
+  };
+
   const handleSellAttempt = () => {
     if (!asset || numericAmountAsset <= 0) {
       toast({
@@ -144,9 +151,16 @@ export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: Sel
             </Select>
           </div>
           <div className="grid gap-2">
-            <Label htmlFor="amount">
-              {sellDialogDict.amountLabel}
-            </Label>
+             <div className="flex justify-between items-center">
+              <Label htmlFor="amount">
+                {sellDialogDict.amountLabel}
+              </Label>
+              {portfolioAsset && (
+                 <span className="text-xs text-muted-foreground">
+                    {dict.assetList.table.balance}: {portfolioAsset.amount} {portfolioAsset.assetSymbol}
+                </span>
+              )}
+            </div>
             <Input
               id="amount"
               type="number"
@@ -155,6 +169,12 @@ export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: Sel
               placeholder={sellDialogDict.amountPlaceholder}
               max={portfolioAsset?.amount}
             />
+             <div className="flex gap-2 mt-1">
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(25)}>%25</Button>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(50)}>%50</Button>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(75)}>%75</Button>
+                <Button variant="outline" size="sm" className="flex-1" onClick={() => setAmountPercentage(100)}>Max</Button>
+            </div>
           </div>
           {assetDetails && numericAmountAsset > 0 && (
             <div className="text-sm text-muted-foreground text-center">

@@ -91,6 +91,8 @@
             },
             "toastInvalidTitle": "Invalid Input",
             "toastInvalidDescription": "Please select an asset and enter a valid amount.",
+            "toastInsufficientTitle": "Insufficient Balance",
+            "toastInsufficientDescription": "You only have {balance} TL in your account.",
             "toastSuccessTitle": "Purchase Successful",
             "toastSuccessDescription": "You have successfully purchased ~{amount} {symbol}."
         },
