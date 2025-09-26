@@ -15,6 +15,7 @@ import { getUserDoc } from '@/lib/firebase/firestore';
 import { getCurrentUser } from "@/lib/firebase/server";
 import { redirect } from "next/navigation";
 
+export const dynamic = 'force-dynamic';
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
   const dict = await getDictionary(lang);

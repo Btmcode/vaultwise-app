@@ -30,6 +30,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+export const dynamic = 'force-dynamic';
 
 export default function SettingsPage() {
   const params = useParams();

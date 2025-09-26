@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useToast } from "@/hooks/use-toast";
 
+export const dynamic = 'force-dynamic';
 
 export default function ProfilePage() {
   const params = useParams();

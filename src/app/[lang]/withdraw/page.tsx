@@ -23,9 +23,11 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Loader2, Info, Banknote, Landmark, Wallet } from 'lucide-react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic';
+
 const TRANSACTION_FEE = 1; // 1 TL
 const WITHDRAWAL_LIMIT_24H = 25000000;
-const WITHDRAWAL_LIMIT_30D = 99999584.99;
+const WITHDRAWAL_LIMIT_30D = 9999584.99;
 
 export default function WithdrawPage() {
   const params = useParams();

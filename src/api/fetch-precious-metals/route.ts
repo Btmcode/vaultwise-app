@@ -3,6 +3,8 @@ import { NextResponse } from 'next/server';
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
+export const dynamic = 'force-dynamic';
+
 type PreciousMetal = {
   'Ürün': string;
   'Alış': number;

@@ -7,7 +7,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { revalidatePath } from 'next/cache';
 import { getAdminApp, getCurrentUser } from '@/lib/firebase/server';
 
-
 // Function to get the user document from Firestore
 export async function getUserDoc(): Promise<FirestoreUser | null> {
     const adminApp = getAdminApp();
@@ -74,6 +73,8 @@ export async function addIbanAccount(account: Omit<IbanAccount, 'id'>): Promise<
         ibanAccounts: FieldValue.arrayUnion(newAccount)
     });
     revalidatePath('/[lang]/settings', 'page');
+    revalidatePath('/[lang]/deposit', 'page');
+    revalidatePath('/[lang]/withdraw', 'page');
 }
 
 export async function removeIbanAccount(accountId: string): Promise<void> {
@@ -94,6 +95,8 @@ export async function removeIbanAccount(accountId: string): Promise<void> {
         ibanAccounts: FieldValue.arrayRemove(accountToRemove)
     });
     revalidatePath('/[lang]/settings', 'page');
+    revalidatePath('/[lang]/deposit', 'page');
+    revalidatePath('/[lang]/withdraw', 'page');
 }
 
 export async function getPortfolioAssets(): Promise<PortfolioAsset[]> {

@@ -2,6 +2,8 @@
 import { NextResponse } from 'next/server';
 import axios from 'axios';
 
+export const dynamic = 'force-dynamic';
+
 // Maps API codes to application symbols
 const codeToSymbolMap: Record<string, string> = {
     'BTC': 'BTC',
