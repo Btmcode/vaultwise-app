@@ -93,16 +93,16 @@ export default function DashboardPage() {
           </Card>
           <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
         </div>
-        <div className="grid gap-4 md:gap-8">
-          <PortfolioChart dict={dict.portfolioChart} data={chartData} />
-          <Card>
-             <AssetList dict={dict} portfolioAssets={userData.portfolio} />
-          </Card>
-           <div>
-            <h2 className="text-2xl font-bold mb-4">{dict.livePrices.title}</h2>
-            <LivePrices dict={dict} portfolioAssets={userData.portfolio} />
-          </div>
+        <div className="grid gap-4 md:gap-8 lg:grid-cols-2">
+            <PortfolioChart dict={dict.portfolioChart} data={chartData} />
+            <div>
+              <h2 className="text-2xl font-bold mb-4">{dict.livePrices.title}</h2>
+              <LivePrices dict={dict} portfolioAssets={userData.portfolio} />
+            </div>
         </div>
+        <Card>
+            <AssetList dict={dict} portfolioAssets={userData.portfolio} />
+        </Card>
       </main>
     </>
   );
