@@ -1,33 +1,33 @@
 rules_version = '2';
-
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Genel veriler: Herkes okuyabilir, kimse yazamaz.
-    match /precious_metals/{metal} {
+
+    // --- Public Data Rules ---
+    // Anyone can read precious metals and history, nobody can write.
+    match /precious_metals/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /precious_metals_history/{document} {
+      allow read: if true;
+      allow write: if false;
+    }
+    match /market_analyses/{document} {
       allow read: if true;
       allow write: if false;
     }
 
-    // Kullanıcıya özel veriler: Sadece oturum açmış ve kimliği eşleşen kullanıcı kendi verisini okuyabilir/yazabilir.
+    // --- User Data Rules ---
+    // Users can read/write their own data.
     match /users/{userId} {
       allow read, update, delete: if request.auth != null && request.auth.uid == userId;
       allow create: if request.auth != null;
-
-      // Kullanıcının kendi işlemlerini okumasına/yazmasına izin ver
-      match /transactions/{transactionId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-      }
-
-      // Kullanıcının kendi portföyünü okumasına/yazmasına izin ver
-       match /portfolio/{assetId} {
-        allow read, write: if request.auth != null && request.auth.uid == userId;
-      }
     }
 
-    // Diğer tüm belgelere erişimi varsayılan olarak reddet (Güvenli başlangıç)
-    match /{document=**} {
-      allow read, write: if false;
+    // Any document in a subcollection of a user's document.
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
+
   }
 }
