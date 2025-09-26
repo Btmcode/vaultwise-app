@@ -11,7 +11,7 @@
     --card-foreground: 224 71.4% 4.1%;
     --popover: 0 0% 100%;
     --popover-foreground: 224 71.4% 4.1%;
-    --primary: 221 83% 53%;
+    --primary: 226 78% 49%;
     --primary-foreground: 210 20% 98%;
     --secondary: 220 14% 96%;
     --secondary-foreground: 224 71.4% 4.1%;
@@ -23,8 +23,8 @@
     --destructive-foreground: 210 20% 98%;
     --border: 220 13% 91%;
     --input: 220 13% 91%;
-    --ring: 221 83% 53%;
-    --chart-1: 221 83% 53%;
+    --ring: 226 78% 49%;
+    --chart-1: 226 78% 49%;
     --chart-2: 45 93% 47%;
     --chart-3: 220 14% 96%;
     --chart-4: 224 71.4% 4.1%;
@@ -32,29 +32,29 @@
     --radius: 0.75rem;
   }
   .dark {
-    --background: 224 71.4% 4.1%;
-    --foreground: 210 20% 98%;
-    --card: 224 71.4% 4.1%;
-    --card-foreground: 210 20% 98%;
-    --popover: 224 71.4% 4.1%;
-    --popover-foreground: 210 20% 98%;
-    --primary: 210 20% 98%;
-    --primary-foreground: 224 71.4% 4.1%;
-    --secondary: 215 28% 17%;
-    --secondary-foreground: 210 20% 98%;
-    --muted: 215 28% 17%;
-    --muted-foreground: 218 11% 65%;
+    --background: 222 47% 11%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 210 40% 98%;
+    --primary-foreground: 226 78% 49%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
     --accent: 45 93% 47%;
-    --accent-foreground: 224 71.4% 4.1%;
-    --destructive: 0 62% 30%;
-    --destructive-foreground: 210 20% 98%;
-    --border: 215 28% 17%;
-    --input: 215 28% 17%;
-    --ring: 210 20% 98%;
-    --chart-1: 210 20% 98%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
+    --ring: 216 80% 68%;
+    --chart-1: 210 40% 98%;
     --chart-2: 45 93% 47%;
-    --chart-3: 218 11% 65%;
-    --chart-4: 224 71.4% 4.1%;
+    --chart-3: 215 20% 65%;
+    --chart-4: 222 47% 11%;
     --chart-5: 160 50% 50%;
   }
 }
