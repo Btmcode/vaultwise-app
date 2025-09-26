@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PriceTicker } from '@/components/landing/price-ticker';
+import { ShieldCheck, Cpu, Zap } from 'lucide-react';
 
 const HeroScene = dynamic(() => import('@/components/landing/hero-scene'), {
   ssr: false,
@@ -63,21 +64,30 @@ export default function LandingPage() {
                         Platformumuz, en üst düzey güvenliği modern finansal araçlarla birleştirerek size varlıklarınız üzerinde tam kontrol ve iç rahatlığı sunar.
                     </p>
                 </div>
-                <div className="mx-auto grid max-w-5xl items-center gap-6 lg:grid-cols-3 lg:gap-12">
-                    <div className="flex flex-col justify-center space-y-4 p-6 rounded-lg border bg-card hover:-translate-y-2 hover:shadow-xl transition-transform duration-300">
-                        <h3 className="text-xl font-bold">Fiziksel Güvence</h3>
+                <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:grid-cols-3">
+                    <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card hover:shadow-xl transition-shadow duration-300">
+                        <div className="p-3 rounded-full bg-primary/10 border border-primary/20 mb-4">
+                           <ShieldCheck className="h-8 w-8 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Fiziksel Güvence</h3>
                         <p className="text-muted-foreground">
                             Tüm dijital ve değerli metal varlıklarınız, sigortalı ve denetlenen yüksek güvenlikli kasalarda fiziksel olarak korunur.
                         </p>
                     </div>
-                     <div className="flex flex-col justify-center space-y-4 p-6 rounded-lg border bg-card hover:-translate-y-2 hover:shadow-xl transition-transform duration-300">
-                        <h3 className="text-xl font-bold">Yapay Zeka Destekli Portföy</h3>
+                     <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card hover:shadow-xl transition-shadow duration-300">
+                        <div className="p-3 rounded-full bg-primary/10 border border-primary/20 mb-4">
+                           <Cpu className="h-8 w-8 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Yapay Zeka Destekli Portföy</h3>
                         <p className="text-muted-foreground">
-                            Akıllı algoritmalarımız, piyasa verilerini analiz ederek size özel birikim stratejileri ve fırsatlar sunar.
+                            Akıllı algoritmalarımız, piyasa verilerini analiz ederek size özel birikim stratejileri ve yatırım fırsatları sunar.
                         </p>
                     </div>
-                     <div className="flex flex-col justify-center space-y-4 p-6 rounded-lg border bg-card hover:-translate-y-2 hover:shadow-xl transition-transform duration-300">
-                        <h3 className="text-xl font-bold">Anında Alım-Satım</h3>
+                     <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card hover:shadow-xl transition-shadow duration-300">
+                        <div className="p-3 rounded-full bg-primary/10 border border-primary/20 mb-4">
+                           <Zap className="h-8 w-8 text-primary" />
+                        </div>
+                        <h3 className="text-xl font-bold mb-2">Anında Alım-Satım</h3>
                         <p className="text-muted-foreground">
                            Varlıklarınızı 7/24 anında alın, satın veya dönüştürün. Piyasaya her zaman bir adım önde olun.
                         </p>
