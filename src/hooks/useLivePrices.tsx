@@ -29,14 +29,9 @@ export function LivePricesProvider({ children }: ProviderProps) {
             const response = await fetch(url, { cache: 'no-store'});
             if (!response.ok) {
                 const errorBody = await response.json().catch(() => ({error: `Request to ${url} failed with status ${response.status}`}));
-                throw new Error(errorBody.error);
+                throw new Error(errorBody.error || `Request to ${url} failed`);
             }
-            const data = await response.json();
-            if (data && Object.keys(data).length > 0 && !data.error) {
-                return data;
-            } else {
-                 throw new Error(data.error || `Received empty or invalid data from ${url}`);
-            }
+            return await response.json();
         } catch (e: any) {
             console.error(`Data fetching error from ${url}:`, e.message);
             throw e;
@@ -61,18 +56,25 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
         results.forEach((res, index) => {
              const apiName = index === 0 ? 'Precious Metals' : 'Crypto';
-            if (res.status === 'fulfilled') {
+            if (res.status === 'fulfilled' && res.value && !res.value.error) {
                 combinedAssets = { ...combinedAssets, ...res.value };
                 fetchSucceeded = true;
             } else {
                 partialFailure = true;
-                errorMessages.push(`${apiName} API: ${res.reason?.message || 'Unknown error'}`);
-                console.error(`${apiName} fetch failed:`, res.reason);
+                const reason = res.status === 'rejected' ? res.reason?.message : res.value?.error;
+                errorMessages.push(`${apiName} API: ${reason || 'Unknown error'}`);
+                console.error(`${apiName} fetch failed:`, reason);
             }
         });
 
         if(fetchSucceeded){
-            setLiveAssets(prev => ({...prev, ...combinedAssets}));
+            // Ensure every item has a symbol property, as our components expect it.
+            Object.keys(combinedAssets).forEach(key => {
+              if(!combinedAssets[key].symbol) {
+                combinedAssets[key].symbol = key as any;
+              }
+            });
+            setLiveAssets(combinedAssets);
             setLastUpdated(new Date().toLocaleString());
             if (partialFailure) {
                  setError(`Failed to load some price data. Displayed data might be incomplete. Errors: ${errorMessages.join(', ')}`);
@@ -83,9 +85,7 @@ export function LivePricesProvider({ children }: ProviderProps) {
             setError(`Failed to load all price data. Errors: ${errorMessages.join(', ')}`);
         }
 
-        if (isInitial) {
-            setLoading(false);
-        }
+        setLoading(false);
     }, [fetchData]);
 
 
