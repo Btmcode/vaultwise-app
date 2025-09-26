@@ -12,7 +12,7 @@ export function getAdminApp(): App {
   
   const projectId = process.env.FIREBASE_PROJECT_ID;
   const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  // The private key must have its newlines properly escaped.
+  // The private key must have its newlines properly escaped in the .env file.
   const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
   if (!projectId || !clientEmail || !privateKey) {

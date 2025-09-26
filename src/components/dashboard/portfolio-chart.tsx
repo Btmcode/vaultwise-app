@@ -113,7 +113,8 @@ export function PortfolioChart({ dict }: { dict: any }) {
             <TabsTrigger value="live" className="text-xs px-2 sm:px-3">{dict.tabs['live']}</TabsTrigger>
             <TabsTrigger value="1d" className="text-xs px-2 sm:px-3">{dict.tabs['1d']}</TabsTrigger>
             <TabsTrigger value="1w" className="text-xs px-2 sm:px-3">{dict.tabs['1w']}</TabsTrigger>
-            <TabsTrigger value="1m" className="text-xs px-2 sm:px-3">{dict.tabs['1m']}</TabsTrigger>
+            <TabsTrigger value="1m" className="text-xs px-2 sm:px
+-3">{dict.tabs['1m']}</TabsTrigger>
             <TabsTrigger value="3m" className="text-xs px-2 sm:px-3">{dict.tabs['3m']}</TabsTrigger>
             <TabsTrigger value="6m" className="text-xs px-2 sm:px-3">{dict.tabs['6m']}</TabsTrigger>
             <TabsTrigger value="1y" className="text-xs px-2 sm:px-3">{dict.tabs['1y']}</TabsTrigger>
