@@ -292,7 +292,7 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
                 dict={dict}
                 portfolioAssets={portfolioAssets}
                 preselectedAsset={dialogState.asset}
-                isOpen={dialogeState.isOpen}
+                isOpen={dialogState.isOpen}
                 onOpenChange={closeDialog}
             />
         )}
