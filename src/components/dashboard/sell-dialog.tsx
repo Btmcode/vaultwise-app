@@ -86,7 +86,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
       <DialogTrigger asChild>
         <Button variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-full max-w-sm">
         <DialogHeader>
           <DialogTitle>{sellDialogDict.title}</DialogTitle>
           <DialogDescription>

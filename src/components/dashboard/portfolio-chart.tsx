@@ -87,10 +87,10 @@ export function PortfolioChart({ dict }: { dict: any }) {
 
   return (
     <>
-      <CardHeader className="flex flex-col items-start justify-between sm:flex-row sm:items-center">
+      <CardHeader className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex-1">
           <CardTitle>{dict.title}</CardTitle>
-           <div className="flex items-baseline gap-2">
+           <div className="flex items-baseline gap-2 mt-2">
             <div className="text-3xl font-bold">
                 {formatCurrency(displayValue)}
             </div>
@@ -107,18 +107,14 @@ export function PortfolioChart({ dict }: { dict: any }) {
         </div>
         <Tabs
           defaultValue="1w"
-          className="w-full sm:w-auto mt-4 sm:mt-0"
+          className="w-full sm:w-auto"
           onValueChange={(value) => setTimeRange(value as keyof ChartData)}
         >
-          <TabsList className="grid w-full grid-cols-4 sm:grid-cols-8">
-            <TabsTrigger value="live">{dict.tabs['live']}</TabsTrigger>
-            <TabsTrigger value="1d">{dict.tabs['1d']}</TabsTrigger>
-            <TabsTrigger value="1w">{dict.tabs['1w']}</TabsTrigger>
-            <TabsTrigger value="1m">{dict.tabs['1m']}</TabsTrigger>
-            <TabsTrigger value="3m" className="hidden sm:inline-flex">{dict.tabs['3m']}</TabsTrigger>
-            <TabsTrigger value="6m" className="hidden sm:inline-flex">{dict.tabs['6m']}</TabsTrigger>
-            <TabsTrigger value="1y" className="hidden sm:inline-flex">{dict.tabs['1y']}</TabsTrigger>
-            <TabsTrigger value="5y" className="hidden sm:inline-flex">{dict.tabs['5y']}</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-4 sm:w-auto sm:grid-cols-none">
+            <TabsTrigger value="live" className="text-xs px-2 sm:px-3">{dict.tabs['live']}</TabsTrigger>
+            <TabsTrigger value="1d" className="text-xs px-2 sm:px-3">{dict.tabs['1d']}</TabsTrigger>
+            <TabsTrigger value="1w" className="text-xs px-2 sm:px-3">{dict.tabs['1w']}</TabsTrigger>
+            <TabsTrigger value="1m" className="text-xs px-2 sm:px-3">{dict.tabs['1m']}</TabsTrigger>
           </TabsList>
         </Tabs>
       </CardHeader>
@@ -126,7 +122,7 @@ export function PortfolioChart({ dict }: { dict: any }) {
         <ChartContainer config={chartConfig} className="h-[250px] w-full">
           <AreaChart
             data={currentData}
-            margin={{ top: 5, right: 20, left: -20, bottom: 0 }}
+            margin={{ top: 5, right: 10, left: 0, bottom: 0 }}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
           >

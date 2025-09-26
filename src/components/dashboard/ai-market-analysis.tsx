@@ -54,13 +54,13 @@ export function AIMarketAnalysis({ lang, dict }: { lang: 'tr' | 'en', dict: any 
         <CardTitle>{dict.title}</CardTitle>
         <CardDescription>{dict.description}</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-col flex-grow justify-center">
+      <CardContent className="flex flex-col flex-grow items-center justify-center">
         {analysis ? (
           <div className="prose prose-sm dark:prose-invert max-w-full">
             <p>{analysis}</p>
           </div>
         ) : (
-          <div className="text-center">
+          <div className="text-center flex flex-col items-center">
             {analysisError && (
                  <Alert variant="destructive" className="mb-4">
                     <AlertTitle>{dict.errorTitle}</AlertTitle>
