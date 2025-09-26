@@ -317,7 +317,7 @@
         "toast": {
             "success": {
                 "title": "Withdrawal Initiated",
-                "description": "Your withdrawal of {amount} TRY has been initiated. It may take 1-2 business days to arrive."
+                "description": "Your withdrawal of {amount} TRY has been initiated and will be in your account shortly."
             },
             "error": {
                 "title": "Withdrawal Failed",
