@@ -1,7 +1,6 @@
 
 'use server';
 
-import { getAdminApp } from '@/lib/firebase/server';
 import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import type { IbanAccount, FirestoreUser, PortfolioAsset, Transaction, UserProfile } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,21 +33,14 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
         
         return { ...data, transactions, id: userDocSnap.id } as FirestoreUser;
     } else {
-        console.log(`User document for ${uid} not found, creating one.`);
+        console.log(`User document for ${uid} not found, creating a new empty one.`);
         const newUser: Omit<FirestoreUser, 'id'> = {
             name: 'New User',
             email: email || 'user@example.com',
-            availableBalanceTRY: 150000.75,
-            portfolio: [
-                { assetSymbol: "BTC", amount: 0.12 },
-                { assetSymbol: "XAU", amount: 5.5 },
-                { assetSymbol: "PAXG", amount: 2.1 },
-            ],
+            availableBalanceTRY: 0,
+            portfolio: [],
             ibanAccounts: [],
-            transactions: [
-                { id: "tx1", assetSymbol: "BTC", type: "Buy", amountUsd: 5000, date: new Date() },
-                { id: "tx2", assetSymbol: "XAU", type: "Sell", amountUsd: 1200, date: new Date() },
-            ],
+            transactions: [],
         };
         await userDocRef.set(newUser);
         
