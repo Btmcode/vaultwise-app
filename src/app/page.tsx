@@ -7,7 +7,7 @@ import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import dynamic from 'next/dynamic';
 
-const HeroScene = dynamic(() => import('@/components/landing/hero-scene').then(mod => mod.HeroScene), {
+const HeroScene = dynamic(() => import('@/components/landing/hero-scene'), {
   ssr: false,
   loading: () => <div className="w-full h-full bg-background" />
 });

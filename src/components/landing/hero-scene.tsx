@@ -40,7 +40,7 @@ function Crystal() {
   );
 }
 
-export function HeroScene() {
+export default function HeroScene() {
   return (
     <Canvas
       shadows
