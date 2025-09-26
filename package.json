@@ -47,7 +47,7 @@
     "embla-carousel-autoplay": "^8.1.5",
     "embla-carousel-react": "^8.1.5",
     "firebase": "^10.12.2",
-    "firebase-admin": "^12.1.1",
+    "firebase-admin": "^12.2.0",
     "genkit": "^1.14.1",
     "lucide-react": "^0.475.0",
     "negotiator": "^0.6.3",

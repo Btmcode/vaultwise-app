@@ -2,6 +2,7 @@
 import { initializeApp, getApps, getApp, type FirebaseOptions, type FirebaseApp } from "firebase/app";
 import { getAuth, type Auth } from "firebase/auth";
 import { getFirestore, type Firestore } from "firebase/firestore";
+import { getStorage, type FirebaseStorage } from "firebase/storage";
 
 const firebaseConfig: FirebaseOptions = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -23,18 +24,19 @@ function getFirebaseServices() {
       console.warn(
         'Firebase config is incomplete. Client-side Firebase services will be disabled.'
       );
-      return { app: null, auth: null, db: null };
+      return { app: null, auth: null, db: null, storage: null };
     }
   } else {
     app = getApp();
   }
 
-  const auth = getAuth(app);
-  const db = getFirestore(app);
+  const auth: Auth = getAuth(app);
+  const db: Firestore = getFirestore(app);
+  const storage: FirebaseStorage = getStorage(app);
 
-  return { app, auth, db };
+  return { app, auth, db, storage };
 }
 
 // Destructure and export for easy client-side use
-const { app, auth, db } = getFirebaseServices();
-export { app, auth, db };
+const { app, auth, db, storage } = getFirebaseServices();
+export { app, auth, db, storage };

@@ -222,7 +222,9 @@
     "livePrices": {
         "error": "Could not load live prices.",
         "lastUpdated": "Last Updated",
-        "refresh": "Refresh"
+        "refresh": "Refresh",
+        "buy": "Buy",
+        "sell": "Sell"
     },
     "loginPage": {
         "title": "Login to Your Account",
@@ -298,9 +300,9 @@
                 "title": "Profile Updated",
                 "description": "Your changes have been saved successfully."
             },
-            "pictureChanged": {
-                "title": "Picture Updated",
-                "description": "Your profile picture has been changed. Save to apply."
+            "error": {
+                "title": "Update Failed",
+                "description": "Could not update your profile. Please try again."
             }
         }
     },

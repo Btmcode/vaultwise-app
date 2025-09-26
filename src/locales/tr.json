@@ -222,7 +222,9 @@
     "livePrices": {
         "error": "Canlı fiyatlar yüklenemedi.",
         "lastUpdated": "Son Güncelleme",
-        "refresh": "Yenile"
+        "refresh": "Yenile",
+        "buy": "Alış",
+        "sell": "Satış"
     },
     "loginPage": {
         "title": "Hesabınıza Giriş Yapın",
@@ -298,9 +300,9 @@
                 "title": "Profil Güncellendi",
                 "description": "Değişiklikleriniz başarıyla kaydedildi."
             },
-            "pictureChanged": {
-                "title": "Resim Güncellendi",
-                "description": "Profil resminiz değiştirildi. Uygulamak için kaydedin."
+             "error": {
+                "title": "Güncelleme Başarısız",
+                "description": "Profiliniz güncellenemedi. Lütfen tekrar deneyin."
             }
         }
     },

@@ -17,7 +17,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
         console.log("Could not get current user. User may not be logged in.");
         return null;
     };
-    const { uid, email } = currentUser;
+    const { uid, email, picture } = currentUser;
 
     const userDocRef = db.collection('users').doc(uid);
     const userDocSnap = await userDocRef.get();
@@ -34,8 +34,9 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
     } else {
         console.log(`User document for ${uid} not found, creating a new empty one.`);
         const newUser: Omit<FirestoreUser, 'id'> = {
-            name: 'New User',
+            name: currentUser.name || 'New User',
             email: email || 'user@example.com',
+            photoURL: picture || null,
             availableBalanceTRY: 0,
             portfolio: [],
             ibanAccounts: [],
@@ -113,3 +114,37 @@ export async function getUserProfile(): Promise<Omit<UserProfile, 'id'> | null> 
     return profileData as Omit<UserProfile, 'id'>;
 }
 
+export async function updateUserProfile(data: { name: string; email: string; photoURL?: string | null; }): Promise<void> {
+    const adminApp = getAdminApp();
+    const db = getFirestore(adminApp);
+    const auth = admin.auth(adminApp);
+
+    const currentUser = await getCurrentUser();
+    if (!currentUser) throw new Error("User not authenticated");
+
+    const { uid } = currentUser;
+
+    // Prepare data for Firestore and Auth updates
+    const firestoreUpdateData: { name: string; email: string; photoURL?: string | null } = {
+        name: data.name,
+        email: data.email,
+    };
+    if(data.photoURL !== undefined) {
+        firestoreUpdateData.photoURL = data.photoURL;
+    }
+
+    // Update Firestore document
+    const userDocRef = db.collection('users').doc(uid);
+    await userDocRef.update(firestoreUpdateData);
+
+    // Update Firebase Authentication record
+    await auth.updateUser(uid, {
+        displayName: data.name,
+        email: data.email,
+        photoURL: data.photoURL,
+    });
+    
+    // Revalidate paths to reflect changes
+    revalidatePath('/[lang]/profile', 'page');
+    revalidatePath('/[lang]/dashboard', 'page'); // Header might show profile pic
+}

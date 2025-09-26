@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
@@ -9,23 +9,45 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { useToast } from "@/hooks/use-toast";
-
-export const dynamic = 'force-dynamic';
+import { Loader2 } from 'lucide-react';
+import { getUserDoc, updateUserProfile } from '@/lib/firebase/firestore';
+import { auth, storage } from '@/lib/firebase/client';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import type { FirestoreUser } from '@/lib/types';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function ProfilePage() {
   const params = useParams();
   const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
+  const profileDict = dict.profilePage;
+
   const { toast } = useToast();
-  
-  const originalUserAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
-  const [avatarSrc, setAvatarSrc] = useState(originalUserAvatar?.imageUrl);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const profileDict = dict.profilePage;
-  const toastDict = profileDict.toast;
+  const [user, setUser] = useState<FirestoreUser | null>(null);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  useEffect(() => {
+    async function fetchUser() {
+      setIsLoading(true);
+      const userDoc = await getUserDoc();
+      if (userDoc) {
+        setUser(userDoc);
+        setName(userDoc.name);
+        setEmail(userDoc.email);
+        setAvatarPreview(userDoc.photoURL || null);
+      }
+      setIsLoading(false);
+    }
+    fetchUser();
+  }, []);
 
   const handlePictureChangeClick = () => {
     fileInputRef.current?.click();
@@ -34,28 +56,90 @@ export default function ProfilePage() {
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      setAvatarFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatarSrc(reader.result as string);
-        toast({
-          title: toastDict.pictureChanged.title,
-          description: toastDict.pictureChanged.description,
-        });
+        setAvatarPreview(reader.result as string);
       };
       reader.readAsDataURL(file);
     }
   };
 
-  const handleSaveChanges = (e: React.FormEvent) => {
+  const handleSaveChanges = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, you would have form state and validation here.
-    // For now, just show a success toast.
-    toast({
-        title: toastDict.success.title,
-        description: toastDict.success.description,
-    });
+    if (!user) return;
+    setIsSaving(true);
+
+    try {
+      let photoURL = user.photoURL;
+
+      // 1. If a new avatar file is selected, upload it
+      if (avatarFile) {
+        const currentUser = auth.currentUser;
+        if (!currentUser) throw new Error("User not authenticated.");
+
+        const storageRef = ref(storage, `avatars/${currentUser.uid}/${avatarFile.name}`);
+        const snapshot = await uploadBytes(storageRef, avatarFile);
+        photoURL = await getDownloadURL(snapshot.ref);
+      }
+
+      // 2. Update user profile in Firestore
+      await updateUserProfile({
+        name,
+        email,
+        photoURL,
+      });
+
+      // 3. Update local state and show success toast
+      setUser(prev => prev ? { ...prev, name, email, photoURL } : null);
+      setAvatarFile(null); // Clear the file after upload
+
+      toast({
+        title: profileDict.toast.success.title,
+        description: profileDict.toast.success.description,
+      });
+
+    } catch (error) {
+      console.error("Profile update error:", error);
+      toast({
+        variant: "destructive",
+        title: profileDict.toast.error.title,
+        description: profileDict.toast.error.description,
+      });
+    } finally {
+      setIsSaving(false);
+    }
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex min-h-screen w-full flex-col bg-background">
+        <Header lang={lang} dict={dict.header} />
+        <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
+          <div className="mx-auto grid w-full max-w-4xl gap-2">
+            <Skeleton className="h-9 w-48" />
+          </div>
+          <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
+            <Card>
+              <CardHeader>
+                <Skeleton className="h-8 w-64" />
+                <Skeleton className="h-4 w-96 mt-2" />
+              </CardHeader>
+              <CardContent>
+                <div className="flex items-center gap-4">
+                  <Skeleton className="h-20 w-20 rounded-full" />
+                  <Skeleton className="h-10 w-32" />
+                </div>
+              </CardContent>
+              <CardFooter className="border-t px-6 py-4">
+                <Skeleton className="h-10 w-24" />
+              </CardFooter>
+            </Card>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -67,45 +151,46 @@ export default function ProfilePage() {
         <div className="mx-auto grid w-full max-w-4xl items-start gap-6">
           <div className="grid gap-6">
             <form onSubmit={handleSaveChanges}>
-                <Card>
+              <Card>
                 <CardHeader>
-                    <CardTitle>{profileDict.cardTitle}</CardTitle>
-                    <CardDescription>{profileDict.cardDescription}</CardDescription>
+                  <CardTitle>{profileDict.cardTitle}</CardTitle>
+                  <CardDescription>{profileDict.cardDescription}</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid gap-4">
+                  <div className="grid gap-6">
                     <div className="flex items-center gap-4">
-                        {avatarSrc && (
-                            <Avatar className="h-20 w-20">
-                            <AvatarImage src={avatarSrc} alt={originalUserAvatar?.description} className="object-cover" />
-                            <AvatarFallback>AV</AvatarFallback>
-                            </Avatar>
-                        )}
-                        <input
-                            type="file"
-                            ref={fileInputRef}
-                            onChange={handleFileChange}
-                            className="hidden"
-                            accept="image/png, image/jpeg, image/gif"
-                        />
-                        <Button type="button" variant="outline" onClick={handlePictureChangeClick}>{profileDict.changePicture}</Button>
+                      <Avatar className="h-20 w-20">
+                        <AvatarImage src={avatarPreview || undefined} alt={user?.name} className="object-cover" />
+                        <AvatarFallback>{name.charAt(0).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <input
+                        type="file"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        accept="image/png, image/jpeg, image/gif"
+                      />
+                      <Button type="button" variant="outline" onClick={handlePictureChangeClick}>{profileDict.changePicture}</Button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div className="grid gap-2">
-                            <label htmlFor="name">{profileDict.nameLabel}</label>
-                            <Input id="name" name="name" defaultValue="Ali Veli" autoComplete="name" />
-                        </div>
-                        <div className="grid gap-2">
-                            <label htmlFor="email">{profileDict.emailLabel}</label>
-                            <Input id="email" name="email" type="email" defaultValue="ali.veli@example.com" autoComplete="email" />
-                        </div>
+                      <div className="grid gap-2">
+                        <label htmlFor="name">{profileDict.nameLabel}</label>
+                        <Input id="name" name="name" value={name} onChange={(e) => setName(e.target.value)} autoComplete="name" />
+                      </div>
+                      <div className="grid gap-2">
+                        <label htmlFor="email">{profileDict.emailLabel}</label>
+                        <Input id="email" name="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" />
+                      </div>
                     </div>
-                    </div>
+                  </div>
                 </CardContent>
                 <CardFooter className="border-t px-6 py-4">
-                    <Button type="submit">{profileDict.saveButton}</Button>
+                  <Button type="submit" disabled={isSaving}>
+                    {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {profileDict.saveButton}
+                  </Button>
                 </CardFooter>
-                </Card>
+              </Card>
             </form>
           </div>
         </div>

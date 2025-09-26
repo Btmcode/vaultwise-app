@@ -14,21 +14,40 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { VaultWiseLogo } from "@/components/icons";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
 import { User, Settings, LogOut, Languages, Moon, Sun, Landmark, ArrowLeftRight } from "lucide-react";
 import { auth } from "@/lib/firebase/client";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
-import { useTransition } from "react";
-
-const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
+import { useState, useTransition, useEffect } from "react";
+import { getUserDoc } from "@/lib/firebase/firestore";
+import type { FirestoreUser } from "@/lib/types";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   const { theme, setTheme } = useTheme();
-  const router = useRouter();
   const { toast } = useToast();
   const params = useParams();
   const [isPending, startTransition] = useTransition();
+
+  const [user, setUser] = useState<FirestoreUser | null>(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const userDoc = await getUserDoc();
+      if (userDoc) {
+        setUser(userDoc);
+      }
+    }
+    fetchUser();
+    
+    // Listen for auth changes to refetch user doc, e.g. after profile update
+    const unsubscribe = auth.onIdTokenChanged(async () => {
+       fetchUser();
+    });
+
+    return () => unsubscribe();
+  }, []);
+
 
   const currentLang = (params.lang || 'tr') as 'tr' | 'en';
   const otherLang = currentLang === 'tr' ? 'en' : 'tr';
@@ -40,24 +59,19 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
   const handleLogout = async () => {
     startTransition(async () => {
       try {
-        // 1. Sign out from Firebase on the client
         await signOut(auth);
-
-        // 2. Call the server-side API to clear the session cookie
         const response = await fetch('/api/auth/logout', { method: 'POST' });
 
         if (!response.ok) {
           throw new Error('Server-side logout failed.');
         }
 
-        // 3. Show success toast and redirect
         toast({
           title: dict.logoutSuccess.title,
           description: dict.logoutSuccess.description,
         });
 
-        // Redirect to the landing page after a successful logout
-        window.location.href = '/';
+        window.location.href = `/${lang}`;
 
       } catch (error) {
         console.error("Logout Error:", error);
@@ -92,23 +106,15 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="secondary" size="icon" className="rounded-full">
-                {userAvatar ? (
-                    <Image
-                      src={userAvatar.imageUrl}
-                      width={36}
-                      height={36}
-                      alt={userAvatar.description}
-                      data-ai-hint={userAvatar.imageHint}
-                      className="rounded-full object-cover"
-                    />
-                ) : (
-                  <User className="h-5 w-5" />
-                )}
+                <Avatar className="h-8 w-8">
+                  <AvatarImage src={user?.photoURL || undefined} alt={user?.name} />
+                  <AvatarFallback>{user?.name ? user.name.charAt(0).toUpperCase() : <User className="h-5 w-5" />}</AvatarFallback>
+                </Avatar>
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>{dict.myAccount}</DropdownMenuLabel>
+              <DropdownMenuLabel>{user?.name || dict.myAccount}</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={`/${currentLang}/deposit`} className="cursor-pointer">
