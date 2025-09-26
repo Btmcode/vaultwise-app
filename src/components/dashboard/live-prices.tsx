@@ -1,11 +1,17 @@
 
 "use client";
 import { useState } from "react";
+import Autoplay from "embla-carousel-autoplay";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
 import {
   GoldIcon,
   SilverIcon,
@@ -185,11 +191,15 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
         <div className="flex justify-end items-center">
           <Skeleton className="h-8 w-1/4" />
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <Skeleton key={index} className="h-[100px] w-full" />
-          ))}
-        </div>
+        <Carousel className="w-full">
+            <CarouselContent>
+                {Array.from({ length: 12 }).map((_, index) => (
+                    <CarouselItem key={index} className="basis-1/1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5">
+                        <Skeleton key={index} className="h-[100px] w-full" />
+                    </CarouselItem>
+                ))}
+            </CarouselContent>
+        </Carousel>
       </div>
     );
   }
@@ -233,46 +243,53 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
             </Button>
             </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {displayAssets.map((item) => {
-            if (!item) return null;
+        <Carousel 
+            className="w-full"
+            opts={{ align: "start", loop: true }}
+            plugins={[Autoplay({ delay: 3000, stopOnInteraction: true })]}
+        >
+            <CarouselContent className="-ml-4">
+                {displayAssets.map((item) => {
+                if (!item) return null;
 
-            const displayName = item.displayName;
-            const Icon = getIcon(displayName);
-            const change24h = item.change24h || 0;
-            const apiSymbol = item.apiSymbol as AssetSymbol;
+                const displayName = item.displayName;
+                const Icon = getIcon(displayName);
+                const change24h = item.change24h || 0;
+                const apiSymbol = item.apiSymbol as AssetSymbol;
 
-            return (
-                <div
-                key={displayName}
-                className={cn(
-                    "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border-2 transition-colors duration-300",
-                    getChangeBgColor(change24h)
-                )}
-                >
-                <div className="flex items-start justify-between gap-2">
-                    <div className="flex items-center gap-3">
-                    <Icon className={cn("h-10 w-10 flex-shrink-0")} />
-                    {renderCardContent(item)}
-                    </div>
-                    <div
-                    className={cn(
-                        "text-sm font-bold pl-2 whitespace-nowrap",
-                        change24h >= 0 ? "text-green-500" : "text-red-500"
-                    )}
-                    >
-                    {change24h >= 0 ? "+" : ""}
-                    {change24h.toFixed(2)}%
-                    </div>
-                </div>
-                <div className="flex gap-2">
-                    <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
-                    <Button onClick={() => openDialog('sell', apiSymbol)} variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
-                </div>
-                </div>
-            );
-            })}
-        </div>
+                return (
+                    <CarouselItem key={displayName} className="basis-1/1 sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 pl-4">
+                        <div
+                            className={cn(
+                                "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border-2 transition-colors duration-300 h-full",
+                                getChangeBgColor(change24h)
+                            )}
+                        >
+                            <div className="flex items-start justify-between gap-2">
+                                <div className="flex items-center gap-3">
+                                <Icon className={cn("h-10 w-10 flex-shrink-0")} />
+                                {renderCardContent(item)}
+                                </div>
+                                <div
+                                className={cn(
+                                    "text-sm font-bold pl-2 whitespace-nowrap",
+                                    change24h >= 0 ? "text-green-500" : "text-red-500"
+                                )}
+                                >
+                                {change24h >= 0 ? "+" : ""}
+                                {change24h.toFixed(2)}%
+                                </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                                <Button onClick={() => openDialog('sell', apiSymbol)} variant="secondary" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
+                            </div>
+                        </div>
+                    </CarouselItem>
+                );
+                })}
+            </CarouselContent>
+        </Carousel>
         </div>
         
         {dialogState && dialogState.type === 'buy' && (

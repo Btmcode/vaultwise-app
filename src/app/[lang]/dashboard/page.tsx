@@ -84,10 +84,7 @@ export default function DashboardPage() {
     <>
       <Header lang={lang} dict={dict.header} />
       <main className="flex flex-1 flex-col gap-8 p-4 md:p-8">
-        <div>
-          <h2 className="text-2xl font-bold mb-4">{dict.livePrices.title}</h2>
-          <LivePrices dict={dict} portfolioAssets={userData.portfolio} />
-        </div>
+        <LivePrices dict={dict} portfolioAssets={userData.portfolio} />
         
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <PortfolioSummary dict={dict} portfolioAssets={userData.portfolio} />
