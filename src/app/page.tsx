@@ -2,7 +2,6 @@
 "use client";
 
 import Link from 'next/link';
-import Image from 'next/image';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, Cpu, Gem } from 'lucide-react';
@@ -46,38 +45,35 @@ export default function LandingPage() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full h-dvh flex items-center justify-center pt-24 pb-12 md:pt-32 relative">
-           <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-background via-secondary/50 to-background z-0 opacity-50"></div>
-           <div className="absolute inset-0 z-0 opacity-20" style={{backgroundImage: 'radial-gradient(circle, hsl(var(--primary) / 0.1), transparent 60%)'}}></div>
-
-          <div className="container px-4 md:px-6 z-10">
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:gap-24 items-center">
-               <div className="flex flex-col justify-center space-y-4 text-center lg:text-left">
-                  <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none bg-clip-text text-transparent bg-gradient-to-r from-foreground to-foreground/70">
-                    Birikim Sanatı.
-                  </h1>
-                  <p className="max-w-[600px] text-muted-foreground md:text-xl">
-                    Değerli metallerin kalıcı güvenini ve dijital varlıkların dinamik potansiyelini, size özel tasarlanmış tek bir platformda birleştirin.
-                  </p>
-                  <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center lg:justify-start">
-                    <Button size="lg" asChild>
-                      <Link href="/tr/signup">Yolculuğa Başla</Link>
-                    </Button>
-                    <Button size="lg" variant="outline" asChild>
-                        <Link href="#features">Keşfet</Link>
-                    </Button>
-                  </div>
-              </div>
-              <div className="w-full max-w-md mx-auto lg:max-w-none">
-                 <Image
-                    src="https://picsum.photos/seed/finance-art/600/600"
-                    width={600}
-                    height={600}
-                    alt="Abstract Art representing finance and technology"
-                    data-ai-hint="abstract finance technology"
-                    className="rounded-full aspect-square object-cover shadow-2xl shadow-primary/20 animate-in fade-in zoom-in-50 duration-1000"
-                  />
-              </div>
+        <section className="w-full h-dvh flex items-center justify-center relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-full h-full z-0">
+            <video
+              src="/videos/gold-drip.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="w-full h-full object-cover"
+            ></video>
+            <div className="absolute inset-0 bg-black/50"></div>
+          </div>
+          
+          <div className="container px-4 md:px-6 z-10 text-center">
+            <div className="flex flex-col justify-center items-center space-y-4">
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none text-white animate-fade-in-up">
+                  Birikim Sanatı.
+                </h1>
+                <p className="max-w-[700px] text-gray-200 md:text-xl animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+                  Değerli metallerin kalıcı güvenini ve dijital varlıkların dinamik potansiyelini, size özel tasarlanmış tek bir platformda birleştirin.
+                </p>
+                <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center lg:justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+                  <Button size="lg" asChild>
+                    <Link href="/tr/signup">Yolculuğa Başla</Link>
+                  </Button>
+                  <Button size="lg" variant="secondary" asChild>
+                      <Link href="#features">Keşfet</Link>
+                  </Button>
+                </div>
             </div>
           </div>
         </section>
