@@ -25,7 +25,6 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     BTC: BtcIcon,
     PAXG: PaxgIcon,
     XAUT: XautIcon,
-    // Add other symbols if they can be part of asset list
     XAU_ONS: GoldIcon,
     XAU_USD_KG: GoldIcon,
     XAU_EUR_KG: GoldIcon,
@@ -33,7 +32,7 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     XAG_TL: SilverIcon,
     XAG_USD: SilverIcon,
     XAG_EUR: SilverIcon,
-    USD_TRY: GoldIcon, // Placeholder
+    USD_TRY: GoldIcon,
 };
 
 const formatCurrency = (value: number) => {
@@ -51,7 +50,7 @@ const formatAssetAmount = (amount: number, symbol: AssetSymbol) => {
     return `${amount.toLocaleString('en-US')} ${unit}`;
 }
 
-const HIDE_THRESHOLD = 1.00; // Hide assets with value less than $1.00
+const HIDE_THRESHOLD = 1.00;
 
 export function AssetList({ dict, portfolioAssets }: { dict: any, portfolioAssets: PortfolioAsset[] }) {
   const assetListDict = dict.assetList;
@@ -74,7 +73,6 @@ export function AssetList({ dict, portfolioAssets }: { dict: any, portfolioAsset
   const closeDialog = () => {
     if (dialogState) {
       setDialogState({ ...dialogState, isOpen: false });
-      // A small delay to prevent the dialog from disappearing abruptly before closing animation
       setTimeout(() => setDialogState(null), 300);
     }
   };

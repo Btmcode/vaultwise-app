@@ -1,4 +1,5 @@
 
+'use client';
 import {
   CardHeader,
   CardTitle,
@@ -16,7 +17,6 @@ const iconMap: Record<AssetSymbol, React.FC<React.SVGProps<SVGSVGElement>>> = {
     PAXG: PaxgIcon,
     XAUT: XautIcon,
     USD_TRY: UsdTryIcon,
-    // Add other symbols if they can be part of asset list
     XAU_ONS: GoldIcon,
     XAU_USD_KG: GoldIcon,
     XAU_EUR_KG: GoldIcon,
@@ -60,36 +60,42 @@ export function RecentTransactions({ recentTransactionsDict, assetNames, transac
         <CardDescription>{recentTransactionsDict.description}</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4">
-        {transactions.map((tx) => {
-          const Icon = iconMap[tx.assetSymbol];
-          const transactionTypeKey = tx.type.toLowerCase().replace('-','_');
-          return (
-            <div key={tx.id} className="flex items-center gap-4">
-              <div className="bg-muted p-2 rounded-full">
-                {Icon && <Icon className="h-6 w-6" />}
+        {transactions.length > 0 ? (
+          transactions.map((tx) => {
+            const Icon = iconMap[tx.assetSymbol];
+            const transactionTypeKey = tx.type.toLowerCase().replace('-','_');
+            return (
+              <div key={tx.id} className="flex items-center gap-4">
+                <div className="bg-muted p-2 rounded-full">
+                  {Icon && <Icon className="h-6 w-6" />}
+                </div>
+                <div className="grid gap-1 flex-1">
+                  <p className="text-sm font-medium leading-none">
+                    {assetNames[tx.assetSymbol]}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {new Date(tx.date).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="font-medium">
+                    {new Intl.NumberFormat("en-US", {
+                      style: "currency",
+                      currency: "USD",
+                    }).format(tx.amountUsd)}
+                  </p>
+                  <Badge variant={getBadgeVariant(tx.type)} className="text-xs">
+                    {recentTransactionsDict.transactionTypes[transactionTypeKey]}
+                  </Badge>
+                </div>
               </div>
-              <div className="grid gap-1 flex-1">
-                <p className="text-sm font-medium leading-none">
-                  {assetNames[tx.assetSymbol]}
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  {new Date(tx.date).toLocaleDateString()}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="font-medium">
-                  {new Intl.NumberFormat("en-US", {
-                    style: "currency",
-                    currency: "USD",
-                  }).format(tx.amountUsd)}
-                </p>
-                <Badge variant={getBadgeVariant(tx.type)} className="text-xs">
-                  {recentTransactionsDict.transactionTypes[transactionTypeKey]}
-                </Badge>
-              </div>
-            </div>
-          );
-        })}
+            );
+          })
+        ) : (
+          <div className="text-center text-sm text-muted-foreground py-4">
+            No recent transactions found.
+          </div>
+        )}
       </CardContent>
     </>
   );

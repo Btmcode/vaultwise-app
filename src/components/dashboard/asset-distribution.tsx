@@ -116,8 +116,8 @@ export function AssetDistribution({ dict, portfolioAssets }: { dict: any, portfo
                         iconSize={8}
                         iconType="circle"
                         formatter={(value, entry) => {
-                             const dataPoint = chartData.find(d => d.name === entry.dataKey);
-                             const assetName = dataPoint ? dict.assetNames[dataPoint.name] : entry.dataKey;
+                             const dataPoint = chartData.find(d => d.name === value);
+                             const assetName = dataPoint ? dict.assetNames[dataPoint.name] : value;
                              return <span className="text-xs text-muted-foreground">{assetName}</span>
                         }}
                     />
@@ -133,4 +133,3 @@ export function AssetDistribution({ dict, portfolioAssets }: { dict: any, portfo
     </Card>
   );
 }
-

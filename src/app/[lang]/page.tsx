@@ -1,11 +1,8 @@
-
-'use client';
-
 import { Header } from "@/components/header";
 import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
 import { AssetList } from "@/components/dashboard/asset-list";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDictionary } from "../dictionaries";
@@ -14,53 +11,16 @@ import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
 import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { getUserDoc } from '@/lib/firebase/firestore';
-import type { FirestoreUser } from "@/lib/types";
-import { useParams } from "next/navigation";
+import { redirect } from 'next/navigation';
 
 export const dynamic = 'force-dynamic';
 
-export default function Home() {
-  const params = useParams();
-  const lang = params.lang as 'tr' | 'en';
+export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
   const dict = getDictionary(lang);
-  const [userData, setUserData] = useState<FirestoreUser | null>(null);
-  const [loading, setLoading] = useState(true);
+  const userData = await getUserDoc();
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const data = await getUserDoc();
-        setUserData(data);
-      } catch (error) {
-        console.error("Failed to fetch user data:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchData();
-  }, []);
-
-
-  if (loading) {
-     return (
-        <div className="flex min-h-screen w-full flex-col bg-background">
-            <Header lang={lang} dict={dict.header} />
-            <main className="flex flex-1 items-center justify-center">
-                <Skeleton className="h-full w-full" />
-            </main>
-        </div>
-    )
-  }
-  
   if (!userData) {
-    return (
-        <div className="flex min-h-screen w-full flex-col bg-background">
-            <Header lang={lang} dict={dict.header} />
-            <main className="flex flex-1 items-center justify-center">
-                <p>Could not load user data. Please try logging in again.</p>
-            </main>
-        </div>
-    )
+    redirect(`/${lang}/login`);
   }
   
   const { portfolio, transactions } = userData;

@@ -36,21 +36,6 @@ const assetOrder: string[] = [
   "USD/TRY",
 ];
 
-const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-  "HAS ALTIN": GoldBarIcon,
-  "Altın/ONS": GoldIcon,
-  "Altın USD/Kg": GoldIcon,
-  "Altın EUR/Kg": GoldIcon,
-  "Gümüş/ONS": SilverIcon,
-  "Gümüş/TL": SilverIcon,
-  "Gümüş/USD": SilverIcon,
-  "Gümüş/EUR": SilverIcon,
-  "Bitcoin": BtcIcon,
-  "PAX Gold": PaxgIcon,
-  "Tether Gold": XautIcon,
-  "USD/TRY": UsdTryIcon,
-};
-
 const apiSymbolMap: Record<string, AssetSymbol> = {
     "HAS ALTIN": "XAU",
     "Altın/ONS": "XAU_ONS",
@@ -104,7 +89,6 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
     let currency = "USD";
     let locale = "en-US";
     
-    // Determine currency based on symbol
     if (symbol.includes("EUR")) {
       currency = "EUR";
       locale = "de-DE";

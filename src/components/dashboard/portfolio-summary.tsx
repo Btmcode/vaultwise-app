@@ -9,7 +9,6 @@ import {
   CardTitle,
   CardFooter,
 } from "@/components/ui/card";
-import { chartData } from "@/lib/data";
 import type { PortfolioAsset } from "@/lib/types";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -24,7 +23,6 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
   const [sellDialogOpen, setSellDialogOpen] = useState(false);
   
-  // State to hold the displayed value, preventing the $0.00 flicker
   const [displayedValue, setDisplayedValue] = useState<number | null>(null);
 
   const { totalValue, percentageChange } = useMemo(() => {
@@ -34,28 +32,21 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
 
     const currentValue = portfolioAssets.reduce((sum, asset) => {
       const liveAsset = liveAssets[asset.assetSymbol];
-      // Use sellPrice for a more conservative valuation, fallback to buyPrice or price
       const price = liveAsset?.sellPrice ?? liveAsset?.buyPrice ?? liveAsset?.price ?? 0;
       return sum + asset.amount * price;
     }, 0);
     
-    // Use the 1W data as a baseline for percentage change calculation for now
-    const weekData = chartData["1w"];
-    if (weekData.length === 0) return { totalValue: currentValue, percentageChange: 0 };
-
-    const startValue = weekData[0].value;
-    // Prevent division by zero if startValue is 0
+    // Placeholder for historical data - you would fetch this in a real app
+    const startValue = currentValue / (1 + (-0.023)); // Mock 2.3% loss for demo
     const change = startValue !== 0 ? ((currentValue - startValue) / startValue) * 100 : 0;
 
     return { totalValue: currentValue, percentageChange: change };
   }, [liveAssets, portfolioAssets]);
 
-  // Effect to update the displayed value only when not loading and totalValue is calculated
   useEffect(() => {
     if (!loading && totalValue > 0) {
       setDisplayedValue(totalValue);
     }
-    // Set initial value on first load
     if (displayedValue === null && totalValue > 0) {
         setDisplayedValue(totalValue);
     }
@@ -65,7 +56,7 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
   const formattedValue = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(displayedValue ?? 0); // Use displayedValue, fallback to 0
+  }).format(displayedValue ?? 0);
   
   const buyDialogDict = dict.portfolioSummary.buyDialog;
   const sellDialogDict = dict.portfolioSummary.sellDialog;

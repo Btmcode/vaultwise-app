@@ -56,7 +56,7 @@ export function AIMarketAnalysis({ lang, dict }: { lang: 'tr' | 'en', dict: any 
       </CardHeader>
       <CardContent className="flex flex-col flex-grow items-center justify-center">
         {analysis ? (
-          <div className="prose prose-sm dark:prose-invert max-w-full">
+          <div className="prose prose-sm dark:prose-invert max-w-full text-center">
             <p>{analysis}</p>
           </div>
         ) : (
