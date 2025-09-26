@@ -9,14 +9,24 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { useToast } from "@/hooks/use-toast";
+
 
 export default function ProfilePage() {
   const params = useParams();
   const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
+  const { toast } = useToast();
   
   const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
   const profileDict = dict.profilePage;
+
+  const handleChangePicture = () => {
+    toast({
+        title: "Feature not available",
+        description: "Changing profile picture is not yet implemented.",
+    });
+  };
 
   return (
     <div className="flex min-h-screen w-full flex-col bg-background">
@@ -41,7 +51,7 @@ export default function ProfilePage() {
                           <AvatarFallback>AV</AvatarFallback>
                         </Avatar>
                     )}
-                    <Button variant="outline">{profileDict.changePicture}</Button>
+                    <Button variant="outline" onClick={handleChangePicture}>{profileDict.changePicture}</Button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                      <div className="grid gap-2">

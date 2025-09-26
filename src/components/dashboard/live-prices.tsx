@@ -8,7 +8,6 @@ import { cn } from '@/lib/utils';
 import { GoldIcon, SilverIcon, InfoIcon, GoldBarIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
 import { BuyDialog } from './buy-dialog';
 import { SellDialog } from './sell-dialog';
-import { Separator } from '../ui/separator';
 
 const assetOrder = [
   "XAU",
@@ -70,13 +69,18 @@ export function LivePrices({ dict }: { dict: any }) {
         currency = 'TRY';
         locale = 'tr-TR';
     }
-
-    return new Intl.NumberFormat(locale, {
-      style: "currency",
+    
+    // Remove leading zeros for Turkish Lira formatting which seems to be the issue
+    const style = (locale === 'tr-TR' && currency === 'TRY') ? 'decimal' : 'currency';
+    
+    const formatted = new Intl.NumberFormat(locale, {
+      style: style,
       currency: currency,
       maximumFractionDigits: symbol === 'USD_TRY' ? 4 : 2,
       minimumFractionDigits: 2,
     }).format(price);
+
+    return style === 'decimal' ? `₺${formatted}` : formatted;
   };
   
   const getIcon = (symbol: string) => {
@@ -138,10 +142,10 @@ export function LivePrices({ dict }: { dict: any }) {
                         "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border transition-colors duration-300",
                         getChangeBgColor(item.change24h)
                     )}>
-                    <div className="flex items-start justify-between gap-4">
-                        <div className="flex items-center gap-4">
+                    <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-3">
                             <Icon className={cn("h-10 w-10 flex-shrink-0", symbol === 'XAU' && 'h-12 w-12')} />
-                             <div className="flex-grow flex flex-col justify-center overflow-hidden">
+                             <div className="flex flex-col justify-center">
                                 <p className="font-semibold text-base whitespace-nowrap">{assetNames[symbol] || symbol}</p>
                                 {isCrypto ? (
                                     <p className="text-sm font-semibold text-muted-foreground">{formatPrice(item.price, symbol)}</p>

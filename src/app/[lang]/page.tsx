@@ -9,8 +9,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDictionary } from "../dictionaries";
 import { AssetDistribution } from "@/components/dashboard/asset-distribution";
-import { AutoSavePlans } from "@/components/dashboard/auto-save-plans";
-import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
 
@@ -27,18 +25,13 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
               <LivePrices dict={dict} />
             </Suspense>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-4">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-2">
             <Suspense fallback={<Skeleton className="h-48" />}>
               <PortfolioSummary dict={dict} />
             </Suspense>
             <Suspense fallback={<Skeleton className="h-48" />}>
               <AssetDistribution dict={dict} />
             </Suspense>
-            <div className="xl:col-span-2">
-              <Suspense fallback={<Skeleton className="h-48" />}>
-                  <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
-              </Suspense>
-            </div>
           </div>
           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
             <Card className="xl:col-span-2">
@@ -53,11 +46,6 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
             </Card>
           </div>
           <div className="grid gap-4 md:gap-8">
-            <Card>
-              <Suspense fallback={<Skeleton className="h-48" />}>
-                  <AutoSavePlans dict={dict} />
-              </Suspense>
-            </Card>
             <Card>
               <Suspense fallback={<Skeleton className="h-96" />}>
                 <AssetList dict={dict} />
