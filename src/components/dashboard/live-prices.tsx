@@ -9,11 +9,11 @@ import { cn } from "@/lib/utils";
 import {
   GoldIcon,
   SilverIcon,
-  InfoIcon,
   BtcIcon,
   PaxgIcon,
   XautIcon,
   UsdTryIcon,
+  GoldBarIcon,
 } from "@/components/icons";
 import { BuyDialog } from "./buy-dialog";
 import { SellDialog } from "./sell-dialog";
@@ -43,7 +43,7 @@ const apiSymbolMap: Record<string, AssetSymbol> = {
 }
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-    "HAS ALTIN": GoldIcon,
+    "HAS ALTIN": GoldBarIcon,
     "Altın/ONS": GoldIcon,
     "Bitcoin": BtcIcon,
     "PAX Gold": PaxgIcon,
@@ -114,10 +114,6 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
 
     return currency === "TRY" ? `${formatted} TL` : formatted;
   };
-
-  const getIcon = (symbol: string) => {
-    return iconMap[symbol] || InfoIcon;
-  };
   
   const displayAssets = assetOrder.map(displayName => {
       const apiSymbol = apiSymbolMap[displayName];
@@ -131,13 +127,13 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
   const renderContent = () => {
     if (loading && displayAssets.length === 0) {
       return Array.from({ length: 8 }).map((_, index) => (
-        <Skeleton key={index} className="h-[120px] w-full" />
+        <Skeleton key={index} className="h-[140px] w-full" />
       ));
     }
 
     if (error) {
         return (
-             <div className="col-span-full text-red-500 p-4 rounded-md bg-red-50 border border-red-200">
+             <div className="col-span-full text-red-500 p-4 rounded-md bg-red-50 border border-red-200 dark:bg-destructive dark:text-destructive-foreground">
                 {livePricesDict.error}: {error}
             </div>
         )
@@ -147,20 +143,28 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
         if (!item) return null;
 
         const displayName = item.displayName;
-        const Icon = getIcon(displayName);
+        const Icon = iconMap[displayName];
         const change24h = item.change24h || 0;
         const apiSymbol = item.apiSymbol as AssetSymbol;
         const price = item.price ?? item.buyPrice ?? item.sellPrice;
+        const hasBuySell = item.buyPrice !== undefined && item.sellPrice !== undefined;
 
         return (
-            <div key={displayName} className="flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border transition-colors duration-300 h-full">
-                <div className="flex items-start justify-between gap-2">
+            <div key={displayName} className="flex flex-col justify-between gap-3 p-4 rounded-lg bg-card border shadow-sm transition-all duration-300 h-full hover:shadow-lg hover:border-primary/50">
+                <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-3">
                         <Icon className="h-10 w-10 flex-shrink-0" />
                         <div>
                             <p className="font-semibold text-lg">{displayName}</p>
-                            <p className={cn("font-mono font-bold whitespace-nowrap text-left", getChangeColor(change24h))}>
-                                {formatPrice(price, displayName)}
+                            <p className={cn("text-xs text-muted-foreground")}>
+                               {hasBuySell ? (
+                                   <>
+                                    <span>{dict.assetList.buy}: {formatPrice(item.buyPrice, displayName)}</span><br/>
+                                    <span>{dict.assetList.sell}: {formatPrice(item.sellPrice, displayName)}</span>
+                                   </>
+                               ) : (
+                                    formatPrice(price, displayName)
+                               )}
                             </p>
                         </div>
                     </div>
@@ -170,7 +174,7 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
                     </div>
                 </div>
                  <div className="flex gap-2">
-                    <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-green-600 text-white hover:bg-green-700">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
+                    <Button onClick={() => openDialog('buy', apiSymbol)} size="sm" className="w-full bg-accent text-accent-foreground hover:bg-accent/90">{dict.portfolioSummary.buyDialog.shortTitle}</Button>
                     <Button onClick={() => openDialog('sell', apiSymbol)} variant="destructive" size="sm" className="w-full">{dict.portfolioSummary.sellDialog.shortTitle}</Button>
                 </div>
             </div>
@@ -193,7 +197,7 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
                 </Button>
                 </div>
             </div>
-             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
                 {renderContent()}
             </div>
         </div>
@@ -220,3 +224,5 @@ export function LivePrices({ dict, portfolioAssets }: LivePricesProps) {
     </>
   );
 }
+
+    
