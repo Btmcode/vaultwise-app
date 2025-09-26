@@ -14,6 +14,7 @@ import { ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { BuyDialog } from "./buy-dialog";
 import { SellDialog } from "./sell-dialog";
+import { AutoSaveDialog } from "./auto-save-dialog";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -90,6 +91,7 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
       <CardFooter className="flex gap-2">
         <Button onClick={() => setBuyDialogOpen(true)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-primary/80">{buyDialogDict.shortTitle}</Button>
         <Button onClick={() => setSellDialogOpen(true)} variant="secondary" size="sm" className="w-full">{sellDialogDict.shortTitle}</Button>
+        <AutoSaveDialog dict={dict} />
         
         <BuyDialog dict={dict} portfolioAssets={portfolioAssets} isOpen={buyDialogOpen} onOpenChange={setBuyDialogOpen} />
         <SellDialog dict={dict} portfolioAssets={portfolioAssets} isOpen={sellDialogOpen} onOpenChange={setSellDialogOpen} />
