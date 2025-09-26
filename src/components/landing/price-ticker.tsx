@@ -17,7 +17,7 @@ import type { AssetSymbol } from '@/lib/types';
 import { ChevronDown, ChevronUp } from 'lucide-react';
 
 
-const assetOrder: AssetSymbol[] = ['BTC', 'XAU', 'XAG', 'PAXG', 'XAUT', 'USD_TRY'];
+const assetOrder: AssetSymbol[] = ['XAU', 'XAG', 'PAXG', 'XAUT', 'USD_TRY', 'BTC'];
 
 const assetDetails: Record<
   AssetSymbol,
