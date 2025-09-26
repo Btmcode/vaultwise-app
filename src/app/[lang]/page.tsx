@@ -56,7 +56,6 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
             <div className="grid gap-4 md:gap-8">
                     <Card className="xl:col-span-2">
                     <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                        {/* PortfolioChart is removed as it was showing dummy data */}
                         <CardHeader>
                             <CardTitle>{dict.portfolioChart.title}</CardTitle>
                         </CardHeader>

@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en'
 }
 
 // The RootLayout itself is also async
-export default async function RootLayout({
+export default function RootLayout({
   children,
   params,
 }: {
