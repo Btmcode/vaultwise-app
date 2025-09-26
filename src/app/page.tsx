@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { VaultWiseLogo, GoldIcon, SilverIcon, BtcIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, Cpu, Gem, Zap } from 'lucide-react';
-import Image from 'next/image';
+import { PriceTicker } from '@/components/landing/price-ticker';
 
 const features = [
   {
@@ -52,7 +52,7 @@ export default function LandingPage() {
         {/* Hero Section */}
         <section className="w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-background to-secondary/30">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+            <div className="grid gap-8 lg:grid-cols-2 lg:gap-12 xl:gap-16">
               <div className="flex flex-col justify-center space-y-6">
                 <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
                   Geleceğiniz İçin <span className="text-primary">Akıllıca</span> Biriktirin.
@@ -69,14 +69,9 @@ export default function LandingPage() {
                   </Button>
                 </div>
               </div>
-              <Image
-                  src="https://picsum.photos/seed/finance/600/400"
-                  width="600"
-                  height="400"
-                  alt="Modern investment platform visual"
-                  data-ai-hint="digital finance investment"
-                  className="mx-auto aspect-video overflow-hidden rounded-xl object-cover"
-                />
+              <div className="flex items-center justify-center">
+                 <PriceTicker />
+              </div>
             </div>
           </div>
         </section>
@@ -158,5 +153,3 @@ export default function LandingPage() {
     </div>
   );
 }
-
-    
