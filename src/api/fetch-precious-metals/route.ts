@@ -1,6 +1,5 @@
 
 import { NextResponse } from 'next/server';
-import axios from 'axios';
 
 // Maps API product names to our application's asset symbols for consistency
 const nameToSymbolMap: Record<string, string> = {
@@ -8,7 +7,7 @@ const nameToSymbolMap: Record<string, string> = {
     'Altın/ONS': 'XAU_ONS',
     'USD/KG': 'XAU_USD_KG',
     'EUR/KG': 'XAU_EUR_KG',
-    'GÜMÜŞ GRAM': 'XAG_TL', // This might need verification from the new endpoint's data
+    'GÜMÜŞ GRAM': 'XAG_TL',
     'GÜM/ONS': 'XAG_ONS',
     'GÜM/USD': 'XAG_USD',
     'GÜM/EUR': 'XAG_EUR',
@@ -29,7 +28,8 @@ type FormattedAsset = {
 };
 
 const parseNumber = (str: string): number | null => {
-    // The API returns strings like "2,450.12", which needs to be parsed correctly.
+    // The API returns strings like "2.450,12", which needs to be parsed correctly.
+    // First, remove dots used as thousand separators, then replace comma with a dot for decimal.
     const num = parseFloat(str.replace(/\./g, '').replace(',', '.'));
     return isNaN(num) ? null : num;
 };
@@ -55,22 +55,34 @@ export async function GET() {
     };
 
     try {
-        const response = await axios.get<{ products: ApiProduct[] }>(url, { headers, timeout: 10000 });
-        const processedProducts: FormattedAsset[] = [];
+        const response = await fetch(url, { 
+            headers: headers, 
+            next: { revalidate: 60 } // Cache for 60 seconds
+        });
 
-        if (!response.data || !response.data.products) {
+        if (!response.ok) {
+            console.error(`API request failed with status ${response.status}`);
+            return NextResponse.json(fallbackPrices);
+        }
+        
+        const data = await response.json();
+
+        if (!data || !data.products) {
             console.warn('API response is missing "products" key. Using fallback data.');
             return NextResponse.json(fallbackPrices);
         }
 
-        for (const prod of response.data.products) {
+        const processedProducts: FormattedAsset[] = [];
+
+        for (const prod of data.products) {
             const symbol = nameToSymbolMap[prod.name];
             if (!symbol) continue;
 
             const buyPrice = parseNumber(prod.public_bid);
             const sellPrice = parseNumber(prod.public_ask);
-
+            
             if (buyPrice !== null && sellPrice !== null && buyPrice > 0 && sellPrice > 0) {
+                 // Calculate percentage change based on the difference between sell and buy
                 const change24h = ((sellPrice - buyPrice) / buyPrice) * 100;
 
                 processedProducts.push({
@@ -93,10 +105,17 @@ export async function GET() {
         }
         
         // Merge with fallback to ensure any unmapped but critical assets are present
-        return NextResponse.json({ ...fallbackPrices, ...formattedData });
+        const responseData = { ...fallbackPrices, ...formattedData };
 
-    } catch (error) {
-        console.error('Error fetching data from Saglamoglu marge/products API:', error);
+        // Ensure every item in the final response has the symbol property inside the object
+        Object.keys(responseData).forEach(key => {
+            (responseData as any)[key].symbol = key;
+        });
+        
+        return NextResponse.json(responseData);
+
+    } catch (error: any) {
+        console.error('Error fetching data from Saglamoglu marge/products API:', error.message);
         return NextResponse.json(fallbackPrices);
     }
 }

@@ -1,7 +1,6 @@
 'use client';
 import { useState, useEffect, useCallback, createContext, useContext, type ReactNode } from 'react';
 import type { Asset } from '@/lib/types';
-import axios from 'axios';
 
 type LiveAssetData = Omit<Asset, 'name'>;
 
@@ -27,10 +26,14 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
     const fetchData = useCallback(async (url: string) => {
         try {
-            const response = await axios.get(url);
-            if (response.data && Object.keys(response.data).length > 0) {
+            const response = await fetch(url, { cache: 'no-store'});
+            if (!response.ok) {
+                throw new Error(`Request to ${url} failed with status ${response.status}`);
+            }
+            const data = await response.json();
+            if (data && Object.keys(data).length > 0) {
                  // On success, clear any previous error and update assets
-                return response.data;
+                return data;
             } else {
                  throw new Error(`Received empty data from ${url}`);
             }
@@ -41,14 +44,12 @@ export function LivePricesProvider({ children }: ProviderProps) {
         }
     }, []);
 
-    const fetchAllData = async (isInitial: boolean) => {
+    const fetchAllData = useCallback(async (isInitial: boolean) => {
         if (isInitial) {
             setLoading(true);
-        } else {
-            setError(null);
         }
+        setError(null);
         
-        // The main precious metals data now comes from fetch-precious-metals
         const results = await Promise.allSettled([
             fetchData('/api/fetch-precious-metals'),
             fetchData('/api/prices/crypto'),
@@ -77,12 +78,12 @@ export function LivePricesProvider({ children }: ProviderProps) {
         if (isInitial) {
             setLoading(false);
         }
-    };
+    }, [fetchData]);
 
 
     useEffect(() => {
         fetchAllData(true);
-    }, []);
+    }, [fetchAllData]);
 
     const refreshData = useCallback(() => {
         setLoading(true);
