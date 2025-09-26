@@ -13,24 +13,16 @@ const firebaseConfig: FirebaseOptions = {
   measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
+// This function is for CLIENT-SIDE usage only.
 function getFirebaseServices() {
-  const isClient = typeof window !== 'undefined';
-  if (!isClient) {
-    // Return a dummy object or handle server-side logic if needed,
-    // but for client-only firebase, we can return nulls.
-    // However, our `firestore.ts` is a server module, so we need a different approach.
-    // The best approach is to have a single initialization pattern.
-  }
-
   let app: FirebaseApp;
   if (!getApps().length) {
     if (firebaseConfig.apiKey && firebaseConfig.projectId) {
       app = initializeApp(firebaseConfig);
     } else {
       console.warn(
-        'Firebase config is incomplete. Firebase services will be disabled. Please check your .env file or environment variables.'
+        'Firebase config is incomplete. Client-side Firebase services will be disabled.'
       );
-      // Return null or throw an error if config is essential
       return { app: null, auth: null, db: null };
     }
   } else {
@@ -43,7 +35,6 @@ function getFirebaseServices() {
   return { app, auth, db };
 }
 
-// We will export the function to be called, rather than the instances.
-// This ensures initialization logic is run on demand.
+// Destructure and export for easy client-side use
 const { app, auth, db } = getFirebaseServices();
-export { app, auth, db, getFirebaseServices };
+export { app, auth, db };
