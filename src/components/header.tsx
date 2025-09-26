@@ -57,7 +57,7 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
         });
 
         // Redirect to the landing page after a successful logout
-        window.location.href = `/${currentLang}`;
+        window.location.href = '/';
 
       } catch (error) {
         console.error("Logout Error:", error);
@@ -84,7 +84,7 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
             <span className="sr-only">Toggle theme</span>
           </Button>
            <Button variant="ghost" size="icon" asChild>
-            <Link href={`/${otherLang}`} prefetch={false}>
+            <Link href={`/${otherLang}/dashboard`} prefetch={false}>
               <Languages />
               <span className="sr-only">Change language</span>
             </Link>
