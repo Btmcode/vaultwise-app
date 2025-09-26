@@ -74,7 +74,7 @@ export function RecentTransactions({ recentTransactionsDict, assetNames, transac
                     {assetNames[tx.assetSymbol]}
                   </p>
                   <p className="text-sm text-muted-foreground">
-                    {new Date(tx.date).toLocaleDateString()}
+                    {new Date(tx.date).toLocaleDateString('tr-TR')}
                   </p>
                 </div>
                 <div className="text-right">
