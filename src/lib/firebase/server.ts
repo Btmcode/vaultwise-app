@@ -3,11 +3,11 @@ import admin from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
 
 // This function initializes and returns the Firebase Admin App instance.
-// It ensures that the app is initialized only once.
+// It ensures that the app is initialized only once across the entire server.
 export function getAdminApp(): App {
-  // Check if the default app is already initialized
-  if (admin.apps.length > 0) {
-    return admin.app();
+  // If the default app is already initialized, return it.
+  if (admin.apps.length > 0 && admin.apps[0]) {
+    return admin.apps[0];
   }
 
   // The private key must have its newlines properly formatted.
@@ -22,6 +22,7 @@ export function getAdminApp(): App {
   }
 
   try {
+    // Initialize the default app.
     return admin.initializeApp({
       credential: admin.credential.cert({
         projectId,

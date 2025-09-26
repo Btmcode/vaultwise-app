@@ -14,12 +14,13 @@ async function getCurrentUserId(): Promise<string | null> {
   try {
     const adminApp = getAdminApp();
     const auth = getAuth(adminApp);
-    const sessionCookie = (await cookies()).get('firebase-session')?.value;
-    if (!sessionCookie) {
+    // CRITICAL FIX: The cookies() function is async and must be awaited.
+    const sessionCookieValue = (await cookies().get('firebase-session'))?.value;
+    if (!sessionCookieValue) {
       console.log("No session cookie found.");
       return null;
     }
-    const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
+    const decodedToken = await auth.verifySessionCookie(sessionCookieValue, true);
     return decodedToken.uid;
   } catch (error) {
     console.error("Error verifying session cookie:", error);
@@ -48,11 +49,10 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             ...tx,
             date: tx.date.toDate().toISOString(),
         })) || [];
-        return { ...data, transactions } as FirestoreUser;
+        return { ...data, transactions, id: userDocSnap.id } as FirestoreUser;
     } else {
         console.log(`User document for ${userId} not found, creating one.`);
-        const newUser: Omit<FirestoreUser, 'transactions'> & { transactions: any[] } = {
-            id: userId,
+        const newUser: Omit<FirestoreUser, 'transactions' | 'id'> & { transactions: any[] } = {
             name: 'Ali Veli',
             email: 'ali.veli@example.com',
             availableBalanceTRY: 150000.75,
@@ -76,7 +76,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             date: tx.date.toDate().toISOString(),
         })) || [];
 
-        return { ...createdData, transactions } as FirestoreUser;
+        return { ...createdData, transactions, id: createdUserDoc.id } as FirestoreUser;
     }
 }
 
@@ -132,10 +132,11 @@ export async function getTransactions(): Promise<Transaction[]> {
      return userDoc?.transactions.map(tx => ({...tx, date: new Date(tx.date)})) || [];
 }
 
-export async function getUserProfile(): Promise<UserProfile | null> {
+export async function getUserProfile(): Promise<Omit<UserProfile, 'id'> | null> {
     const userDoc = await getUserDoc();
     if (!userDoc) return null;
 
-    const { portfolio, ibanAccounts, transactions, ...profileData } = userDoc;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { id, portfolio, ibanAccounts, transactions, ...profileData } = userDoc;
     return profileData;
 }
