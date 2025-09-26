@@ -274,6 +274,10 @@
         "ibanPlaceholder": "Select a saved IBAN",
         "noIban": "No saved IBANs. Please add one in Settings.",
         "button": "Deposit",
+        "identityWarning": {
+            "title": "Important Reminder",
+            "description": "For Turkish Lira deposits, it is a legal requirement that the sender's Full Name and National ID Number match your VaultWise account information. In case of a mismatch, the transaction cannot be processed."
+        },
         "toast": {
             "success": {
                 "title": "Deposit Initiated",
@@ -318,5 +322,3 @@
         "dataSourceError": "Analysis cannot be performed due to a data source error."
     }
 }
-
-    

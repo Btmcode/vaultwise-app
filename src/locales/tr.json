@@ -274,6 +274,10 @@
         "ibanPlaceholder": "Kayıtlı bir IBAN seçin",
         "noIban": "Kayıtlı IBAN yok. Lütfen Ayarlar'dan bir tane ekleyin.",
         "button": "Para Yatır",
+        "identityWarning": {
+            "title": "Önemli Hatırlatma",
+            "description": "Türk Lirası yatırma işlemleri için göndericiye ait Ad Soyad ve TC Kimlik Numarası bilgilerinin VaultWise hesap bilgileriniz ile aynı olması yasal bir zorunluluktur. Uyumsuzluk durumunda işlem gerçekleştirilemeyecektir."
+        },
         "toast": {
             "success": {
                 "title": "Yatırma İşlemi Başlatıldı",
@@ -318,5 +322,3 @@
         "dataSourceError": "Veri kaynağı hatası nedeniyle analiz yapılamıyor."
     }
 }
-
-    

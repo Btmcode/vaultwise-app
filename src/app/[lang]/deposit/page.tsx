@@ -18,7 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Loader2 } from 'lucide-react';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Loader2, AlertTriangle } from 'lucide-react';
 import Link from 'next/link';
 
 export default function DepositPage() {
@@ -90,6 +91,15 @@ export default function DepositPage() {
               <CardDescription>{depositDict.cardDescription}</CardDescription>
             </CardHeader>
             <CardContent>
+                {lang === 'tr' && (
+                    <Alert className="mb-6">
+                        <AlertTriangle className="h-4 w-4" />
+                        <AlertTitle>{depositDict.identityWarning.title}</AlertTitle>
+                        <AlertDescription>
+                            {depositDict.identityWarning.description}
+                        </AlertDescription>
+                    </Alert>
+                )}
               <form onSubmit={handleDeposit} className="grid gap-6">
                 <div className="grid gap-2">
                   <Label htmlFor="amount">{depositDict.amountLabel}</Label>
