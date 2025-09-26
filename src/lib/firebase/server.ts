@@ -9,26 +9,19 @@ export function getAdminApp(): App {
   if (admin.apps.length > 0 && admin.apps[0]) {
     return admin.apps[0];
   }
+  
+  const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
-  // The private key must have its newlines properly formatted.
-  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n');
-  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-  const projectId = process.env.FIREBASE_PROJECT_ID;
-
-  if (!privateKey || !clientEmail || !projectId) {
+  if (!serviceAccountKey) {
     throw new Error(
-      'Firebase Admin SDK environment variables are not set. Check FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL, and FIREBASE_PROJECT_ID.'
+      'Firebase Admin SDK environment variable FIREBASE_SERVICE_ACCOUNT_KEY is not set.'
     );
   }
 
   try {
     // Initialize the default app.
     return admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId,
-        clientEmail,
-        privateKey,
-      }),
+      credential: admin.credential.cert(JSON.parse(serviceAccountKey)),
     });
   } catch (error: any) {
     console.error('Firebase Admin SDK initialization error:', error.message);

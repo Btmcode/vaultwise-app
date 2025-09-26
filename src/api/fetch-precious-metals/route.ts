@@ -3,20 +3,9 @@ import { NextResponse } from 'next/server';
 import { getFirestore } from 'firebase-admin/firestore';
 import { getAdminApp } from '@/lib/firebase/server';
 
-type FormattedAsset = {
-    symbol: string;
-    buyPrice: number;
-    sellPrice: number;
-    change24h: number;
-};
-
-/**
- * Fetches precious metal prices from the Firebase Firestore 'precious_metals' collection.
- * This is the single source of truth for this data.
- */
 export async function GET() {
     try {
-        const adminApp = getAdminApp();
+        const adminApp = getAdminApp(); // Ensure the app is initialized
         const db = getFirestore(adminApp);
         
         const snapshot = await db.collection('precious_metals').get();
@@ -26,9 +15,9 @@ export async function GET() {
              return NextResponse.json({ error: 'No precious metals data found in database.' }, { status: 404 });
         }
 
-        const data: Record<string, FormattedAsset> = {};
+        const data: Record<string, any> = {};
         snapshot.forEach(doc => {
-            data[doc.id] = doc.data() as FormattedAsset;
+            data[doc.id] = doc.data();
         });
 
         return NextResponse.json(data);
