@@ -151,7 +151,8 @@
     "assetDistribution": {
         "title": "Asset Distribution",
         "description": "Your portfolio's asset allocation.",
-        "percentage": "Percentage"
+        "percentage": "Percentage",
+        "noData": "No assets in portfolio"
     },
     "portfolioChart": {
         "title": "Portfolio Value",

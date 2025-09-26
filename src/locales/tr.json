@@ -151,7 +151,8 @@
     "assetDistribution": {
         "title": "Varlık Dağılımı",
         "description": "Portföyünüzün varlık dağılımı.",
-        "percentage": "Yüzde"
+        "percentage": "Yüzde",
+        "noData": "Portföyde varlık yok"
     },
     "portfolioChart": {
         "title": "Portföy Değeri",
