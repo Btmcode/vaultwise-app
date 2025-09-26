@@ -1,7 +1,7 @@
 
 "use client";
 
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Legend, Tooltip, Cell } from "recharts";
 import {
   Card,
   CardContent,
@@ -100,9 +100,8 @@ export function AssetDistribution({ dict, portfolioAssets }: { dict: any, portfo
             />
             <Bar dataKey="value" barSize={20} radius={[4, 4, 4, 4]}>
                 {chartData.map((entry, index) => (
-                    <Bar 
+                    <Cell 
                         key={`cell-${index}`} 
-                        dataKey="value"
                         fill={entry.name === 'no-data' ? NO_DATA_COLOR : COLORS[index % COLORS.length]} 
                         radius={4}
                     />
