@@ -2,9 +2,9 @@
 'use server';
 
 import { getAdminApp } from '@/lib/firebase/server';
-import { getFirestore } from 'firebase-admin/firestore';
+import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import { cookies } from 'next/headers';
-import type { IbanAccount, FirestoreUser, PortfolioAsset, Transaction } from '@/lib/types';
+import type { IbanAccount, FirestoreUser, PortfolioAsset, Transaction, UserProfile } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 import { revalidatePath } from 'next/cache';
 import { getAuth } from 'firebase-admin/auth';
@@ -14,8 +14,9 @@ async function getCurrentUserId(): Promise<string | null> {
   try {
     const adminApp = getAdminApp();
     const auth = getAuth(adminApp);
-    const sessionCookie = cookies().get('firebase-session')?.value;
+    const sessionCookie = (await cookies()).get('firebase-session')?.value;
     if (!sessionCookie) {
+      console.log("No session cookie found.");
       return null;
     }
     const decodedToken = await auth.verifySessionCookie(sessionCookie, true);
@@ -42,7 +43,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
 
     if (userDocSnap.exists) {
         const data = userDocSnap.data() as any;
-        // Convert Firestore Timestamps to serializable Date objects
+        // Convert Firestore Timestamps to serializable strings
         const transactions = data.transactions?.map((tx: any) => ({
             ...tx,
             date: tx.date.toDate().toISOString(),
@@ -127,10 +128,11 @@ export async function getPortfolioAssets(): Promise<PortfolioAsset[]> {
 
 export async function getTransactions(): Promise<Transaction[]> {
     const userDoc = await getUserDoc();
-    return userDoc?.transactions.map(tx => ({...tx, date: new Date(tx.date)})) || [];
+    // Ensure the date is returned as a Date object for server-side use, or ISO string for client
+     return userDoc?.transactions.map(tx => ({...tx, date: new Date(tx.date)})) || [];
 }
 
-export async function getUserProfile(): Promise<Omit<FirestoreUser, 'portfolio' | 'ibanAccounts' | 'transactions'> | null> {
+export async function getUserProfile(): Promise<UserProfile | null> {
     const userDoc = await getUserDoc();
     if (!userDoc) return null;
 
