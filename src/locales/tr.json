@@ -60,13 +60,13 @@
         "BTC": "Bitcoin",
         "PAXG": "PAX Gold",
         "XAUT": "Tether Gold",
-        "XAU_ONS": "Altın (ONS)",
-        "XAU_USD_KG": "Altın (USD/Kg)",
-        "XAU_EUR_KG": "Altın (EUR/Kg)",
-        "XAG_ONS": "Gümüş (ONS)",
-        "XAG_TL": "Gümüş (Gram/TL)",
-        "XAG_USD": "Gümüş (USD/Gram)",
-        "XAG_EUR": "Gümüş (EUR/Gram)",
+        "XAU_ONS": "Altın/ONS",
+        "XAU_USD_KG": "Altın USD/Kg",
+        "XAU_EUR_KG": "Altın EUR/Kg",
+        "XAG_ONS": "Gümüş/ONS",
+        "XAG_TL": "Gümüş/TL",
+        "XAG_USD": "Gümüş/USD",
+        "XAG_EUR": "Gümüş/EUR",
         "USD_TRY": "USD/TRY Kuru"
     },
     "portfolioSummary": {
@@ -446,5 +446,3 @@
         }
     }
 }
-
-    

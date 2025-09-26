@@ -26,7 +26,7 @@ export default function LocaleLayout({
 }) {
   return (
      <html lang={params.lang} className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
-       <body>
+       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"

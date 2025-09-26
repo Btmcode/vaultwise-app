@@ -55,7 +55,7 @@
         "withdraw": "Withdraw"
     },
     "assetNames": {
-        "XAU": "Gold (Gram)",
+        "XAU": "HAS ALTIN",
         "XAG": "Silver (Gram)",
         "BTC": "Bitcoin",
         "PAXG": "PAX Gold",
@@ -446,5 +446,3 @@
         }
     }
 }
-
-    
