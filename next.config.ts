@@ -2,15 +2,6 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  async redirects() {
-    return [
-      {
-        source: '/dashboard',
-        destination: '/tr/dashboard',
-        permanent: false,
-      },
-    ]
-  },
   async headers() {
     if (process.env.NODE_ENV === 'production') {
       return [
