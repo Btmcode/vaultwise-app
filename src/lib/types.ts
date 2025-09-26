@@ -3,6 +3,7 @@
 
 
 
+
 export type AssetSymbol = "XAU" | "XAG" | "BTC" | "PAXG" | "XAUT" | "XAU_ONS" | "XAU_USD_KG" | "XAU_EUR_KG" | "XAG_ONS" | "XAG_TL" | "XAG_USD" | "XAG_EUR" | "USD_TRY";
 
 export type Asset = {
@@ -26,7 +27,7 @@ export type Transaction = {
   assetSymbol: AssetSymbol;
   type: TransactionType;
   amountUsd: number;
-  date: Date;
+  date: string; // Changed from Date to string to ensure serializability
 };
 
 export type ChartDataPoint = {
@@ -82,3 +83,4 @@ export type FirestoreUser = {
     ibanAccounts: IbanAccount[];
     transactions: Transaction[];
 };
+

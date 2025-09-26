@@ -30,7 +30,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             date: tx.date.toDate().toISOString(),
         })) || [];
         
-        return { ...data, id: userDocSnap.id } as FirestoreUser;
+        return { ...data, id: userDocSnap.id, transactions } as FirestoreUser;
     } else {
         console.log(`User document for ${uid} not found, creating a new empty one.`);
         const newUser: Omit<FirestoreUser, 'id'> = {
@@ -100,8 +100,8 @@ export async function getPortfolioAssets(): Promise<PortfolioAsset[]> {
 
 export async function getTransactions(): Promise<Transaction[]> {
     const userDoc = await getUserDoc();
-    // Ensure the date is returned as a Date object for server-side use, or ISO string for client
-     return userDoc?.transactions.map(tx => ({...tx, date: new Date(tx.date)})) || [];
+    // userDoc already has serialized dates, so we can return it directly.
+    return userDoc?.transactions || [];
 }
 
 export async function getUserProfile(): Promise<Omit<UserProfile, 'id'> | null> {
@@ -112,3 +112,4 @@ export async function getUserProfile(): Promise<Omit<UserProfile, 'id'> | null> 
     const { id, ...profileData } = userDoc;
     return profileData as Omit<UserProfile, 'id'>;
 }
+
