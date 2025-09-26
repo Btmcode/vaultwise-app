@@ -45,7 +45,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
-  // Handle pre-selection when dialog opens
+  // When the dialog opens or the preselected asset changes, update the internal state.
   useEffect(() => {
     if (isOpen) {
       setAsset(preselectedAsset);
@@ -109,7 +109,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
       <DialogTrigger asChild>
         <Button variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-sm">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{sellDialogDict.title}</DialogTitle>
           <DialogDescription>
@@ -123,7 +123,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
             </Label>
             <Select 
               onValueChange={(value) => setAsset(value as AssetSymbol)}
-              value={asset || undefined}
+              value={asset}
               disabled={!!preselectedAsset}
             >
               <SelectTrigger id="asset">

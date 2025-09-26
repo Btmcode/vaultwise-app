@@ -44,7 +44,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
-  // Handle pre-selection when dialog opens
+  // When the dialog opens or the preselected asset changes, update the internal state.
   useEffect(() => {
     if (isOpen) {
       setAsset(preselectedAsset);
@@ -91,7 +91,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
   };
 
   const availableAssets = Object.keys(liveAssets)
-    .filter(symbol => symbol !== 'USD_TRY')
+    .filter(symbol => symbol !== 'USD_TRY' && symbol !== 'XAG_TL')
     .map(symbol => ({ symbol: symbol as AssetSymbol, name: dict.assetNames[symbol] || symbol }));
 
   return (
@@ -99,7 +99,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
       <DialogTrigger asChild>
         <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
       </DialogTrigger>
-      <DialogContent className="w-full max-w-sm">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{buyDialogDict.title}</DialogTitle>
           <DialogDescription>
@@ -113,7 +113,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
             </Label>
             <Select 
               onValueChange={(value) => setAsset(value as AssetSymbol)} 
-              value={asset || undefined}
+              value={asset}
               disabled={!!preselectedAsset}
             >
               <SelectTrigger id="asset">
@@ -148,7 +148,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
         </div>
         <DialogFooter>
           <AlertDialog open={isConfirming} onOpenChange={setIsConfirming}>
-            <Button onClick={handleBuyAttempt} className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">
+            <Button onClick={handleBuyAttempt} className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover-bg-green-600">
                 {buyDialogDict.buyButton}
             </Button>
             <AlertDialogContent>
