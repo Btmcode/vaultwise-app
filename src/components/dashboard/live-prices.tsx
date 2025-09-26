@@ -70,8 +70,7 @@ export function LivePrices({ dict }: { dict: any }) {
         locale = 'tr-TR';
     }
     
-    // Remove leading zeros for Turkish Lira formatting which seems to be the issue
-    const style = (locale === 'tr-TR' && currency === 'TRY') ? 'decimal' : 'currency';
+    const style = (currency === 'TRY') ? 'decimal' : 'currency';
     
     const formatted = new Intl.NumberFormat(locale, {
       style: style,
@@ -165,8 +164,8 @@ export function LivePrices({ dict }: { dict: any }) {
                         </div>
                     </div>
                     <div className="flex gap-2 w-full">
-                       <BuyDialog dict={dict} />
-                       <SellDialog dict={dict} />
+                       <BuyDialog dict={dict} preselectedAsset={item.symbol as any} />
+                       <SellDialog dict={dict} preselectedAsset={item.symbol as any} />
                     </div>
                 </div>
             )})}

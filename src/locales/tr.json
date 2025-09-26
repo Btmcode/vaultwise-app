@@ -73,17 +73,17 @@
         "buyDialog": {
             "title": "Varlık Satın Al",
             "shortTitle": "Al",
-            "description": "Bir varlık seçin ve ne kadar almak istediğinizi girin.",
+            "description": "Ne kadar varlık alabileceğinizi görmek için tutarı TRY cinsinden girin.",
             "assetLabel": "Varlık",
             "assetPlaceholder": "Bir varlık seçin",
-            "amountLabel": "Tutar (USD)",
-            "amountPlaceholder": "Örn: 100",
-            "approximate": "{amount} {symbol} alacaksınız",
+            "amountLabel": "Tutar (TRY)",
+            "amountPlaceholder": "Örn: 1000",
+            "approximate": "Yaklaşık {amount} {symbol} alacaksınız",
             "buyButton": "Şimdi Al",
             "toastInvalidTitle": "Geçersiz Giriş",
             "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
             "toastSuccessTitle": "Satın Alma Başarılı",
-            "toastSuccessDescription": "{amount} {symbol} başarıyla satın aldınız."
+            "toastSuccessDescription": "Yaklaşık {amount} {symbol} başarıyla satın aldınız."
         },
         "sellDialog": {
             "title": "Varlık Sat",
@@ -91,16 +91,16 @@
             "description": "Portföyünüzden bir varlık seçin ve satmak istediğiniz tutarı girin.",
             "assetLabel": "Varlık",
             "assetPlaceholder": "Satmak için bir varlık seçin",
-            "amountLabel": "Tutar (Varlık)",
+            "amountLabel": "Satılacak Tutar (Varlık birimi)",
             "amountPlaceholder": "Örn: 0.5",
-            "approximate": "${usd} alacaksınız",
+            "approximate": "Yaklaşık {try} TRY alacaksınız",
             "sellButton": "Şimdi Sat",
             "toastInvalidTitle": "Geçersiz Giriş",
             "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
             "toastInsufficientTitle": "Yetersiz Bakiye",
             "toastInsufficientDescription": "Satmak için sadece {amount} {symbol} varlığınız var.",
             "toastSuccessTitle": "Satış Başarılı",
-            "toastSuccessDescription": "{amount} {symbol} varlığını ${usd} karşılığında başarıyla sattınız. Para banka hesabınıza aktarılacaktır."
+            "toastSuccessDescription": "{amount} {symbol} varlığını yaklaşık {try} TRY karşılığında başarıyla sattınız. Para hesabınıza aktarılacaktır."
         },
         "autoSaveDialog": {
             "title": "AI ile Oto-Tasarruf",
@@ -254,18 +254,6 @@
             }
         }
     },
-     "autoSavePlans": {
-        "title": "Aktif Otomatik Tasarruf Planları",
-        "description": "Aktif otomatik tasarruf planlarınızı yönetin.",
-        "amount": "Tutar",
-        "frequency": "Aylık",
-        "stopButton": "Durdur",
-        "noPlans": "Aktif otomatik tasarruf planı yok.",
-        "toast": {
-            "title": "Plan Durduruldu",
-            "description": "Otomatik tasarruf planınız başarıyla durduruldu."
-        }
-    },
     "depositPage": {
         "title": "Para Yatır",
         "description": "VaultWise hesabınıza para ekleyin.",
@@ -334,16 +322,5 @@
                 "limit30d": "Aylık para çekme limitinizi aştınız."
             }
         }
-    },
-    "aiMarketAnalysis": {
-        "title": "Yapay Zeka Piyasa Analizi",
-        "description": "Piyasa verileri hakkında anlık bir değerlendirme alın.",
-        "buttonText": "Analiz Oluştur",
-        "buttonLoadingText": "Analiz Oluşturuluyor...",
-        "errorTitle": "Hata",
-        "noData": "Analiz edilecek piyasa verisi bulunamadı.",
-        "generationFailed": "Yapay zeka bir analiz üretemedi. Lütfen tekrar deneyin.",
-        "general": "Analiz oluşturulurken beklenmedik bir hata oluştu.",
-        "dataSourceError": "Veri kaynağı hatası nedeniyle analiz yapılamıyor."
     }
 }

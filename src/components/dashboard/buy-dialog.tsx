@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -21,26 +21,37 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { assets } from "@/lib/data";
 import { useToast } from "@/hooks/use-toast";
 import type { AssetSymbol } from "@/lib/types";
+import { useLivePrices } from "@/hooks/useLivePrices";
 
-export function BuyDialog({ dict }: { dict: any }) {
+export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAsset?: AssetSymbol }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [asset, setAsset] = useState<AssetSymbol | null>(null);
-  const [amountUsd, setAmountUsd] = useState("");
+  const [asset, setAsset] = useState<AssetSymbol | null>(preselectedAsset || null);
+  const [amountTry, setAmountTry] = useState("");
   const { toast } = useToast();
+  const { liveAssets } = useLivePrices();
 
-  const assetDetails = asset ? assets[asset] : null;
+  // Handle pre-selection when dialog opens
+  useEffect(() => {
+    if (isOpen) {
+      setAsset(preselectedAsset || null);
+      setAmountTry(""); // Reset amount when dialog is reopened
+    }
+  }, [isOpen, preselectedAsset]);
+  
+  const assetDetails = asset ? liveAssets[asset] : null;
+  const usdTryRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8; // Fallback rate
+
   const amountAsset =
-    assetDetails && amountUsd
-      ? (parseFloat(amountUsd) / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
+    assetDetails && amountTry
+      ? (parseFloat(amountTry) / usdTryRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
       : "0";
 
   const buyDialogDict = dict.portfolioSummary.buyDialog;
 
   const handleBuy = () => {
-    if (!asset || !amountUsd || parseFloat(amountUsd) <= 0) {
+    if (!asset || !amountTry || parseFloat(amountTry) <= 0) {
       toast({
         variant: "destructive",
         title: buyDialogDict.toastInvalidTitle,
@@ -54,19 +65,19 @@ export function BuyDialog({ dict }: { dict: any }) {
       description: buyDialogDict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset),
     });
     setIsOpen(false);
-    setAsset(null);
-    setAmountUsd("");
+    // State is reset via useEffect on isOpen change
   };
 
-  const assetValues = Object.values(assets);
-  
+  const availableAssets = Object.keys(liveAssets)
+    .filter(symbol => symbol !== 'USD_TRY') // Exclude the currency pair itself
+    .map(symbol => ({ symbol: symbol as AssetSymbol, name: dict.assetNames[symbol] || symbol }));
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>{buyDialogDict.title}</DialogTitle>
           <DialogDescription>
@@ -78,14 +89,18 @@ export function BuyDialog({ dict }: { dict: any }) {
             <Label htmlFor="asset">
               {buyDialogDict.assetLabel}
             </Label>
-            <Select onValueChange={(value) => setAsset(value as AssetSymbol)}>
+            <Select 
+              onValueChange={(value) => setAsset(value as AssetSymbol)} 
+              value={asset || undefined}
+              disabled={!!preselectedAsset} // Disable if preselected
+            >
               <SelectTrigger id="asset">
                 <SelectValue placeholder={buyDialogDict.assetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
-                {assetValues.map((a) => (
+                {availableAssets.map((a) => (
                   <SelectItem key={a.symbol} value={a.symbol}>
-                    {dict.assetNames[a.symbol]}
+                    {a.name}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -98,19 +113,19 @@ export function BuyDialog({ dict }: { dict: any }) {
             <Input
               id="amount"
               type="number"
-              value={amountUsd}
-              onChange={(e) => setAmountUsd(e.target.value)}
+              value={amountTry}
+              onChange={(e) => setAmountTry(e.target.value)}
               placeholder={buyDialogDict.amountPlaceholder}
             />
           </div>
-          {assetDetails && (
-            <div className="text-sm text-muted-foreground text-center col-span-4">
+          {assetDetails && amountTry && (
+            <div className="text-sm text-muted-foreground text-center">
               {buyDialogDict.approximate.replace('{amount}', amountAsset).replace('{symbol}', assetDetails.symbol)}
             </div>
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleBuy} className="bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.buyButton}</Button>
+          <Button onClick={handleBuy} className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.buyButton}</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

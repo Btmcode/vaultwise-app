@@ -73,17 +73,17 @@
         "buyDialog": {
             "title": "Buy Asset",
             "shortTitle": "Buy",
-            "description": "Select an asset and enter the amount you want to buy.",
+            "description": "Enter the amount in TRY to see how much of the selected asset you can buy.",
             "assetLabel": "Asset",
             "assetPlaceholder": "Select an asset",
-            "amountLabel": "Amount (USD)",
-            "amountPlaceholder": "e.g., 100",
-            "approximate": "You will get {amount} {symbol}",
+            "amountLabel": "Amount (TRY)",
+            "amountPlaceholder": "e.g., 1000",
+            "approximate": "You will get ~{amount} {symbol}",
             "buyButton": "Buy Now",
             "toastInvalidTitle": "Invalid Input",
             "toastInvalidDescription": "Please select an asset and enter a valid amount.",
             "toastSuccessTitle": "Purchase Successful",
-            "toastSuccessDescription": "You have successfully purchased {amount} {symbol}."
+            "toastSuccessDescription": "You have successfully purchased ~{amount} {symbol}."
         },
         "sellDialog": {
             "title": "Sell Asset",
@@ -91,16 +91,16 @@
             "description": "Select an asset from your portfolio and enter the amount you want to sell.",
             "assetLabel": "Asset",
             "assetPlaceholder": "Select an asset to sell",
-            "amountLabel": "Amount (Asset)",
+            "amountLabel": "Amount to Sell (in Asset unit)",
             "amountPlaceholder": "e.g., 0.5",
-            "approximate": "You will receive ${usd}",
+            "approximate": "You will receive ~{try} TRY",
             "sellButton": "Sell Now",
             "toastInvalidTitle": "Invalid Input",
             "toastInvalidDescription": "Please select an asset and enter a valid amount.",
             "toastInsufficientTitle": "Insufficient Balance",
             "toastInsufficientDescription": "You only have {amount} {symbol} to sell.",
             "toastSuccessTitle": "Sale Successful",
-            "toastSuccessDescription": "You have successfully sold {amount} {symbol} for ${usd}. The funds will be transferred to your bank account."
+            "toastSuccessDescription": "You have successfully sold {amount} {symbol} for ~{try} TRY. The funds will be transferred to your account."
         },
         "autoSaveDialog": {
             "title": "AI Auto-Save",
@@ -254,18 +254,6 @@
             }
         }
     },
-    "autoSavePlans": {
-        "title": "Active Auto-Save Plans",
-        "description": "Manage your active automated savings plans.",
-        "amount": "Amount",
-        "frequency": "Monthly",
-        "stopButton": "Stop",
-        "noPlans": "No active auto-save plans.",
-        "toast": {
-            "title": "Plan Stopped",
-            "description": "Your auto-save plan has been successfully stopped."
-        }
-    },
     "depositPage": {
         "title": "Deposit Funds",
         "description": "Add funds to your VaultWise account.",
@@ -334,16 +322,5 @@
                 "limit30d": "You have exceeded your monthly withdrawal limit."
             }
         }
-    },
-    "aiMarketAnalysis": {
-        "title": "AI Market Analysis",
-        "description": "Get an instant assessment of the market data.",
-        "buttonText": "Generate Analysis",
-        "buttonLoadingText": "Generating Analysis...",
-        "errorTitle": "Error",
-        "noData": "No market data available to analyze.",
-        "generationFailed": "The AI could not generate an analysis. Please try again.",
-        "general": "An unexpected error occurred while generating the analysis.",
-        "dataSourceError": "Analysis cannot be performed due to a data source error."
     }
 }
