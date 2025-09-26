@@ -25,8 +25,7 @@ export default function LocaleLayout({
   params: { lang: 'tr' | 'en' };
 }) {
   return (
-     <html lang={params.lang} className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
-       <body className={`${inter.variable} font-sans antialiased`}>
+     <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -37,6 +36,5 @@ export default function LocaleLayout({
           <Toaster />
         </ThemeProvider>
     </body>
-    </html>
   );
 }

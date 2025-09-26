@@ -18,9 +18,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${inter.variable} font-sans antialiased`} suppressHydrationWarning>
-      <body>
-        <Providers>{children}</Providers>
-      </body>
+       {/* The <body> tag is now managed in the [lang]/layout.tsx file to prevent hydration errors. */}
+      <Providers>{children}</Providers>
     </html>
   );
 }
