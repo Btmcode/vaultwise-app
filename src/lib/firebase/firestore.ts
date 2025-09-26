@@ -5,7 +5,7 @@ import { getFirestore, FieldValue } from 'firebase-admin/firestore';
 import type { IbanAccount, FirestoreUser, PortfolioAsset, Transaction, UserProfile } from '@/lib/types';
 import { v4 as uuidv4 } from 'uuid';
 import { revalidatePath } from 'next/cache';
-import { getCurrentUser } from '@/lib/firebase/server';
+import { getAdminApp, getCurrentUser } from '@/lib/firebase/server';
 
 
 // Function to get the user document from Firestore
