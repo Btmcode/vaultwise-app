@@ -1,11 +1,11 @@
+
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/chart";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { chartData } from "@/lib/data";
-import type { ChartData, ChartDataPoint } from "@/lib/types";
+import type { ChartData } from "@/lib/types";
 import { ArrowUp, ArrowDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -109,7 +109,7 @@ export function PortfolioChart({ dict }: { dict: any }) {
           className="w-full sm:w-auto"
           onValueChange={(value) => setTimeRange(value as keyof ChartData)}
         >
-          <TabsList className="grid w-full grid-cols-4 sm:w-auto sm:grid-cols-none">
+          <TabsList className="w-full sm:w-auto">
             <TabsTrigger value="live" className="text-xs px-2 sm:px-3">{dict.tabs['live']}</TabsTrigger>
             <TabsTrigger value="1d" className="text-xs px-2 sm:px-3">{dict.tabs['1d']}</TabsTrigger>
             <TabsTrigger value="1w" className="text-xs px-2 sm:px-3">{dict.tabs['1w']}</TabsTrigger>

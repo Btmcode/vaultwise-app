@@ -34,6 +34,18 @@ const parseNumber = (str: string | number): number => {
     return parseFloat(str.toString().replace(/,/g, '.'));
 };
 
+const calculateChange = (item: any): number => {
+    if (item && item.forex && item.forex.lastOpen && item.forex.lastClose) {
+        const lastOpen = parseNumber(item.forex.lastOpen);
+        const lastClose = parseNumber(item.forex.lastClose);
+        if (lastOpen > 0) {
+            return ((lastClose - lastOpen) / lastOpen) * 100;
+        }
+    }
+    // Fallback if data is missing
+    return 0;
+}
+
 export function LivePricesProvider({ children }: ProviderProps) {
     const [liveAssets, setLiveAssets] = useState<Record<string, LiveAssetData>>({});
     const [loading, setLoading] = useState<boolean>(true);
@@ -58,12 +70,10 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
-                // The API now returns "Ürün" for the symbol/name
                 const symbol = item['Ürün'];
-                // Use the correct keys from the Firestore data structure
-                const buyPrice = parseNumber(item['public_ask']);
-                const sellPrice = parseNumber(item['public_bid']);
-                const change24h = parseFloat(item['Değişim'] || '0');
+                const buyPrice = parseNumber(item['Alış']);
+                const sellPrice = parseNumber(item['Satış']);
+                const change24h = calculateChange(item);
 
                 if (symbol) {
                      processedAssets[symbol] = {
