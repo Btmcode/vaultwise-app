@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -35,8 +34,14 @@ import type { AssetSymbol } from "@/lib/types";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Loader2 } from "lucide-react";
 
-export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAsset?: AssetSymbol }) {
-  const [isOpen, setIsOpen] = useState(false);
+type BuyDialogProps = {
+  dict: any;
+  preselectedAsset?: AssetSymbol;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+};
+
+export function BuyDialog({ dict, preselectedAsset, isOpen, onOpenChange }: BuyDialogProps) {
   const [asset, setAsset] = useState<AssetSymbol | undefined>(preselectedAsset);
   const [amountTl, setAmountTl] = useState("");
   const [isConfirming, setIsConfirming] = useState(false);
@@ -44,30 +49,40 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
-  // Reset state and set preselected asset when dialog opens
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-    if (open) {
+  useEffect(() => {
+    if (isOpen) {
       setAsset(preselectedAsset);
       setAmountTl("");
       setIsConfirming(false);
       setIsLoading(false);
     }
-  };
+  }, [isOpen, preselectedAsset]);
   
   const assetDetails = asset ? liveAssets[asset] : null;
   const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8;
 
+  const numericAmountTl = parseFloat(amountTl.replace(/\./g, '').replace(',', '.')) || 0;
+
   const amountAsset =
-    assetDetails && amountTl && asset
-      ? (parseFloat(amountTl.replace(/,/g, '')) / usdTlRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
+    assetDetails && numericAmountTl > 0 && asset
+      ? (numericAmountTl / usdTlRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
       : "0";
 
   const buyDialogDict = dict.portfolioSummary.buyDialog;
   const assetName = asset ? dict.assetNames[asset] || asset : "";
 
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawValue = e.target.value.replace(/[^\d]/g, '');
+    if (rawValue) {
+        const numericValue = parseInt(rawValue, 10);
+        setAmountTl(numericValue.toLocaleString('tr-TR'));
+    } else {
+        setAmountTl('');
+    }
+  };
+
   const handleBuyAttempt = () => {
-    if (!asset || !amountTl || parseFloat(amountTl) <= 0) {
+    if (!asset || !amountTl || numericAmountTl <= 0) {
       toast({
         variant: "destructive",
         title: buyDialogDict.toastInvalidTitle,
@@ -88,7 +103,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
         });
         setIsLoading(false);
         setIsConfirming(false);
-        setIsOpen(false);
+        onOpenChange(false);
     }, 1000);
   };
 
@@ -97,10 +112,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
     .map(symbol => ({ symbol: symbol as AssetSymbol, name: dict.assetNames[symbol] || symbol }));
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{buyDialogDict.title}</DialogTitle>
@@ -116,6 +128,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
             <Select 
               onValueChange={(value) => setAsset(value as AssetSymbol)} 
               value={asset}
+              disabled={!!preselectedAsset}
             >
               <SelectTrigger id="asset">
                 <SelectValue placeholder={buyDialogDict.assetPlaceholder} />
@@ -135,13 +148,13 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
             </Label>
             <Input
               id="amount"
-              type="number"
+              type="text"
               value={amountTl}
-              onChange={(e) => setAmountTl(e.target.value)}
+              onChange={handleAmountChange}
               placeholder={buyDialogDict.amountPlaceholder}
             />
           </div>
-          {assetDetails && amountTl && (
+          {assetDetails && numericAmountTl > 0 && (
             <div className="text-sm text-muted-foreground text-center">
               {buyDialogDict.approximate.replace('{amount}', amountAsset).replace('{symbol}', asset || '')}
             </div>
@@ -160,7 +173,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
                         <div>{buyDialogDict.confirm.description}</div>
                         <div className="p-4 bg-muted rounded-md text-muted-foreground">
                             <div className="flex justify-between"><span>{buyDialogDict.confirm.asset}:</span> <span className="font-semibold text-foreground">{assetName}</span></div>
-                            <div className="flex justify-between"><span>{buyDialogDict.confirm.paymentAmount}:</span> <span className="font-semibold text-foreground">{parseFloat(amountTl).toLocaleString('tr-TR')} TL</span></div>
+                            <div className="flex justify-between"><span>{buyDialogDict.confirm.paymentAmount}:</span> <span className="font-semibold text-foreground">{numericAmountTl.toLocaleString('tr-TR')} TL</span></div>
                             <div className="flex justify-between"><span>{buyDialogDict.confirm.amountToReceive}:</span> <span className="font-semibold text-foreground">~{amountAsset} {asset}</span></div>
                         </div>
                     </div>

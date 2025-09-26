@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -36,8 +35,15 @@ import type { AssetSymbol } from "@/lib/types";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Loader2 } from "lucide-react";
 
-export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedAsset?: AssetSymbol }) {
-  const [isOpen, setIsOpen] = useState(false);
+type SellDialogProps = {
+  dict: any;
+  preselectedAsset?: AssetSymbol;
+  isOpen: boolean;
+  onOpenChange: (isOpen: boolean) => void;
+};
+
+
+export function SellDialog({ dict, preselectedAsset, isOpen, onOpenChange }: SellDialogProps) {
   const [asset, setAsset] = useState<AssetSymbol | undefined>(preselectedAsset);
   const [amountAsset, setAmountAsset] = useState("");
   const [isConfirming, setIsConfirming] = useState(false);
@@ -45,31 +51,31 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
-  // Reset state and set preselected asset when dialog opens
-  const handleOpenChange = (open: boolean) => {
-    setIsOpen(open);
-    if (open) {
+  useEffect(() => {
+    if (isOpen) {
       setAsset(preselectedAsset);
       setAmountAsset("");
       setIsConfirming(false);
       setIsLoading(false);
     }
-  };
+  }, [isOpen, preselectedAsset]);
   
   const assetDetails = asset ? liveAssets[asset] : null;
   const portfolioAsset = asset ? portfolioAssets.find(pa => pa.assetSymbol === asset) : null;
   const usdTlRate = liveAssets['USD_TRY']?.sellPrice ?? 32.8;
+
+  const numericAmountAsset = parseFloat(amountAsset.replace(/,/g, '.')) || 0;
   
   const amountTl =
-    assetDetails && amountAsset && asset
-      ? (parseFloat(amountAsset.replace(/,/g, '')) * (assetDetails.price ?? assetDetails.sellPrice ?? 1) * usdTlRate).toFixed(2)
+    assetDetails && numericAmountAsset > 0 && asset
+      ? (numericAmountAsset * (assetDetails.price ?? assetDetails.sellPrice ?? 1) * usdTlRate).toFixed(2)
       : "0";
 
   const sellDialogDict = dict.portfolioSummary.sellDialog;
   const assetName = asset ? dict.assetNames[asset] || asset : "";
 
   const handleSellAttempt = () => {
-    if (!asset || !amountAsset || parseFloat(amountAsset) <= 0) {
+    if (!asset || numericAmountAsset <= 0) {
       toast({
         variant: "destructive",
         title: sellDialogDict.toastInvalidTitle,
@@ -78,7 +84,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
       return;
     }
     
-    if (portfolioAsset && parseFloat(amountAsset) > portfolioAsset.amount) {
+    if (portfolioAsset && numericAmountAsset > portfolioAsset.amount) {
       toast({
         variant: "destructive",
         title: sellDialogDict.toastInsufficientTitle,
@@ -100,17 +106,14 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
         });
         setIsLoading(false);
         setIsConfirming(false);
-        setIsOpen(false);
+        onOpenChange(false);
     }, 1000);
   };
 
   const availableToSell = portfolioAssets.filter(pa => liveAssets[pa.assetSymbol]);
 
   return (
-    <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
-      </DialogTrigger>
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{sellDialogDict.title}</DialogTitle>
@@ -126,6 +129,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
             <Select 
               onValueChange={(value) => setAsset(value as AssetSymbol)}
               value={asset}
+              disabled={!!preselectedAsset}
             >
               <SelectTrigger id="asset">
                 <SelectValue placeholder={sellDialogDict.assetPlaceholder} />
@@ -152,7 +156,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
               max={portfolioAsset?.amount}
             />
           </div>
-          {assetDetails && amountAsset && (
+          {assetDetails && numericAmountAsset > 0 && (
             <div className="text-sm text-muted-foreground text-center">
               {sellDialogDict.approximate.replace('{tl}', parseFloat(amountTl).toLocaleString('tr-TR'))}
             </div>

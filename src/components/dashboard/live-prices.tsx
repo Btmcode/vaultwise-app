@@ -1,5 +1,6 @@
 
 'use client';
+import { useState } from 'react';
 import { useLivePrices } from '@/hooks/useLivePrices';
 import { Button } from '@/components/ui/button';
 import { RefreshCw } from 'lucide-react';
@@ -8,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { GoldIcon, SilverIcon, InfoIcon, GoldBarIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
 import { BuyDialog } from './buy-dialog';
 import { SellDialog } from './sell-dialog';
+import type { AssetSymbol } from '@/lib/types';
 
 const assetOrder = [
   "XAU",
@@ -44,6 +46,22 @@ export function LivePrices({ dict }: { dict: any }) {
   const { liveAssets, loading, error, lastUpdated, refreshData } = useLivePrices();
   const assetNames = dict.assetNames;
   const livePricesDict = dict.livePrices;
+
+  const [dialogState, setDialogState] = useState<{
+    type: 'buy' | 'sell';
+    asset: AssetSymbol;
+    isOpen: boolean;
+  } | null>(null);
+
+  const openDialog = (type: 'buy' | 'sell', asset: AssetSymbol) => {
+    setDialogState({ type, asset, isOpen: true });
+  };
+
+  const closeDialog = () => {
+    if (dialogState) {
+      setDialogState({ ...dialogState, isOpen: false });
+    }
+  };
 
   const getChangeBgColor = (change: number) => {
     if (change > 0) return 'border-green-500/50';
@@ -167,14 +185,30 @@ export function LivePrices({ dict }: { dict: any }) {
                         </div>
                     </div>
                     <div className="flex gap-2 w-full">
-                       <BuyDialog dict={dict} preselectedAsset={item.symbol as any} />
-                       <SellDialog dict={dict} preselectedAsset={item.symbol as any} />
+                       <Button onClick={() => openDialog('buy', item.symbol as AssetSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialog.shortTitle}</Button>
+                       <Button onClick={() => openDialog('sell', item.symbol as AssetSymbol)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialog.shortTitle}</Button>
                     </div>
                 </div>
             )})}
         </div>
+
+        {dialogState && dialogState.type === 'buy' && (
+            <BuyDialog
+                dict={dict}
+                preselectedAsset={dialogState.asset}
+                isOpen={dialogState.isOpen}
+                onOpenChange={closeDialog}
+            />
+        )}
+
+        {dialogState && dialogState.type === 'sell' && (
+            <SellDialog
+                dict={dict}
+                preselectedAsset={dialogState.asset}
+                isOpen={dialogState.isOpen}
+                onOpenChange={closeDialog}
+            />
+        )}
     </div>
   );
 }
-
-    

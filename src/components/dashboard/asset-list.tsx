@@ -8,6 +8,7 @@ import {
   CardDescription,
   CardContent,
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { portfolioAssets } from "@/lib/data";
 import { GoldIcon, SilverIcon, BtcIcon, PaxgIcon, XautIcon } from "@/components/icons";
 import type { AssetSymbol } from "@/lib/types";
@@ -53,10 +54,29 @@ const HIDE_THRESHOLD = 1.00; // Hide assets with value less than $1.00
 export function AssetList({ dict }: { dict: any }) {
   const assetListDict = dict.assetList;
   const assetNames = dict.assetNames;
+  const buyDialogDict = dict.portfolioSummary.buyDialog;
+  const sellDialogDict = dict.portfolioSummary.sellDialog;
 
   const [searchTerm, setSearchTerm] = useState('');
   const [hideLowBalances, setHideLowBalances] = useState(false);
   const { liveAssets, loading } = useLivePrices();
+  
+  const [dialogState, setDialogState] = useState<{
+    type: 'buy' | 'sell';
+    asset: AssetSymbol;
+    isOpen: boolean;
+  } | null>(null);
+
+  const openDialog = (type: 'buy' | 'sell', asset: AssetSymbol) => {
+    setDialogState({ type, asset, isOpen: true });
+  };
+
+  const closeDialog = () => {
+    if (dialogState) {
+      setDialogState({ ...dialogState, isOpen: false });
+    }
+  };
+
 
   const enrichedAssets = useMemo(() => {
     return portfolioAssets.map(pa => {
@@ -138,8 +158,8 @@ export function AssetList({ dict }: { dict: any }) {
                   </div>
                 </div>
                 <div className="flex gap-2 justify-end w-full md:w-auto">
-                   <BuyDialog dict={dict} />
-                   <SellDialog dict={dict} />
+                   <Button onClick={() => openDialog('buy', pa.assetSymbol)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
+                   <Button onClick={() => openDialog('sell', pa.assetSymbol)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialogDict.shortTitle}</Button>
                 </div>
               </div>
               {index < filteredAssets.length - 1 && <Separator className="mt-6" />}
@@ -152,6 +172,24 @@ export function AssetList({ dict }: { dict: any }) {
             </div>
         )}
       </CardContent>
+
+      {dialogState && dialogState.type === 'buy' && (
+          <BuyDialog
+              dict={dict}
+              preselectedAsset={dialogState.asset}
+              isOpen={dialogState.isOpen}
+              onOpenChange={closeDialog}
+          />
+      )}
+
+      {dialogState && dialogState.type === 'sell' && (
+          <SellDialog
+              dict={dict}
+              preselectedAsset={dialogState.asset}
+              isOpen={dialogState.isOpen}
+              onOpenChange={closeDialog}
+          />
+      )}
     </>
   );
 }

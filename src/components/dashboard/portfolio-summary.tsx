@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { portfolioAssets, chartData } from "@/lib/data";
 import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { BuyDialog } from "./buy-dialog";
 import { SellDialog } from "./sell-dialog";
 import { useLivePrices } from "@/hooks/useLivePrices";
@@ -19,6 +20,8 @@ import { cn } from "@/lib/utils";
 
 export function PortfolioSummary({ dict }: { dict: any }) {
   const { liveAssets, loading } = useLivePrices();
+  const [isBuyOpen, setIsBuyOpen] = useState(false);
+  const [isSellOpen, setIsSellOpen] = useState(false);
 
   const { totalValue, percentageChange } = useMemo(() => {
     if (loading || Object.keys(liveAssets).length === 0) {
@@ -45,6 +48,9 @@ export function PortfolioSummary({ dict }: { dict: any }) {
     style: "currency",
     currency: "USD",
   }).format(totalValue);
+  
+  const buyDialog = dict.portfolioSummary.buyDialog;
+  const sellDialog = dict.portfolioSummary.sellDialog;
 
   return (
     <Card className="flex flex-col">
@@ -73,8 +79,11 @@ export function PortfolioSummary({ dict }: { dict: any }) {
         )}
       </CardContent>
       <CardFooter className="flex gap-2">
-        <BuyDialog dict={dict} />
-        <SellDialog dict={dict} />
+        <Button onClick={() => setIsBuyOpen(true)} size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialog.shortTitle}</Button>
+        <Button onClick={() => setIsSellOpen(true)} variant="secondary" size="sm" className="w-full hover:bg-red-500 hover:text-white dark:hover:bg-red-600">{sellDialog.shortTitle}</Button>
+        
+        <BuyDialog dict={dict} isOpen={isBuyOpen} onOpenChange={setIsBuyOpen} />
+        <SellDialog dict={dict} isOpen={isSellOpen} onOpenChange={setIsSellOpen} />
       </CardFooter>
     </Card>
   );
