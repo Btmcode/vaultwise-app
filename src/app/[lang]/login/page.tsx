@@ -22,12 +22,17 @@ export default function LoginPage() {
   const router = useRouter();
   const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
-  const loginDict = dict.loginPage;
+
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  if (!dict) {
+    return null; // or a loading skeleton
+  }
+  const loginDict = dict.loginPage;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();

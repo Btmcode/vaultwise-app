@@ -21,12 +21,18 @@ export default function SignupPage() {
   const router = useRouter();
   const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
-  const signupDict = dict.signupPage;
+  
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+
+  if (!dict) {
+    return null; // or a loading skeleton
+  }
+  const signupDict = dict.signupPage;
+
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();

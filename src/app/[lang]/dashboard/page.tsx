@@ -45,6 +45,10 @@ export default function DashboardPage() {
     }
     fetchData();
   }, [dict.portfolioChart.noData]);
+  
+  if (!dict) {
+    return null; // or a loading skeleton
+  }
 
   if (loading) {
     return (

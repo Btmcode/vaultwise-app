@@ -20,11 +20,15 @@ export default function ForgotPasswordPage() {
   const params = useParams();
   const lang = params.lang as 'tr' | 'en';
   const dict = getDictionary(lang);
-  const forgotPasswordDict = dict.forgotPasswordPage;
-
+  
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  
+  if (!dict) {
+    return null; // or a loading skeleton
+  }
+  const forgotPasswordDict = dict.forgotPasswordPage;
 
   const handlePasswordReset = async (e: React.FormEvent) => {
     e.preventDefault();
