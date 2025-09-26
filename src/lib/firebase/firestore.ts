@@ -48,7 +48,14 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             ...tx,
             date: tx.date.toDate().toISOString(),
         })) || [];
-        return { ...data, transactions, id: userDocSnap.id } as FirestoreUser;
+        
+        // Sıfırlama mantığı: Portföydeki tüm varlıkların miktarını 0 yap
+        const resetPortfolio = data.portfolio.map((asset: PortfolioAsset) => ({
+            ...asset,
+            amount: 0,
+        }));
+
+        return { ...data, portfolio: resetPortfolio, transactions, id: userDocSnap.id } as FirestoreUser;
     } else {
         console.log(`User document for ${userId} not found, creating one.`);
         const newUser: Omit<FirestoreUser, 'id'> = {
