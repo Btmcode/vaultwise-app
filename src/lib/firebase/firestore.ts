@@ -30,7 +30,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             date: tx.date.toDate().toISOString(),
         })) || [];
         
-        return { ...data, transactions, id: userDocSnap.id } as FirestoreUser;
+        return { ...data, id: userDocSnap.id } as FirestoreUser;
     } else {
         console.log(`User document for ${uid} not found, creating a new empty one.`);
         const newUser: Omit<FirestoreUser, 'id'> = {
@@ -43,14 +43,8 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
         };
         await userDocRef.set(newUser);
         
-        const createdUserDoc = await userDocRef.get();
-        const createdData = createdUserDoc.data() as any;
-         const transactions = createdData.transactions?.map((tx: any) => ({
-            ...tx,
-            date: tx.date.toDate().toISOString(),
-        })) || [];
-
-        return { ...createdData, transactions, id: createdUserDoc.id } as FirestoreUser;
+        // Return the newly created (and empty) user data
+        return { ...newUser, id: uid } as FirestoreUser;
     }
 }
 
