@@ -7,7 +7,7 @@ type LiveAssetData = {
     buyPrice: number;
     sellPrice: number;
     change24h: number;
-    price?: number; // for crypto
+    price?: number; // for crypto if ever needed
 };
 
 interface LivePricesContextType {
@@ -28,23 +28,13 @@ const parsePrice = (price: string | number | undefined): number => {
     if (price === null || price === undefined) return 0;
     if (typeof price === 'number') return price;
     if (typeof price === 'string') {
-        const num = parseFloat(price.replace(/,/g, ''));
+        // Handles both "1.234,56" and "1234.56"
+        const num = parseFloat(price.replace(/\./g, '').replace(',', '.'));
         return isNaN(num) ? 0 : num;
     }
     return 0;
 };
 
-const calculateChange = (forex: any): number => {
-    if (forex && forex.lastOpen && forex.lastClose) {
-        const lastOpen = parsePrice(forex.lastOpen);
-        const lastClose = parsePrice(forex.lastClose);
-        if (lastOpen > 0) {
-            const change = ((lastClose - lastOpen) / lastOpen) * 100;
-            return isFinite(change) ? change : 0;
-        }
-    }
-    return 0;
-}
 
 export function LivePricesProvider({ children }: ProviderProps) {
     const [liveAssets, setLiveAssets] = useState<Record<string, LiveAssetData>>({});
@@ -70,14 +60,13 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
-                const symbol = item.name;
+                // The symbol is the 'Urun' field from Firestore
+                const symbol = item.Urun; 
                 if (!symbol) return;
                 
-                const group = item.forex?.groups?.[0];
-                
-                const buyPrice = group ? parsePrice(group.bid) : parsePrice(item.public_bid);
-                const sellPrice = group ? parsePrice(group.ask) : parsePrice(item.public_ask);
-                const change24h = calculateChange(item.forex);
+                const buyPrice = parsePrice(item.Alis);
+                const sellPrice = parsePrice(item.Satis);
+                const change24h = parsePrice(item.DegisimYuzde);
 
                 processedAssets[symbol] = {
                     symbol: symbol,
