@@ -82,12 +82,12 @@ export function SellDialog({ dict }: { dict: any }) {
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="asset" className="text-right">
+          <div className="grid gap-2">
+            <Label htmlFor="asset">
               {sellDialogDict.assetLabel}
             </Label>
             <Select onValueChange={(value) => setAsset(value as AssetSymbol)}>
-              <SelectTrigger id="asset" className="col-span-3">
+              <SelectTrigger id="asset">
                 <SelectValue placeholder={sellDialogDict.assetPlaceholder} />
               </SelectTrigger>
               <SelectContent>
@@ -99,8 +99,8 @@ export function SellDialog({ dict }: { dict: any }) {
               </SelectContent>
             </Select>
           </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="amount" className="text-right">
+          <div className="grid gap-2">
+            <Label htmlFor="amount">
               {sellDialogDict.amountLabel}
             </Label>
             <Input
@@ -108,7 +108,6 @@ export function SellDialog({ dict }: { dict: any }) {
               type="number"
               value={amountAsset}
               onChange={(e) => setAmountAsset(e.target.value)}
-              className="col-span-3"
               placeholder={sellDialogDict.amountPlaceholder}
             />
           </div>
