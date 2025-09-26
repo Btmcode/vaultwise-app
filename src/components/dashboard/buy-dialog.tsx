@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -58,7 +57,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
   const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8;
 
   const amountAsset =
-    assetDetails && amountTl
+    assetDetails && amountTl && asset
       ? (parseFloat(amountTl.replace(/,/g, '')) / usdTlRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
       : "0";
 
@@ -157,7 +156,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
                 <AlertDialogTitle>{buyDialogDict.confirm.title}</AlertDialogTitle>
                 <AlertDialogDescription>
                     <div className="space-y-2">
-                        <p>{buyDialogDict.confirm.description}</p>
+                        <div>{buyDialogDict.confirm.description}</div>
                         <div className="p-4 bg-muted rounded-md text-muted-foreground">
                             <div className="flex justify-between"><span>{buyDialogDict.confirm.asset}:</span> <span className="font-semibold text-foreground">{assetName}</span></div>
                             <div className="flex justify-between"><span>{buyDialogDict.confirm.paymentAmount}:</span> <span className="font-semibold text-foreground">{parseFloat(amountTl).toLocaleString('tr-TR')} TL</span></div>

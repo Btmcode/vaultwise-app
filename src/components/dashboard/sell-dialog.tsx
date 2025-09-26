@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -60,7 +59,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
   const usdTlRate = liveAssets['USD_TRY']?.sellPrice ?? 32.8;
   
   const amountTl =
-    assetDetails && amountAsset
+    assetDetails && amountAsset && asset
       ? (parseFloat(amountAsset.replace(/,/g, '')) * (assetDetails.price ?? assetDetails.sellPrice ?? 1) * usdTlRate).toFixed(2)
       : "0";
 
@@ -123,7 +122,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
               {sellDialogDict.assetLabel}
             </Label>
             <Select 
-              onValuechainge={(value) => setAsset(value as AssetSymbol)}
+              onValueChange={(value) => setAsset(value as AssetSymbol)}
               value={asset || undefined}
               disabled={!!preselectedAsset}
             >
@@ -168,7 +167,7 @@ export function SellDialog({ dict, preselectedAsset }: { dict: any, preselectedA
                 <AlertDialogTitle>{sellDialogDict.confirm.title}</AlertDialogTitle>
                 <AlertDialogDescription>
                     <div className="space-y-2">
-                        <p>{sellDialogDict.confirm.descriptionSell}</p>
+                        <div>{sellDialogDict.confirm.descriptionSell}</div>
                         <div className="p-4 bg-muted rounded-md text-muted-foreground">
                             <div className="flex justify-between"><span>{sellDialogDict.confirm.assetToSell}:</span> <span className="font-semibold text-foreground">{assetName}</span></div>
                             <div className="flex justify-between"><span>{sellDialogDict.confirm.amountToSell}:</span> <span className="font-semibold text-foreground">{amountAsset} {asset}</span></div>
