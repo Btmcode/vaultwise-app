@@ -80,6 +80,15 @@
             "amountPlaceholder": "Örn: 1000",
             "approximate": "Yaklaşık {amount} {symbol} alacaksınız",
             "buyButton": "Şimdi Al",
+            "confirm": {
+                "title": "Alış İşlemini Onayla",
+                "description": "Lütfen sipariş detaylarınızı aşağıda kontrol edin ve alımı onaylayın.",
+                "asset": "Varlık",
+                "paymentAmount": "Ödenecek Tutar",
+                "amountToReceive": "Alınacak Miktar",
+                "cancel": "İptal",
+                "confirm": "Onayla"
+            },
             "toastInvalidTitle": "Geçersiz Giriş",
             "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
             "toastSuccessTitle": "Satın Alma Başarılı",
@@ -95,6 +104,15 @@
             "amountPlaceholder": "Örn: 0.5",
             "approximate": "Yaklaşık {tl} TL alacaksınız",
             "sellButton": "Şimdi Sat",
+            "confirm": {
+                "title": "Satış İşlemini Onayla",
+                "descriptionSell": "Lütfen satış detaylarınızı aşağıda kontrol edin ve onaylayın.",
+                "assetToSell": "Satılacak Varlık",
+                "amountToSell": "Satılacak Miktar",
+                "amountToReceive": "Tahmini Gelir",
+                "cancel": "İptal",
+                "confirm": "Onayla"
+            },
             "toastInvalidTitle": "Geçersiz Giriş",
             "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
             "toastInsufficientTitle": "Yetersiz Bakiye",

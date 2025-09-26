@@ -11,6 +11,16 @@ import {
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -24,33 +34,38 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import type { AssetSymbol } from "@/lib/types";
 import { useLivePrices } from "@/hooks/useLivePrices";
+import { Loader2 } from "lucide-react";
 
 export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAsset?: AssetSymbol }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [asset, setAsset] = useState<AssetSymbol | null>(preselectedAsset || null);
+  const [asset, setAsset] = useState<AssetSymbol | undefined>(preselectedAsset);
   const [amountTl, setAmountTl] = useState("");
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const { liveAssets } = useLivePrices();
 
   // Handle pre-selection when dialog opens
   useEffect(() => {
     if (isOpen) {
-      setAsset(preselectedAsset || null);
-      setAmountTl(""); // Reset amount when dialog is reopened
+      setAsset(preselectedAsset);
+      setAmountTl("");
+      setIsConfirming(false);
     }
   }, [isOpen, preselectedAsset]);
   
   const assetDetails = asset ? liveAssets[asset] : null;
-  const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8; // Fallback rate
+  const usdTlRate = liveAssets['USD_TRY']?.buyPrice ?? 32.8;
 
   const amountAsset =
     assetDetails && amountTl
-      ? (parseFloat(amountTl) / usdTlRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
+      ? (parseFloat(amountTl.replace(/,/g, '')) / usdTlRate / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
       : "0";
 
   const buyDialogDict = dict.portfolioSummary.buyDialog;
+  const assetName = asset ? dict.assetNames[asset] || asset : "";
 
-  const handleBuy = () => {
+  const handleBuyAttempt = () => {
     if (!asset || !amountTl || parseFloat(amountTl) <= 0) {
       toast({
         variant: "destructive",
@@ -59,17 +74,25 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
       });
       return;
     }
-    
-    toast({
-      title: buyDialogDict.toastSuccessTitle,
-      description: buyDialogDict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset),
-    });
-    setIsOpen(false);
-    // State is reset via useEffect on isOpen change
+    setIsConfirming(true);
+  };
+
+  const handleConfirmBuy = () => {
+    setIsLoading(true);
+    // Simulate API call
+    setTimeout(() => {
+        toast({
+        title: buyDialogDict.toastSuccessTitle,
+        description: buyDialogDict.toastSuccessDescription.replace('{amount}', amountAsset).replace('{symbol}', asset || ''),
+        });
+        setIsLoading(false);
+        setIsConfirming(false);
+        setIsOpen(false);
+    }, 1000);
   };
 
   const availableAssets = Object.keys(liveAssets)
-    .filter(symbol => symbol !== 'USD_TRY') // Exclude the currency pair itself
+    .filter(symbol => symbol !== 'USD_TRY')
     .map(symbol => ({ symbol: symbol as AssetSymbol, name: dict.assetNames[symbol] || symbol }));
 
   return (
@@ -77,7 +100,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
       <DialogTrigger asChild>
         <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="w-full max-w-sm">
         <DialogHeader>
           <DialogTitle>{buyDialogDict.title}</DialogTitle>
           <DialogDescription>
@@ -92,7 +115,7 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
             <Select 
               onValueChange={(value) => setAsset(value as AssetSymbol)} 
               value={asset || undefined}
-              disabled={!!preselectedAsset} // Disable if preselected
+              disabled={!!preselectedAsset}
             >
               <SelectTrigger id="asset">
                 <SelectValue placeholder={buyDialogDict.assetPlaceholder} />
@@ -125,11 +148,35 @@ export function BuyDialog({ dict, preselectedAsset }: { dict: any; preselectedAs
           )}
         </div>
         <DialogFooter>
-          <Button onClick={handleBuy} className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.buyButton}</Button>
+          <AlertDialog open={isConfirming} onOpenChange={setIsConfirming}>
+            <Button onClick={handleBuyAttempt} className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">
+                {buyDialogDict.buyButton}
+            </Button>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>{buyDialogDict.confirm.title}</AlertDialogTitle>
+                <AlertDialogDescription>
+                    <div className="space-y-2">
+                        <p>{buyDialogDict.confirm.description}</p>
+                        <div className="p-4 bg-muted rounded-md text-muted-foreground">
+                            <div className="flex justify-between"><span>{buyDialogDict.confirm.asset}:</span> <span className="font-semibold text-foreground">{assetName}</span></div>
+                            <div className="flex justify-between"><span>{buyDialogDict.confirm.paymentAmount}:</span> <span className="font-semibold text-foreground">{parseFloat(amountTl).toLocaleString('tr-TR')} TL</span></div>
+                            <div className="flex justify-between"><span>{buyDialogDict.confirm.amountToReceive}:</span> <span className="font-semibold text-foreground">~{amountAsset} {asset}</span></div>
+                        </div>
+                    </div>
+                </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                <AlertDialogCancel>{buyDialogDict.confirm.cancel}</AlertDialogCancel>
+                <AlertDialogAction onClick={handleConfirmBuy} disabled={isLoading}>
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {buyDialogDict.confirm.confirm}
+                </AlertDialogAction>
+                </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
 }
-
-    

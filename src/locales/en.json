@@ -80,6 +80,15 @@
             "amountPlaceholder": "e.g., 1000",
             "approximate": "You will get ~{amount} {symbol}",
             "buyButton": "Buy Now",
+            "confirm": {
+                "title": "Confirm Purchase",
+                "description": "Please review your order details below and confirm the purchase.",
+                "asset": "Asset",
+                "paymentAmount": "Payment Amount",
+                "amountToReceive": "Amount to Receive",
+                "cancel": "Cancel",
+                "confirm": "Confirm"
+            },
             "toastInvalidTitle": "Invalid Input",
             "toastInvalidDescription": "Please select an asset and enter a valid amount.",
             "toastSuccessTitle": "Purchase Successful",
@@ -95,6 +104,15 @@
             "amountPlaceholder": "e.g., 0.5",
             "approximate": "You will receive ~{tl} TL",
             "sellButton": "Sell Now",
+            "confirm": {
+                "title": "Confirm Sale",
+                "descriptionSell": "Please review your sale details below and confirm.",
+                "assetToSell": "Asset to Sell",
+                "amountToSell": "Amount to Sell",
+                "amountToReceive": "Estimated Proceeds",
+                "cancel": "Cancel",
+                "confirm": "Confirm"
+            },
             "toastInvalidTitle": "Invalid Input",
             "toastInvalidDescription": "Please select an asset and enter a valid amount.",
             "toastInsufficientTitle": "Insufficient Balance",
