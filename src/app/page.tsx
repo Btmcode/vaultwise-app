@@ -2,9 +2,16 @@
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PriceTicker } from '@/components/landing/price-ticker';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const HeroScene = dynamic(() => import('@/components/landing/hero-scene'), {
+  ssr: false,
+  loading: () => <Skeleton className="absolute inset-0 w-full h-full bg-background" />,
+});
 
 export default function LandingPage() {
   return (
@@ -25,8 +32,9 @@ export default function LandingPage() {
       </header>
       
       <main className="flex-1">
-        <section className="relative w-full flex flex-col items-center justify-center text-center py-24 sm:py-32 lg:py-40 px-4">
-          <div className="z-10 flex flex-col items-center">
+        <section className="relative w-full h-dvh flex flex-col items-center justify-center text-center px-4">
+          <HeroScene />
+          <div className="relative z-10 flex flex-col items-center">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground">
               Gerçek Değer, Gerçek Güvence.
             </h1>
