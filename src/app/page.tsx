@@ -6,17 +6,16 @@ import dynamic from 'next/dynamic';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PriceTicker } from '@/components/landing/price-ticker';
-import { Skeleton } from '@/components/ui/skeleton';
 
 const HeroScene = dynamic(() => import('@/components/landing/hero-scene'), {
   ssr: false,
-  loading: () => <Skeleton className="absolute inset-0 w-full h-full bg-background" />,
 });
 
 export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground overflow-x-hidden">
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/80 backdrop-blur-sm">
+      <HeroScene />
+      <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-transparent backdrop-blur-sm">
         <Link href="/" className="flex items-center justify-center" prefetch={false}>
           <VaultWiseLogo className="h-8 w-8 text-primary" />
           <span className="ml-2 text-xl font-bold">VaultWise</span>
@@ -31,14 +30,13 @@ export default function LandingPage() {
         </nav>
       </header>
       
-      <main className="flex-1">
-        <section className="relative w-full h-dvh flex flex-col items-center justify-center text-center px-4">
-          <HeroScene />
-          <div className="relative z-10 flex flex-col items-center">
+      <main className="flex-1 flex flex-col justify-center">
+        <section className="w-full pt-24 pb-12 md:pt-32 md:pb-16 lg:pt-40 lg:pb-20 text-center relative z-10">
+          <div className="container mx-auto px-4">
             <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground">
               Gerçek Değer, Gerçek Güvence.
             </h1>
-            <p className="max-w-[700px] text-muted-foreground md:text-xl mt-6">
+            <p className="max-w-[700px] mx-auto text-muted-foreground md:text-xl mt-6">
               VaultWise, dijital varlıklarınızı dahi sigortalı, fiziksel kasalarda koruyan tek platform. Geleceğin birikim standardı ile tanışın.
             </p>
             <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8">
@@ -51,12 +49,12 @@ export default function LandingPage() {
             </div>
           </div>
         </section>
-
-        <section className="w-full h-20 flex items-center">
+        
+        <section className="w-full py-12">
             <PriceTicker />
         </section>
 
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-background">
+        <section id="features" className="w-full py-12 md:py-16 lg:py-20 bg-background relative z-10">
             <div className="container mx-auto px-4 md:px-6">
                  <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
                     <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Neden VaultWise?</div>
@@ -88,7 +86,7 @@ export default function LandingPage() {
             </div>
         </section>
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
+      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t relative z-10 bg-background">
         <p className="text-xs text-muted-foreground">&copy; 2024 VaultWise. Tüm hakları saklıdır.</p>
         <nav className="sm:ml-auto flex gap-4 sm:gap-6">
           <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
