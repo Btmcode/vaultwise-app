@@ -14,8 +14,7 @@ async function getCurrentUserId(): Promise<string | null> {
   try {
     const adminApp = getAdminApp();
     const auth = getAuth(adminApp);
-    const sessionCookie = await cookies().get('firebase-session');
-    const sessionCookieValue = sessionCookie?.value;
+    const sessionCookieValue = cookies().get('firebase-session')?.value;
     
     if (!sessionCookieValue) {
       console.log("No session cookie found.");
@@ -51,7 +50,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
             date: tx.date.toDate().toISOString(),
         })) || [];
         
-        // Sıfırlama mantığı: Portföydeki tüm varlıkların miktarını 0 yap
+        // Reset portfolio amount to 0 for display purposes as requested
         const resetPortfolio = data.portfolio.map((asset: PortfolioAsset) => ({
             ...asset,
             amount: 0,

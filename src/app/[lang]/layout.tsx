@@ -14,7 +14,7 @@ type LayoutProps = {
 
 // This function is async and correctly awaits params
 export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en' } }): Promise<Metadata> {
-  const dict = await getDictionary(params.lang);
+  const dict = getDictionary(params.lang);
   return {
     title: dict.metadata.title,
     description: dict.metadata.description,

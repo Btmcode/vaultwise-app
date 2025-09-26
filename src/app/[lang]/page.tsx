@@ -1,7 +1,6 @@
 
 import { Header } from "@/components/header";
 import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
-import { PortfolioChart } from "@/components/dashboard/portfolio-chart";
 import { AssetList } from "@/components/dashboard/asset-list";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { Suspense } from "react";
@@ -57,7 +56,13 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
             <div className="grid gap-4 md:gap-8">
                     <Card className="xl:col-span-2">
                     <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                        <PortfolioChart dict={dict.portfolioChart} />
+                        {/* PortfolioChart is removed as it was showing dummy data */}
+                        <CardHeader>
+                            <CardTitle>{dict.portfolioChart.title}</CardTitle>
+                            <CardContent className="h-[250px] w-full flex items-center justify-center text-muted-foreground">
+                                {dict.portfolioChart.description}
+                            </CardContent>
+                        </CardHeader>
                     </Suspense>
                 </Card>
             </div>
