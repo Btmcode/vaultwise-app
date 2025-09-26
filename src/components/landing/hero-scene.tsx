@@ -1,99 +1,63 @@
 'use client';
 
-import Link from 'next/link';
-import { VaultWiseLogo } from '@/components/icons';
-import { Button } from '@/components/ui/button';
-import { PriceTicker } from '@/components/landing/price-ticker';
+import { useRef, useMemo } from 'react';
+import { Canvas, useFrame } from '@react-three/fiber';
+import { PerspectiveCamera, SpotLight } from '@react-three/drei';
+import * as THREE from 'three';
+import { gsap } from 'gsap';
 
-export default function LandingPage() {
+function Crystal() {
+  const meshRef = useRef<THREE.Mesh>(null!);
+
+  const vertices = useMemo(() => {
+    const icoGeometry = new THREE.IcosahedronGeometry(1.5, 0);
+    return icoGeometry.attributes.position.clone();
+  }, []);
+
+  useFrame((state) => {
+    const time = state.clock.getElapsedTime();
+    if (meshRef.current) {
+        meshRef.current.rotation.y = time / 5;
+        meshRef.current.rotation.x = THREE.MathUtils.lerp(meshRef.current.rotation.x, Math.sin(time / 2) / 4, 0.1);
+    }
+
+    const { mouse } = state;
+    const targetRotation = Math.sin(mouse.x * Math.PI) * 0.2;
+    gsap.to(meshRef.current.rotation, {
+      y: meshRef.current.rotation.y + targetRotation * 0.05,
+      duration: 1,
+      ease: 'power2.out',
+    });
+  });
+
   return (
-    <div className="flex flex-col min-h-dvh bg-background text-foreground overflow-x-hidden">
-      <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/80 backdrop-blur-sm">
-        <Link href="/" className="flex items-center justify-center" prefetch={false}>
-          <VaultWiseLogo className="h-8 w-8 text-primary" />
-          <span className="ml-2 text-xl font-bold">VaultWise</span>
-        </Link>
-        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
-          <Button variant="ghost" asChild>
-            <Link href="/tr/login">Giriş Yap</Link>
-          </Button>
-          <Button asChild>
-            <Link href="/tr/signup">Hesap Oluştur</Link>
-          </Button>
-        </nav>
-      </header>
-      
-      <main className="flex-1">
-        <section className="relative w-full h-[calc(100dvh-80px)] flex flex-col items-center justify-center text-center p-4 overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full filter blur-3xl animate-blob opacity-70 animation-delay-2000"></div>
-                <div className="absolute -bottom-40 -left-20 w-96 h-96 bg-accent/20 rounded-full filter blur-3xl animate-blob opacity-70 animation-delay-4000"></div>
-            </div>
-            <div className="relative z-10 flex flex-col items-center">
-                 <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground animate-fade-in-up">
-                  Gerçek Değer, Gerçek Güvence.
-                </h1>
-                <p className="max-w-[700px] text-muted-foreground md:text-xl mt-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  VaultWise, dijital varlıklarınızı dahi sigortalı, fiziksel kasalarda koruyan tek platform. Geleceğin birikim standardı ile tanışın.
-                </p>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                  <Button size="lg" asChild>
-                    <Link href="/tr/signup">Biriktirmeye Başla</Link>
-                  </Button>
-                   <Button size="lg" variant="outline" asChild>
-                    <Link href="#features">Keşfet</Link>
-                  </Button>
-                </div>
-            </div>
-        </section>
+    <mesh ref={meshRef}>
+      <icosahedronGeometry args={[1.5, 0]} />
+      <meshStandardMaterial color={'hsl(var(--primary))'} roughness={0.1} metalness={0.9} />
+    </mesh>
+  );
+}
 
-        <section className="w-full h-20 flex items-center">
-            <PriceTicker />
-        </section>
-
-        <section id="features" className="w-full py-12 md:py-24 lg:py-32 bg-background">
-            <div className="container mx-auto px-4 md:px-6">
-                 <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-                    <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">Neden VaultWise?</div>
-                    <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Geleceğin Birikimi. Bugün.</h2>
-                    <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                        Platformumuz, en üst düzey güvenliği modern finansal araçlarla birleştirerek size varlıklarınız üzerinde tam kontrol ve iç rahatlığı sunar.
-                    </p>
-                </div>
-                <div className="mx-auto grid max-w-5xl items-center gap-6 lg:grid-cols-3 lg:gap-12">
-                    <div className="flex flex-col justify-center space-y-4 p-6 rounded-lg border bg-card hover:-translate-y-2 hover:shadow-xl transition-transform duration-300">
-                        <h3 className="text-xl font-bold">Fiziksel Güvence</h3>
-                        <p className="text-muted-foreground">
-                            Tüm dijital ve değerli metal varlıklarınız, sigortalı ve denetlenen yüksek güvenlikli kasalarda fiziksel olarak korunur.
-                        </p>
-                    </div>
-                     <div className="flex flex-col justify-center space-y-4 p-6 rounded-lg border bg-card hover:-translate-y-2 hover:shadow-xl transition-transform duration-300">
-                        <h3 className="text-xl font-bold">Yapay Zeka Destekli Portföy</h3>
-                        <p className="text-muted-foreground">
-                            Akıllı algoritmalarımız, piyasa verilerini analiz ederek size özel birikim stratejileri ve fırsatlar sunar.
-                        </p>
-                    </div>
-                     <div className="flex flex-col justify-center space-y-4 p-6 rounded-lg border bg-card hover:-translate-y-2 hover:shadow-xl transition-transform duration-300">
-                        <h3 className="text-xl font-bold">Anında Alım-Satım</h3>
-                        <p className="text-muted-foreground">
-                           Varlıklarınızı 7/24 anında alın, satın veya dönüştürün. Piyasaya her zaman bir adım önde olun.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-      </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 VaultWise. Tüm hakları saklıdır.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-            Kullanım Koşulları
-          </Link>
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-            Gizlilik Politikası
-          </Link>
-        </nav>
-      </footer>
-    </div>
+export default function HeroScene() {
+  return (
+    <Canvas>
+      <ambientLight intensity={0.5} />
+      <SpotLight
+        position={[10, 10, 10]}
+        angle={0.3}
+        penumbra={1}
+        intensity={2}
+        castShadow
+      />
+       <SpotLight
+        position={[-10, -10, -5]}
+        angle={0.5}
+        penumbra={1}
+        intensity={1.5}
+        color="hsl(var(--accent))"
+      />
+      <PerspectiveCamera makeDefault position={[0, 0, 5]} fov={75} />
+      <Crystal />
+    </Canvas>
   );
 }

@@ -1,10 +1,16 @@
-
 'use client';
 
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PriceTicker } from '@/components/landing/price-ticker';
+import { Skeleton } from '@/components/ui/skeleton';
+
+const HeroScene = dynamic(() => import('@/components/landing/hero-scene'), {
+  ssr: false,
+  loading: () => <Skeleton className="absolute inset-0 w-full h-full bg-background" />,
+});
 
 export default function LandingPage() {
   return (
@@ -25,27 +31,24 @@ export default function LandingPage() {
       </header>
       
       <main className="flex-1">
-        <section className="relative w-full h-[calc(100dvh-80px)] flex flex-col items-center justify-center text-center p-4 overflow-hidden">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <div className="absolute -top-40 -right-40 w-96 h-96 bg-primary/20 rounded-full filter blur-3xl animate-blob opacity-70 animation-delay-2000"></div>
-                <div className="absolute -bottom-40 -left-20 w-96 h-96 bg-accent/20 rounded-full filter blur-3xl animate-blob opacity-70 animation-delay-4000"></div>
+        <section className="relative w-full h-dvh flex flex-col items-center justify-center p-4">
+          <HeroScene />
+          <div className="relative z-10 flex flex-col items-center text-center">
+            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground animate-fade-in-up">
+              Gerçek Değer, Gerçek Güvence.
+            </h1>
+            <p className="max-w-[700px] text-muted-foreground md:text-xl mt-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+              VaultWise, dijital varlıklarınızı dahi sigortalı, fiziksel kasalarda koruyan tek platform. Geleceğin birikim standardı ile tanışın.
+            </p>
+            <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              <Button size="lg" asChild>
+                <Link href="/tr/signup">Biriktirmeye Başla</Link>
+              </Button>
+              <Button size="lg" variant="outline" asChild>
+                <Link href="#features">Keşfet</Link>
+              </Button>
             </div>
-            <div className="relative z-10 flex flex-col items-center">
-                 <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground animate-fade-in-up">
-                  Gerçek Değer, Gerçek Güvence.
-                </h1>
-                <p className="max-w-[700px] text-muted-foreground md:text-xl mt-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  VaultWise, dijital varlıklarınızı dahi sigortalı, fiziksel kasalarda koruyan tek platform. Geleceğin birikim standardı ile tanışın.
-                </p>
-                <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center mt-8 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                  <Button size="lg" asChild>
-                    <Link href="/tr/signup">Biriktirmeye Başla</Link>
-                  </Button>
-                   <Button size="lg" variant="outline" asChild>
-                    <Link href="#features">Keşfet</Link>
-                  </Button>
-                </div>
-            </div>
+          </div>
         </section>
 
         <section className="w-full h-20 flex items-center">
