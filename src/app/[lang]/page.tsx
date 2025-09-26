@@ -11,6 +11,7 @@ import { getDictionary } from "../dictionaries";
 import { AssetDistribution } from "@/components/dashboard/asset-distribution";
 import { LivePrices } from "@/components/dashboard/live-prices";
 import { LivePricesProvider } from "@/hooks/useLivePrices";
+import { AIMarketAnalysis } from "@/components/dashboard/ai-market-analysis";
 
 
 export default async function Home({ params: { lang } }: { params: { lang: 'tr' | 'en' } }) {
@@ -25,12 +26,15 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
               <LivePrices dict={dict} />
             </Suspense>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-2 xl:grid-cols-2">
+          <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             <Suspense fallback={<Skeleton className="h-48" />}>
               <PortfolioSummary dict={dict} />
             </Suspense>
             <Suspense fallback={<Skeleton className="h-48" />}>
               <AssetDistribution dict={dict} />
+            </Suspense>
+             <Suspense fallback={<Skeleton className="h-48" />}>
+                <AIMarketAnalysis lang={lang} dict={dict.livePrices} />
             </Suspense>
           </div>
           <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
