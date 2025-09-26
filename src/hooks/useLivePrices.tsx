@@ -48,8 +48,9 @@ export function LivePricesProvider({ children }: ProviderProps) {
             setError(null);
         }
         
+        // The main precious metals data now comes from fetch-precious-metals
         const results = await Promise.allSettled([
-            fetchData('/api/prices/metals'),
+            fetchData('/api/fetch-precious-metals'),
             fetchData('/api/prices/crypto'),
         ]);
 
