@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Card,
   CardContent,
@@ -23,15 +23,19 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
   const { liveAssets, loading } = useLivePrices();
   const [buyDialogOpen, setBuyDialogOpen] = useState(false);
   const [sellDialogOpen, setSellDialogOpen] = useState(false);
+  
+  // State to hold the displayed value, preventing the $0.00 flicker
+  const [displayedValue, setDisplayedValue] = useState<number | null>(null);
 
   const { totalValue, percentageChange } = useMemo(() => {
-    if (loading || Object.keys(liveAssets).length === 0 || !portfolioAssets) {
+    if (Object.keys(liveAssets).length === 0 || !portfolioAssets) {
       return { totalValue: 0, percentageChange: 0 };
     }
 
     const currentValue = portfolioAssets.reduce((sum, asset) => {
       const liveAsset = liveAssets[asset.assetSymbol];
-      const price = liveAsset?.price ?? liveAsset?.buyPrice ?? 0;
+      // Use sellPrice for a more conservative valuation, fallback to buyPrice or price
+      const price = liveAsset?.sellPrice ?? liveAsset?.buyPrice ?? liveAsset?.price ?? 0;
       return sum + asset.amount * price;
     }, 0);
     
@@ -40,15 +44,28 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
     if (weekData.length === 0) return { totalValue: currentValue, percentageChange: 0 };
 
     const startValue = weekData[0].value;
-    const change = ((currentValue - startValue) / startValue) * 100;
+    // Prevent division by zero if startValue is 0
+    const change = startValue !== 0 ? ((currentValue - startValue) / startValue) * 100 : 0;
 
     return { totalValue: currentValue, percentageChange: change };
-  }, [liveAssets, loading, portfolioAssets]);
+  }, [liveAssets, portfolioAssets]);
+
+  // Effect to update the displayed value only when not loading and totalValue is calculated
+  useEffect(() => {
+    if (!loading && totalValue > 0) {
+      setDisplayedValue(totalValue);
+    }
+    // Set initial value on first load
+    if (displayedValue === null && totalValue > 0) {
+        setDisplayedValue(totalValue);
+    }
+  }, [loading, totalValue, displayedValue]);
+
 
   const formattedValue = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
-  }).format(totalValue);
+  }).format(displayedValue ?? 0); // Use displayedValue, fallback to 0
   
   const buyDialogDict = dict.portfolioSummary.buyDialog;
   const sellDialogDict = dict.portfolioSummary.sellDialog;
@@ -59,12 +76,12 @@ export function PortfolioSummary({ dict, portfolioAssets }: { dict: any, portfol
         <CardTitle>{dict.portfolioSummary.totalBalance}</CardTitle>
       </CardHeader>
       <CardContent className="flex-grow">
-        {loading ? (
+        {(loading && displayedValue === null) ? (
            <Skeleton className="h-12 w-3/4" />
         ) : (
           <div className="text-4xl font-bold">{formattedValue}</div>
         )}
-        {loading ? (
+        {(loading && displayedValue === null) ? (
              <Skeleton className="h-4 w-1/4 mt-2" />
         ) : (
             <p className={cn(
