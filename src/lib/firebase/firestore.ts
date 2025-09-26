@@ -14,7 +14,6 @@ async function getCurrentUserId(): Promise<string | null> {
   try {
     const adminApp = getAdminApp();
     const auth = getAuth(adminApp);
-    // CRITICAL FIX: The cookies() function is async and must be awaited.
     const sessionCookieValue = (await cookies().get('firebase-session'))?.value;
     if (!sessionCookieValue) {
       console.log("No session cookie found.");
@@ -52,7 +51,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
         return { ...data, transactions, id: userDocSnap.id } as FirestoreUser;
     } else {
         console.log(`User document for ${userId} not found, creating one.`);
-        const newUser: Omit<FirestoreUser, 'transactions' | 'id'> & { transactions: any[] } = {
+        const newUser: Omit<FirestoreUser, 'id'> = {
             name: 'Ali Veli',
             email: 'ali.veli@example.com',
             availableBalanceTRY: 150000.75,
@@ -62,10 +61,7 @@ export async function getUserDoc(): Promise<FirestoreUser | null> {
                 { assetSymbol: "PAXG", amount: 0 },
             ],
             ibanAccounts: [],
-            transactions: [
-                { id: "1", assetSymbol: "BTC", type: "Buy", amountUsd: 681.23, date: new Date("2024-05-20T10:00:00Z") },
-                { id: "2", assetSymbol: "XAU", type: "Auto-Save", amountUsd: 100, date: new Date("2024-05-18T09:00:00Z") },
-            ],
+            transactions: [],
         };
         await userDocRef.set(newUser);
         
