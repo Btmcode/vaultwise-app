@@ -11,12 +11,12 @@ const features = [
   {
     icon: <Warehouse className="h-8 w-8 text-primary" />,
     title: "Fiziksel Güvence",
-    description: "Tüm dijital ve metal varlıklarınız, sigortalı, yüksek güvenlikli fiziksel kasalarda korunur. Yatırımlarınız sadece dijital değil, aynı zamanda gerçektir.",
+    description: "Tüm dijital ve metal varlıklarınız, sigortalı, yüksek güvenlikli fiziksel kasalarda korunur. Birikimleriniz sadece dijital değil, aynı zamanda gerçektir.",
   },
   {
     icon: <Cpu className="h-8 w-8 text-primary" />,
     title: "Yapay Zeka Destekli Stratejiler",
-    description: "Piyasa verilerini analiz eden ve size özel tasarruf ve yatırım önerileri sunan akıllı algoritmalarımızla birikimlerinizi optimize edin.",
+    description: "Piyasa verilerini analiz eden ve size özel birikim ve varlık önerileri sunan akıllı algoritmalarımızla birikimlerinizi optimize edin.",
   },
   {
     icon: <Gem className="h-8 w-8 text-primary" />,
@@ -52,11 +52,11 @@ export default function LandingPage() {
                   Varlıklarınız. Hem Dijital. <br/> Hem Fiziksel Güvencede.
                 </h1>
                 <p className="max-w-[700px] text-muted-foreground md:text-xl animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                  VaultWise ile dijital varlıkların potansiyelini, değerli metallerin sarsılmaz güveniyle birleştirin. Tüm yatırımlarınız sigortalı ve fiziksel kasalarda korunur.
+                  VaultWise ile dijital varlıkların potansiyelini, değerli metallerin sarsılmaz güveniyle birleştirin. Tüm birikimleriniz sigortalı ve fiziksel kasalarda korunur.
                 </p>
                 <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center lg:justify-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
                   <Button size="lg" asChild>
-                    <Link href="/tr/signup">Yatırıma Başla</Link>
+                    <Link href="/tr/signup">Biriktirmeye Başla</Link>
                   </Button>
                   <Button size="lg" variant="secondary" asChild>
                       <Link href="#features">Keşfet</Link>
@@ -76,7 +76,7 @@ export default function LandingPage() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
               <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm font-medium">Neden VaultWise?</div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Geleceğin Portföyü. Bugün.</h2>
+              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Geleceğin Birikimi. Bugün.</h2>
               <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed">
                 Finansal hedeflerinize ulaşmanız için tasarlanmış, teknoloji ve güvenin mükemmel birleşimi.
               </p>
