@@ -1,5 +1,5 @@
+
 "use client";
-import { useState } from "react";
 import { useLivePrices } from "@/hooks/useLivePrices";
 import { Button } from "@/components/ui/button";
 import { RefreshCw } from "lucide-react";
@@ -10,51 +10,33 @@ import {
   SilverIcon,
   InfoIcon,
   GoldBarIcon,
-  BtcIcon,
-  PaxgIcon,
-  XautIcon,
-  UsdTryIcon,
 } from "@/components/icons";
-import { BuyDialog } from "./buy-dialog";
-import { SellDialog } from "./sell-dialog";
 import type { AssetSymbol } from "@/lib/types";
 
-// User-defined list of assets to display
-const assetOrder: AssetSymbol[] = [
-  "XAU",
-  "XAU_ONS",
-  "XAU_USD_KG",
-  "XAU_EUR_KG",
-  "XAG_ONS",
-  "XAG_TL",
-  "XAG_USD",
-  "XAG_EUR",
-  // "BTC",  // Keep these commented out unless needed
-  // "PAXG",
-  // "XAUT",
-  // "USD_TRY"
+const assetOrder: string[] = [
+  "HAS ALTIN",
+  "Altın/ONS",
+  "USD/KG",
+  "EUR/KG",
+  "GÜM/ONS",
+  "GÜM/TL",
+  "GÜM/USD",
+  "GÜM/EUR",
 ];
 
 const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
-  BTC: BtcIcon,
-  XAU: GoldBarIcon, // Has Altın için Külçe ikonu
-  PAXG: PaxgIcon,
-  XAUT: XautIcon,
-  XAU_ONS: GoldIcon, // Diğer altınlar için Para ikonu
-  XAU_USD_KG: GoldIcon,
-  XAU_EUR_KG: GoldIcon,
-  XAG: SilverIcon,
-  XAG_ONS: SilverIcon,
-  XAG_TL: SilverIcon,
-  XAG_USD: SilverIcon,
-  XAG_EUR: SilverIcon,
-  USD_TRY: UsdTryIcon,
+  "HAS ALTIN": GoldBarIcon,
+  "Altın/ONS": GoldIcon,
+  "USD/KG": GoldIcon,
+  "EUR/KG": GoldIcon,
+  "GÜM/ONS": SilverIcon,
+  "GÜM/TL": SilverIcon,
+  "GÜM/USD": SilverIcon,
+  "GÜM/EUR": SilverIcon,
 };
 
 export function LivePrices({ dict }: { dict: any }) {
-  const { liveAssets, loading, error, lastUpdated, refreshData } =
-    useLivePrices();
-  const assetNames = dict.assetNames;
+  const { liveAssets, loading, error, lastUpdated, refreshData } = useLivePrices();
   const livePricesDict = dict.livePrices;
 
   const getChangeBgColor = (change: number) => {
@@ -72,11 +54,7 @@ export function LivePrices({ dict }: { dict: any }) {
     if (symbol.includes("EUR")) {
       currency = "EUR";
       locale = "de-DE";
-    } else if (
-      symbol.includes("TL") ||
-      symbol === "USD_TRY" ||
-      symbol === "XAU"
-    ) {
+    } else if (symbol.includes("TL") || symbol === "HAS ALTIN") {
       currency = "TRY";
       locale = "tr-TR";
     }
@@ -86,7 +64,7 @@ export function LivePrices({ dict }: { dict: any }) {
       maximumFractionDigits: symbol === "USD_TRY" ? 4 : 2,
       minimumFractionDigits: 2,
     }).format(price);
-
+    
     if (currency === "TRY") {
       return `${formatted} TL`;
     }
@@ -102,8 +80,10 @@ export function LivePrices({ dict }: { dict: any }) {
   const getIcon = (symbol: string) => {
     return iconMap[symbol] || InfoIcon;
   };
+  
+  const displayAssets = assetOrder.map(symbol => liveAssets[symbol]).filter(Boolean);
 
-  if (loading && Object.keys(liveAssets).length === 0) {
+  if (loading && displayAssets.length === 0) {
     return (
       <div className="space-y-4">
         <div className="flex justify-end items-center">
@@ -157,15 +137,14 @@ export function LivePrices({ dict }: { dict: any }) {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-        {assetOrder.map((symbol) => {
-          const item = liveAssets[symbol];
+        {displayAssets.map((item) => {
           if (!item) return null;
 
+          const symbol = item.symbol;
           const Icon = getIcon(symbol);
-          // Adapt to Firestore data structure
           const buyPrice = item.buyPrice;
           const sellPrice = item.sellPrice;
-          const change24h = item.change24h || 0; // Use pre-calculated change if available
+          const change24h = item.change24h || 0;
 
           return (
             <div
@@ -180,12 +159,12 @@ export function LivePrices({ dict }: { dict: any }) {
                   <Icon
                     className={cn(
                       "h-10 w-10 flex-shrink-0",
-                      symbol === "XAU" && "h-12 w-12"
+                      symbol === "HAS ALTIN" && "h-12 w-12"
                     )}
                   />
                   <div className="flex flex-col justify-center">
                     <p className="font-semibold text-base whitespace-nowrap">
-                      {assetNames[symbol] || symbol}
+                      {symbol}
                     </p>
                     <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
                       <span className="font-medium whitespace-nowrap">
@@ -213,7 +192,6 @@ export function LivePrices({ dict }: { dict: any }) {
                   {change24h.toFixed(2)}%
                 </div>
               </div>
-              {/* Buy/Sell buttons can be added back later if needed */}
             </div>
           );
         })}

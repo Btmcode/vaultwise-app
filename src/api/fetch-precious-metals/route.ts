@@ -17,10 +17,7 @@ export async function GET() {
 
         const data: any[] = [];
         snapshot.forEach(doc => {
-            // Add the document ID (which is the product name) to the data object
-            // to match the expected format of the frontend.
             data.push({
-                "Ürün": doc.id,
                 ...doc.data()
             });
         });
