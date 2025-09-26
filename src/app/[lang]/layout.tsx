@@ -1,4 +1,3 @@
-
 import type { Metadata } from 'next';
 import { getDictionary } from '@/app/dictionaries';
 import '../globals.css';
@@ -15,7 +14,7 @@ type LayoutProps = {
 
 // This function is async and correctly awaits params
 export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en' } }): Promise<Metadata> {
-  const dict = getDictionary(params.lang);
+  const dict = await getDictionary(params.lang);
   return {
     title: dict.metadata.title,
     description: dict.metadata.description,
@@ -25,10 +24,13 @@ export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en'
 // The RootLayout itself is also async
 export default async function RootLayout({
   children,
-  params: { lang }, // Destructure lang directly from params
-}: LayoutProps) {
+  params,
+}: {
+  children: React.ReactNode;
+  params: { lang: 'tr' | 'en' };
+}) {
   return (
-    <html lang={lang} suppressHydrationWarning>
+    <html lang={params.lang} suppressHydrationWarning>
       <head />
       <body className={`${inter.className} antialiased`}>
         <ThemeProvider

@@ -80,8 +80,8 @@ export function AssetDistribution({ dict, portfolioAssets }: { dict: any, portfo
         <CardTitle>{assetDistributionDict.title}</CardTitle>
         <CardDescription>{assetDistributionDict.description}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="w-full h-40">
+      <CardContent className="h-40">
+        <div className="w-full h-full">
             <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                 <Tooltip content={<CustomTooltip dict={dict} />} />

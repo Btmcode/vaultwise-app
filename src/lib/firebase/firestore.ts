@@ -14,7 +14,9 @@ async function getCurrentUserId(): Promise<string | null> {
   try {
     const adminApp = getAdminApp();
     const auth = getAuth(adminApp);
-    const sessionCookieValue = (await cookies().get('firebase-session'))?.value;
+    const sessionCookie = await cookies().get('firebase-session');
+    const sessionCookieValue = sessionCookie?.value;
+    
     if (!sessionCookieValue) {
       console.log("No session cookie found.");
       return null;
