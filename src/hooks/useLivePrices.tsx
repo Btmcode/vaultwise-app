@@ -72,9 +72,9 @@ export function LivePricesProvider({ children }: ProviderProps) {
             data.forEach((item: any) => {
                 const symbol = item['Ürün'];
                 // Use public_bid and public_ask for buy and sell prices respectively
-                const buyPrice = parseNumber(item['public_bid']);
-                const sellPrice = parseNumber(item['public_ask']);
-                const change24h = calculateChange(item);
+                const buyPrice = parseNumber(item['Alış']);
+                const sellPrice = parseNumber(item['Satış']);
+                const change24h = item['Değişim'];
 
                 if (symbol) {
                      processedAssets[symbol] = {
