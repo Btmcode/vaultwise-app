@@ -28,18 +28,17 @@ export function LivePricesProvider({ children }: ProviderProps) {
         try {
             const response = await fetch(url, { cache: 'no-store'});
             if (!response.ok) {
-                throw new Error(`Request to ${url} failed with status ${response.status}`);
+                const errorBody = await response.json().catch(() => ({error: `Request to ${url} failed with status ${response.status}`}));
+                throw new Error(errorBody.error);
             }
             const data = await response.json();
-            if (data && Object.keys(data).length > 0) {
-                 // On success, clear any previous error and update assets
+            if (data && Object.keys(data).length > 0 && !data.error) {
                 return data;
             } else {
-                 throw new Error(`Received empty data from ${url}`);
+                 throw new Error(data.error || `Received empty or invalid data from ${url}`);
             }
         } catch (e: any) {
             console.error(`Data fetching error from ${url}:`, e.message);
-            // Re-throw to be caught by Promise.allSettled and handled there
             throw e;
         }
     }, []);
@@ -55,25 +54,34 @@ export function LivePricesProvider({ children }: ProviderProps) {
             fetchData('/api/prices/crypto'),
         ]);
 
-        const successfulResults = results
-            .filter(res => res.status === 'fulfilled')
-            .map(res => (res as PromiseFulfilledResult<any>).value);
+        let combinedAssets: Record<string, LiveAssetData> = {};
+        let fetchSucceeded = false;
+        let partialFailure = false;
+        let errorMessages: string[] = [];
 
-        if(successfulResults.length > 0){
-            const combinedAssets = successfulResults.reduce((acc, current) => ({ ...acc, ...current }), {});
+        results.forEach((res, index) => {
+             const apiName = index === 0 ? 'Precious Metals' : 'Crypto';
+            if (res.status === 'fulfilled') {
+                combinedAssets = { ...combinedAssets, ...res.value };
+                fetchSucceeded = true;
+            } else {
+                partialFailure = true;
+                errorMessages.push(`${apiName} API: ${res.reason?.message || 'Unknown error'}`);
+                console.error(`${apiName} fetch failed:`, res.reason);
+            }
+        });
+
+        if(fetchSucceeded){
             setLiveAssets(prev => ({...prev, ...combinedAssets}));
             setLastUpdated(new Date().toLocaleString());
-            setError(null); // Clear previous errors on partial success
+            if (partialFailure) {
+                 setError(`Failed to load some price data. Displayed data might be incomplete. Errors: ${errorMessages.join(', ')}`);
+            } else {
+                 setError(null);
+            }
+        } else {
+            setError(`Failed to load all price data. Errors: ${errorMessages.join(', ')}`);
         }
-
-        const allFailed = results.every(res => res.status === 'rejected');
-        if (allFailed) {
-            const firstError = results[0] as PromiseRejectedResult;
-            setError(`Failed to load all price data. Please try again. (${firstError.reason?.message})`);
-        } else if (results.some(res => res.status === 'rejected')) {
-             setError(`Failed to load some price data. Displayed data might be incomplete.`);
-        }
-
 
         if (isInitial) {
             setLoading(false);
@@ -86,9 +94,10 @@ export function LivePricesProvider({ children }: ProviderProps) {
     }, [fetchAllData]);
 
     const refreshData = useCallback(() => {
+        if (loading) return;
         setLoading(true);
         fetchAllData(false).finally(() => setLoading(false));
-    }, [fetchAllData]);
+    }, [fetchAllData, loading]);
 
     const value = { liveAssets, loading, error, lastUpdated, refreshData };
 
