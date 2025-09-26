@@ -36,12 +36,18 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
 
   const handleLogout = async () => {
     try {
-      // Clear the client-side token only if auth is initialized
-      if (auth) {
-        await signOut(auth);
+      // Try to sign out from the client first, but don't let it block the process
+      // if it fails (e.g., user was deleted from Firebase console).
+      try {
+        if (auth) {
+          await signOut(auth);
+        }
+      } catch (clientError) {
+        console.warn("Client-side signOut failed (user might be deleted):", clientError);
       }
       
-      // Call the API route to clear the server-side session cookie
+      // ALWAYS call the API route to clear the server-side session cookie.
+      // This is the most important step.
       const response = await fetch('/api/auth/logout', { method: 'POST' });
 
       if (!response.ok) {
@@ -54,7 +60,6 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
       });
 
       // Use window.location.href for a full page refresh to ensure middleware catches the new cookie state.
-      // This is the most reliable way to handle redirection after setting an httpOnly cookie.
       window.location.href = `/${currentLang}/login`;
 
     } catch (error) {
