@@ -45,16 +45,17 @@ export function GoldIcon(props: SVGProps<SVGSVGElement>) {
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
     >
-      <defs>
-        <radialGradient id="gold-gradient-coin" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <stop offset="0%" stopColor="#FFFDE4" />
-          <stop offset="60%" stopColor="#FFD700" />
-          <stop offset="95%" stopColor="#FDB813" />
-          <stop offset="100%" stopColor="#B8860B" />
-        </radialGradient>
-      </defs>
-      <circle cx="24" cy="24" r="24" fill="url(#gold-gradient-coin)" />
-      <circle cx="24" cy="24" r="21" fill="none" stroke="#B8860B" strokeWidth="1.5" strokeOpacity="0.7" />
+        <defs>
+            <radialGradient id="gold-coin-gradient-premium" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+                <stop offset="0%" stopColor="#FFF7B2" />
+                <stop offset="50%" stopColor="#FFD700" />
+                <stop offset="95%" stopColor="#B8860B" />
+                <stop offset="100%" stopColor="#A4770A" />
+            </radialGradient>
+        </defs>
+        <circle cx="24" cy="24" r="24" fill="url(#gold-coin-gradient-premium)" />
+        <circle cx="24" cy="24" r="22" fill="none" stroke="#B8860B" strokeWidth="1" strokeOpacity="0.5" />
+        <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#B8860B" opacity="0.75">$</text>
     </svg>
   );
 }
@@ -67,23 +68,34 @@ export function GoldBarIcon(props: SVGProps<SVGSVGElement>) {
         xmlns="http://www.w3.org/2000/svg" 
         fill="none">
         <defs>
-            <linearGradient id="gold-bar-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#FFDF00" />
+            <linearGradient id="gold-bar-gradient-premium" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#FFD700" />
+                <stop offset="50%" stopColor="#FFAA00" />
                 <stop offset="100%" stopColor="#B8860B" />
             </linearGradient>
+            <filter id="gold-bar-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="1.5" result="blur"/>
+                <feOffset in="blur" dx="1" dy="2" result="offsetBlur"/>
+                <feMerge>
+                    <feMergeNode in="offsetBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
         </defs>
-        <path 
-            d="M6 16 L10 12 L38 12 L42 16 L42 36 L38 40 L10 40 L6 36 Z" 
-            fill="url(#gold-bar-gradient)" 
-            stroke="#A07000" 
-            strokeWidth="1"
-        />
-        <path 
-            d="M10 12 L38 12 L42 16 L38 20 L10 20 L6 16 Z" 
-            fill="#FFE766"
-            opacity="0.5"
-        />
-        <text x="24" y="30" textAnchor="middle" fontSize="8" fill="#A07000" fontWeight="bold">999.9</text>
+        <g filter="url(#gold-bar-shadow)">
+            <path 
+                d="M4 14 L12 10 L44 10 L44 34 L36 38 L4 38 Z" 
+                fill="url(#gold-bar-gradient-premium)" 
+                stroke="#A07000" 
+                strokeWidth="0.5"
+            />
+            <path 
+                d="M12 10 L44 10 L36 18 L4 18 L12 14 Z"
+                fill="#FFEB99"
+                opacity="0.6"
+            />
+            <text x="24" y="28" textAnchor="middle" fontSize="8" fill="#A07000" fontWeight="bold">999.9</text>
+        </g>
     </svg>
   );
 }
@@ -98,15 +110,16 @@ export function SilverIcon(props: SVGProps<SVGSVGElement>) {
       fill="none"
     >
       <defs>
-         <radialGradient id="silver-gradient-coin" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
-          <stop offset="0%" stopColor="#FFFFFF" />
-          <stop offset="70%" stopColor="#E0E0E0" />
-          <stop offset="95%" stopColor="#B0B0B0" />
-          <stop offset="100%" stopColor="#8E8E8E" />
+         <radialGradient id="silver-coin-gradient-premium" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+            <stop offset="0%" stopColor="#F5F5F5" />
+            <stop offset="60%" stopColor="#C0C0C0" />
+            <stop offset="95%" stopColor="#A9A9A9" />
+            <stop offset="100%" stopColor="#808080" />
         </radialGradient>
       </defs>
-      <circle cx="24" cy="24" r="24" fill="url(#silver-gradient-coin)" />
-      <circle cx="24" cy="24" r="21" fill="none" stroke="#8E8E8E" strokeWidth="1.5" strokeOpacity="0.7" />
+      <circle cx="24" cy="24" r="24" fill="url(#silver-coin-gradient-premium)" />
+      <circle cx="24" cy="24" r="22" fill="none" stroke="#808080" strokeWidth="1" strokeOpacity="0.6" />
+      <text x="50%" y="58%" dominantBaseline="middle" textAnchor="middle" fontSize="18" fontWeight="bold" fill="#696969" opacity="0.75">$</text>
     </svg>
   );
 }
@@ -119,9 +132,26 @@ export function PaxgIcon(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 48 48"
       fill="none"
     >
-      <circle cx="24" cy="24" r="24" fill="#F0B90B" />
-      <path d="M24 35c6.075 0 11-4.925 11-11S30.075 13 24 13 13 17.925 13 24s4.925 11 11 11z" fill="#fff" />
-      <path d="M24 38.682c8.113 0 14.682-6.57 14.682-14.682S32.113 9.318 24 9.318 9.318 15.887 9.318 24 15.887 38.682 24 38.682zM24 34c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10z" fill="#F0B90B" />
+        <defs>
+            <radialGradient id="paxg-gradient" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+                <stop offset="0%" stopColor="#F8E087" />
+                <stop offset="100%" stopColor="#D4A12A" />
+            </radialGradient>
+            <filter id="paxg-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+                <feOffset in="blur" dx="1" dy="1" result="offsetBlur"/>
+                <feMerge>
+                    <feMergeNode in="offsetBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+        <g filter="url(#paxg-shadow)">
+            <circle cx="24" cy="24" r="22" fill="url(#paxg-gradient)" />
+            <path d="M24 35c6.075 0 11-4.925 11-11S30.075 13 24 13 13 17.925 13 24s4.925 11 11 11z" fill="#fff" fillOpacity="0.9" />
+            <path d="M24 38c7.732 0 14-6.268 14-14S31.732 10 24 10 10 16.268 10 24s6.268 14 14 14zm0-34C12.954 4 4 12.954 4 24s8.954 20 20 20 20-8.954 20-20S35.046 4 24 4z" fill="none" />
+            <path d="M24 34c5.523 0 10-4.477 10-10s-4.477-10-10-10-10 4.477-10 10 4.477 10 10 10z" fill="#D4A12A" />
+        </g>
     </svg>
   );
 }
@@ -135,9 +165,25 @@ export function XautIcon(props: SVGProps<SVGSVGElement>) {
       viewBox="0 0 48 48"
       fill="none"
     >
-      <circle cx="24" cy="24" r="24" fill="#F0B90B" />
-      <path d="M24.23 35.83c-6.23 0-11.28-5.06-11.28-11.28 0-6.23 5.05-11.28 11.28-11.28s11.28 5.05 11.28 11.28c0 6.22-5.05 11.28-11.28 11.28zm0-20.5c-5.09 0-9.22 4.13-9.22 9.22s4.13 9.22 9.22 9.22 9.22-4.13 9.22-9.22-9.22-4.13-9.22-9.22z" fillOpacity=".4" fill="#fff" />
-      <path d="M16.92 13.33h14.62v3.7H16.92v-3.7zm7.3 22.5V17.03h-3.7v18.8h3.7z" fill="#fff" />
+        <defs>
+            <linearGradient id="xaut-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#F9D423" />
+                <stop offset="100%" stopColor="#E6A914" />
+            </linearGradient>
+            <filter id="xaut-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+                <feOffset in="blur" dx="1" dy="1" result="offsetBlur"/>
+                <feMerge>
+                    <feMergeNode in="offsetBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+        <g filter="url(#xaut-shadow)">
+            <circle cx="24" cy="24" r="22" fill="url(#xaut-gradient)" />
+            <path d="M24.23 35.83c-6.23 0-11.28-5.06-11.28-11.28 0-6.23 5.05-11.28 11.28-11.28s11.28 5.05 11.28 11.28c0 6.22-5.05 11.28-11.28 11.28zm0-20.5c-5.09 0-9.22 4.13-9.22 9.22s4.13 9.22 9.22 9.22 9.22-4.13 9.22-9.22-9.22-4.13-9.22-9.22z" fillOpacity=".2" fill="#000" />
+            <path d="M16.92 13.33h14.62v3.7H16.92v-3.7zm7.3 22.5V17.03h-3.7v18.8h3.7z" fill="#fff" />
+        </g>
     </svg>
   );
 }
@@ -199,4 +245,5 @@ export const BankIcon = (props: SVGProps<SVGSVGElement>) => (
     
 
     
+
 

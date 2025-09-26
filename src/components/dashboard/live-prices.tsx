@@ -105,7 +105,7 @@ export function LivePrices({ dict }: { dict: any }) {
                 </Button>
             </div>
             <div className="text-red-500 p-4 rounded-md bg-red-50 border border-red-200">
-                {livePricesDict.error}: {error.message}
+                {livePricesDict.error}: {error}
             </div>
         </div>
     );
