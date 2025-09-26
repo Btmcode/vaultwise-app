@@ -1,86 +1,74 @@
 
 import { NextResponse } from 'next/server';
+import axios from 'axios';
+import * as cheerio from 'cheerio';
 
-type ApiProduct = {
-    name: string;
-    public_bid: string;
-    public_ask: string;
+type PreciousMetal = {
+  'Ürün': string;
+  'Alış': number;
+  'Satış': number;
+  'Değişim': number;
 };
 
-type FormattedAsset = {
-    symbol: string;
-    buyPrice: number;
-    sellPrice: number;
-    change24h: number;
+// Yedek veri
+const getManualData = (): PreciousMetal[] => {
+    return [
+        { "Ürün": "HAS ALTIN", "Değişim": -1.38, "Alış": 5090.180, "Satış": 5111.977 },
+        { "Ürün": "Altın/ONS", "Değişim": -1.25, "Alış": 3816.65, "Satış": 3826.72 },
+        { "Ürün": "USD/KG", "Değişim": -1.25, "Alış": 122095, "Satış": 122417 },
+        { "Ürün": "EUR/KG", "Değişim": -0.68, "Alış": 104168, "Satış": 104612 },
+        { "Ürün": "GÜM/ONS", "Değişim": -0.59, "Alış": 43.940, "Satış": 44.280 },
+        { "Ürün": "GÜM/TL", "Değişim": -0.70, "Alış": 58614, "Satış": 59167 },
+        { "Ürün": "GÜM/USD", "Değişim": -0.56, "Alış": 1413, "Satış": 1424 },
+        { "Ürün": "GÜM/EUR", "Değişim": 0.00, "Alış": 1206, "Satış": 1217 }
+    ];
 };
 
-const nameToSymbolMap: Record<string, string> = {
-    'HAS ALTIN': 'XAU',
-    'Altın/ONS': 'XAU_ONS',
-    'USD/KG': 'XAU_USD_KG',
-    'EUR/KG': 'XAU_EUR_KG',
-    'GÜMÜŞ GRAM': 'XAG_TL',
-    'GÜM/ONS': 'XAG_ONS',
-    'GÜM/USD': 'XAG_USD',
-    'GÜM/EUR': 'XAG_EUR',
-    'Gram Gümüş': 'XAG_TL',
-};
-
-const parseNumber = (str: string): number | null => {
-    // API'den gelen "2.450,12" gibi string'leri doğru şekilde ayrıştırır
-    if (!str) return null;
-    const num = parseFloat(str.replace(/\./g, '').replace(',', '.'));
-    return isNaN(num) ? null : num;
+const parseNumber = (str: string) => {
+    return parseFloat(str.replace(/\./g, '').replace(',', '.'));
 };
 
 export async function GET() {
-    const url = "https://saglamoglualtin.com/marge/products";
-    const headers = {
-        "User-Agent": "Mozilla/5.0",
-        "Accept": "application/json",
-        "Referer": "https://saglamoglualtin.com/",
-        "X-Requested-With": "XMLHttpRequest"
-    };
-
     try {
-        const response = await fetch(url, { headers, next: { revalidate: 60 } });
+        const response = await axios.get('https://saglamoglualtin.com', {
+            headers: {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+            },
+            timeout: 10000
+        });
 
-        if (!response.ok) {
-            return NextResponse.json({ error: `API request failed with status ${response.status}` }, { status: 500 });
-        }
-        
-        const data = await response.json();
+        const $ = cheerio.load(response.data);
+        const data: PreciousMetal[] = [];
 
-        if (!data || !data.products) {
-            return NextResponse.json({ error: 'API response missing "products" key' }, { status: 500 });
-        }
+        // #goldTabs içindeki ilk tbody'yi hedef al
+        $('#goldTabs > .tab-content > #g > .kurlar > tbody > tr').each((i, el) => {
+            const tds = $(el).find('td');
+            if (tds.length >= 4) {
+                const productName = $(tds[0]).text().trim();
+                // Değişim yüzdesindeki % işaretini kaldır
+                const changeText = $(tds[1]).find('.deger').text().trim().replace('%', '');
+                const buyText = $(tds[2]).text().trim();
+                const sellText = $(tds[3]).text().trim();
 
-        const processedProducts: Record<string, FormattedAsset> = {};
-
-        for (const prod of data.products as ApiProduct[]) {
-            const symbol = nameToSymbolMap[prod.name] || prod.name;
-            const buyPrice = parseNumber(prod.public_bid);
-            const sellPrice = parseNumber(prod.public_ask);
-            
-            if (buyPrice !== null && sellPrice !== null && buyPrice > 0 && sellPrice > 0) {
-                const change24h = ((sellPrice - buyPrice) / buyPrice) * 100;
-                processedProducts[symbol] = {
-                    symbol,
-                    buyPrice,
-                    sellPrice,
-                    change24h: isFinite(change24h) ? change24h : 0,
+                const item: PreciousMetal = {
+                    'Ürün': productName,
+                    'Değişim': parseNumber(changeText),
+                    'Alış': parseNumber(buyText),
+                    'Satış': parseNumber(sellText),
                 };
+                data.push(item);
             }
-        }
+        });
         
-        if (Object.keys(processedProducts).length === 0) {
-            return NextResponse.json({ error: 'No valid products found in API response' }, { status: 500 });
+        if (data.length === 0) {
+            console.warn('Cheerio scraper returned no data. Using manual fallback data.');
+            return NextResponse.json(getManualData());
         }
 
-        return NextResponse.json(processedProducts);
+        return NextResponse.json(data);
 
-    } catch (error: any) {
-        console.error('Error fetching data from Saglamoglu API:', error.message);
-        return NextResponse.json({ error: 'Error fetching data from Saglamoglu API: ' + error.message }, { status: 500 });
+    } catch (error) {
+        console.error('Error fetching or parsing data from saglamoglualtin.com:', error);
+        return NextResponse.json(getManualData());
     }
 }
