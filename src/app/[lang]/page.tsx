@@ -54,22 +54,22 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
                         <AIMarketAnalysis lang={lang} dict={dict.aiMarketAnalysis} />
                     </Suspense>
                 </div>
-                <div className="grid gap-4 md:gap-8 lg:grid-cols-2 xl:grid-cols-3">
-                    <Card className="xl:col-span-2">
-                    <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                        <PortfolioChart dict={dict.portfolioChart} />
-                    </Suspense>
-                    </Card>
-                    <Card>
-                    <Suspense fallback={<Skeleton className="h-[350px]" />}>
-                        <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} transactions={transactions} />
-                    </Suspense>
+                <div className="grid gap-4 md:gap-8">
+                     <Card className="xl:col-span-2">
+                        <Suspense fallback={<Skeleton className="h-[350px]" />}>
+                            <PortfolioChart dict={dict.portfolioChart} />
+                        </Suspense>
                     </Card>
                 </div>
-                <div className="grid gap-4 md:gap-8">
-                    <Card>
+                <div className="grid gap-4 md:gap-8 grid-cols-1 xl:grid-cols-3">
+                    <Card className="xl:col-span-2">
                     <Suspense fallback={<Skeleton className="h-96" />}>
                         <AssetList dict={dict} portfolioAssets={portfolio} />
+                    </Suspense>
+                    </Card>
+                     <Card>
+                    <Suspense fallback={<Skeleton className="h-[350px]" />}>
+                        <RecentTransactions recentTransactionsDict={dict.recentTransactions} assetNames={dict.assetNames} transactions={transactions} />
                     </Suspense>
                     </Card>
                 </div>

@@ -1,4 +1,3 @@
-
 import type { ChartData, AutoSavePlan } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 
@@ -46,12 +45,12 @@ const generateLiveChartData = (minutes: number, baseValue: number, volatility: n
 }
 
 export const chartData: ChartData = {
-  "live": generateLiveChartData(60, 68000, 0.005),
-  "1d": generateChartData('day', 24, 68200, 0.01),
-  "1w": generateChartData('day', 7, 67500, 0.02),
-  "1m": generateChartData('day', 30, 69000, 0.03),
-  "3m": generateChartData('week', 12, 65000, 0.04),
-  "6m": generateChartData('week', 26, 62000, 0.045),
-  "1y": generateChartData('month', 12, 45000, 0.05),
-  "5y": generateChartData('month', 60, 20000, 0.08),
+  "live": [],
+  "1d": [],
+  "1w": [],
+  "1m": [],
+  "3m": [],
+  "6m": [],
+  "1y": [],
+  "5y": [],
 };

@@ -28,7 +28,6 @@ const parsePrice = (price: string | number | undefined): number => {
     if (price === null || price === undefined) return 0;
     if (typeof price === 'number') return price;
     if (typeof price === 'string') {
-        // Handles both "1.234,56" and "1234.56"
         const num = parseFloat(price.replace(/\./g, '').replace(',', '.'));
         return isNaN(num) ? 0 : num;
     }
@@ -60,7 +59,6 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const processedAssets: Record<string, LiveAssetData> = {};
             data.forEach((item: any) => {
-                // The symbol is the 'Urun' field from Firestore
                 const symbol = item.Urun; 
                 if (!symbol) return;
                 
