@@ -46,6 +46,8 @@ export function LivePrices({ dict }: { dict: any }) {
   const { liveAssets, loading, error, lastUpdated, refreshData } = useLivePrices();
   const assetNames = dict.assetNames;
   const livePricesDict = dict.livePrices;
+  const buyDialog = dict.portfolioSummary.buyDialog;
+  const sellDialog = dict.portfolioSummary.sellDialog;
 
   const [dialogState, setDialogState] = useState<{
     type: 'buy' | 'sell';
