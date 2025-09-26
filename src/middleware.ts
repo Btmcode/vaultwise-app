@@ -1,49 +1,56 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { match } from '@formatjs/intl-localematcher';
+import Negotiator from 'negotiator';
 
 const supportedLangs = ['tr', 'en'];
 const defaultLang = 'tr';
 
+function getLocale(request: NextRequest): string {
+  const negotiatorHeaders: Record<string, string> = {};
+  request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
+
+  const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
+  
+  try {
+    return match(languages, supportedLangs, defaultLang);
+  } catch (e) {
+    return defaultLang;
+  }
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // 1. Check if the path is for a static file, API route, or the root landing page itself.
-  // If so, do nothing and let the request proceed.
+  // 1. API ve framework dosyalarını atla
   const isExcludedPath =
     pathname.startsWith('/api/') ||
     pathname.startsWith('/_next/') ||
-    pathname.includes('.') || // This covers files like favicon.ico, sitemap.xml, etc.
-    pathname === '/'; // Exclude the root landing page
+    pathname.includes('.');
 
   if (isExcludedPath) {
     return NextResponse.next();
   }
 
-  // 2. Check if there is any supported locale in the pathname
+  // 2. Patika'da dil var mı kontrol et
   const pathnameHasLocale = supportedLangs.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`
   );
 
   if (pathnameHasLocale) {
-     return NextResponse.next();
+    return NextResponse.next();
   }
 
-  // 3. If no locale, redirect to the default locale for the requested page
-  // e.g., incoming request is /dashboard -> redirect to /tr/dashboard
-  request.nextUrl.pathname = `/${defaultLang}${pathname}`;
+  // 3. Dil yoksa, tarayıcı diline göre yönlendir
+  const locale = getLocale(request);
+  request.nextUrl.pathname = `/${locale}${pathname}`;
+  
   return NextResponse.redirect(request.nextUrl);
 }
 
 export const config = {
-  // The matcher should NOT include the root path "/"
-  // It will match all paths except for the ones starting with:
-  // - api (API routes)
-  // - _next/static (static files)
-  // - _next/image (image optimization files)
-  // - favicon.ico (favicon file)
   matcher: [
+    // Kök yol dahil tüm yolları kapsa, hariç tutulanları negatif lookahead ile belirt
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
-
-    

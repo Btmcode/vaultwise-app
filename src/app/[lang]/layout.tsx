@@ -1,11 +1,8 @@
-
 import type { Metadata } from 'next';
 import { getDictionary } from '@/app/dictionaries';
 import '../globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
-import { Providers } from '@/components/providers';
-
 
 // This function is async and correctly awaits params
 export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en' } }): Promise<Metadata> {
@@ -16,8 +13,7 @@ export async function generateMetadata({ params }: { params: { lang: 'tr' | 'en'
   };
 }
 
-// The RootLayout itself is also async
-export default function RootLayout({
+export default function LocaleLayout({
   children,
   params,
 }: {
@@ -25,16 +21,18 @@ export default function RootLayout({
   params: { lang: 'tr' | 'en' };
 }) {
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="system"
-      enableSystem
-      disableTransitionOnChange
-    >
-      <Providers>
-        {children}
-      </Providers>
-      <Toaster />
-    </ThemeProvider>
+     <html lang={params.lang} suppressHydrationWarning>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+            {children}
+          <Toaster />
+        </ThemeProvider>
+      </body>
+    </html>
   );
 }
