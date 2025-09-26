@@ -28,6 +28,25 @@ const parseNumber = (str: string) => {
     return parseFloat(str.replace(/\./g, '').replace(',', '.'));
 };
 
+const nameToSymbolMap: Record<string, string> = {
+    'HAS ALTIN': 'XAU',
+    'Altın/ONS': 'XAU_ONS',
+    'USD/KG': 'XAU_USD_KG',
+    'EUR/KG': 'XAU_EUR_KG',
+    'GÜMÜŞ GRAM': 'XAG_TL',
+    'GÜM/ONS': 'XAG_ONS',
+    'GÜM/USD': 'XAG_USD',
+    'GÜM/EUR': 'XAG_EUR',
+    'Gram Gümüş': 'XAG_TL',
+};
+
+type FormattedAsset = {
+    symbol: string;
+    buyPrice: number;
+    sellPrice: number;
+    change24h: number;
+};
+
 export async function GET() {
     try {
         const response = await axios.get('https://saglamoglualtin.com', {
@@ -40,12 +59,10 @@ export async function GET() {
         const $ = cheerio.load(response.data);
         const data: PreciousMetal[] = [];
 
-        // #goldTabs içindeki ilk tbody'yi hedef al
         $('#goldTabs > .tab-content > #g > .kurlar > tbody > tr').each((i, el) => {
             const tds = $(el).find('td');
             if (tds.length >= 4) {
                 const productName = $(tds[0]).text().trim();
-                // Değişim yüzdesindeki % işaretini kaldır
                 const changeText = $(tds[1]).find('.deger').text().trim().replace('%', '');
                 const buyText = $(tds[2]).text().trim();
                 const sellText = $(tds[3]).text().trim();
@@ -62,13 +79,58 @@ export async function GET() {
         
         if (data.length === 0) {
             console.warn('Cheerio scraper returned no data. Using manual fallback data.');
-            return NextResponse.json(getManualData());
+            const manualData = getManualData();
+            const formattedFallback = manualData.reduce((acc, item) => {
+                const symbol = Object.keys(nameToSymbolMap).find(key => nameToSymbolMap[key] === item['Ürün']) || item['Ürün'];
+                 if(symbol) {
+                    acc[symbol] = {
+                        symbol: symbol,
+                        buyPrice: item['Alış'],
+                        sellPrice: item['Satış'],
+                        change24h: item['Değişim']
+                    };
+                }
+                return acc;
+            }, {} as Record<string, FormattedAsset>);
+            return NextResponse.json(formattedFallback);
         }
 
-        return NextResponse.json(data);
+        const processedProducts: Record<string, FormattedAsset> = {};
+
+        for (const prod of data) {
+            const symbol = nameToSymbolMap[prod['Ürün']];
+            if (!symbol) continue;
+
+            const buyPrice = prod['Alış'];
+            const sellPrice = prod['Satış'];
+            
+            if (buyPrice && sellPrice && buyPrice > 0 && sellPrice > 0) {
+                processedProducts[symbol] = {
+                    symbol: symbol,
+                    buyPrice: buyPrice,
+                    sellPrice: sellPrice,
+                    change24h: prod['Değişim'],
+                };
+            }
+        }
+
+        return NextResponse.json(processedProducts);
 
     } catch (error) {
         console.error('Error fetching or parsing data from saglamoglualtin.com:', error);
-        return NextResponse.json(getManualData());
+        const manualData = getManualData();
+        const formattedFallback = manualData.reduce((acc, item) => {
+            const symbol = Object.keys(nameToSymbolMap).find(key => nameToSymbolMap[key] === item['Ürün']) || item['Ürün'];
+             if(symbol) {
+                acc[symbol] = {
+                    symbol: symbol,
+                    buyPrice: item['Alış'],
+                    sellPrice: item['Satış'],
+                    change24h: item['Değişim']
+                };
+            }
+            return acc;
+        }, {} as Record<string, FormattedAsset>);
+        return NextResponse.json(formattedFallback);
     }
 }
