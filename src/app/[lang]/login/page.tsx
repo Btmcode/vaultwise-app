@@ -65,8 +65,8 @@ export default function LoginPage() {
         description: loginDict.toast.success.description,
       });
       
-      // Use Next.js router for client-side navigation
-      router.push(`/${lang}`);
+      // Perform a full page reload to ensure the new session cookie is sent to the server.
+      window.location.href = `/${lang}`;
 
     } catch (error: any) {
       console.error('Login error:', error);
