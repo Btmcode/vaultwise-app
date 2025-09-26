@@ -102,7 +102,7 @@ export function PriceTicker() {
         >
           <Icon className="h-7 w-7" />
           <div className="flex flex-col items-start">
-            <span className="font-semibold text-sm">{details.name}</span>
+            <span className="font-semibold text-sm whitespace-nowrap">{details.name}</span>
             <span className="font-mono text-xs text-muted-foreground">
               {formatPrice(price, asset.symbol as AssetSymbol)}
             </span>
