@@ -28,15 +28,22 @@ export function middleware(request: NextRequest) {
      return NextResponse.next();
   }
 
-  // 3. If no locale, redirect to the default locale
+  // 3. If no locale, redirect to the default locale for the requested page
   // e.g., incoming request is /dashboard -> redirect to /tr/dashboard
   request.nextUrl.pathname = `/${defaultLang}${pathname}`;
   return NextResponse.redirect(request.nextUrl);
 }
 
 export const config = {
-  // Matcher ignoring `/_next/` and `/api/`
+  // The matcher should NOT include the root path "/"
+  // It will match all paths except for the ones starting with:
+  // - api (API routes)
+  // - _next/static (static files)
+  // - _next/image (image optimization files)
+  // - favicon.ico (favicon file)
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)'
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };
+
+    

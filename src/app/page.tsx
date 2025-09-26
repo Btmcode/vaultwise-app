@@ -2,71 +2,161 @@
 "use client";
 
 import Link from 'next/link';
-import { VaultWiseLogo } from '@/components/icons';
+import { VaultWiseLogo, GoldIcon, SilverIcon, BtcIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
+import { ShieldCheck, Cpu, Gem, Zap } from 'lucide-react';
+import Image from 'next/image';
+
+const features = [
+  {
+    icon: <Gem className="h-8 w-8 text-primary" />,
+    title: "Değerli Metaller",
+    description: "Altın ve gümüş gibi geleneksel ve güvenli limanlara kolayca yatırım yapın.",
+  },
+  {
+    icon: <BtcIcon className="h-8 w-8" />,
+    title: "Dijital Varlıklar",
+    description: "Bitcoin ve altına endeksli tokenlar gibi dijital para birimleriyle portföyünüzü çeşitlendirin.",
+  },
+  {
+    icon: <ShieldCheck className="h-8 w-8 text-primary" />,
+    title: "Güvenli Saklama",
+    description: "Varlıklarınız, en üst düzey güvenlik standartlarına sahip dijital ve fiziki kasalarda korunur.",
+  },
+  {
+    icon: <Cpu className="h-8 w-8 text-primary" />,
+    title: "AI Destekli Analiz",
+    description: "Yapay zeka destekli piyasa analizleri ve tasarruf önerileri ile akıllı yatırım kararları alın.",
+  },
+];
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-screen bg-background">
-      <header className="px-4 lg:px-6 h-14 flex items-center">
+    <div className="flex flex-col min-h-dvh bg-background text-foreground">
+      <header className="px-4 lg:px-6 h-16 flex items-center shadow-sm">
         <Link href="/" className="flex items-center justify-center" prefetch={false}>
-          <VaultWiseLogo className="h-6 w-6" />
-          <span className="sr-only">VaultWise</span>
+          <VaultWiseLogo className="h-8 w-8 text-primary" />
+          <span className="ml-2 text-xl font-bold">VaultWise</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link href="/tr/login" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
-            Login
-          </Link>
-          <Link href="/tr/signup" className="text-sm font-medium hover:underline underline-offset-4" prefetch={false}>
-            Sign Up
-          </Link>
+        <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+          <Button variant="ghost" asChild>
+            <Link href="/tr/login">Giriş Yap</Link>
+          </Button>
+          <Button asChild>
+            <Link href="/tr/signup">Kayıt Ol</Link>
+          </Button>
         </nav>
       </header>
+
       <main className="flex-1">
-        <section className="w-full pt-12 md:pt-24 lg:pt-32 border-y">
-          <div className="px-4 md:px-6 space-y-10 xl:space-y-16">
-            <div className="grid max-w-[1300px] mx-auto gap-4 px-4 sm:px-6 md:px-10 md:grid-cols-2 md:gap-16">
-              <div>
-                <h1 className="lg:leading-tighter text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl xl:text-[3.4rem] 2xl:text-[3.75rem]">
-                  Secure Your Future with Digital & Precious Assets
+        {/* Hero Section */}
+        <section className="w-full py-20 md:py-32 lg:py-40 bg-gradient-to-br from-background to-secondary/30">
+          <div className="container px-4 md:px-6">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-12 xl:gap-16">
+              <div className="flex flex-col justify-center space-y-6">
+                <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
+                  Geleceğiniz İçin <span className="text-primary">Akıllıca</span> Biriktirin.
                 </h1>
-                <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl mt-4">
-                  VaultWise offers a seamless and secure platform to invest in gold, silver, Bitcoin, and other digital assets. Start building your diversified portfolio today.
+                <p className="max-w-[600px] text-muted-foreground md:text-xl">
+                  VaultWise, değerli metaller ve dijital varlıkları tek bir güvenli platformda birleştirerek birikim yapmanın en modern yolunu sunar.
                 </p>
-                <div className="space-x-4 mt-6">
-                  <Button asChild>
-                    <Link href="/tr/signup">Get Started</Link>
+                <div className="flex flex-col gap-2 min-[400px]:flex-row">
+                  <Button size="lg" asChild>
+                    <Link href="/tr/signup">Hemen Başla</Link>
                   </Button>
-                  <Button variant="outline" asChild>
-                     <Link href="#">Learn More</Link>
+                  <Button size="lg" variant="outline" asChild>
+                     <Link href="#features">Daha Fazla Bilgi</Link>
                   </Button>
                 </div>
               </div>
-              <div className="flex flex-col items-start space-y-4">
-                 <img
-                  src="https://picsum.photos/seed/1/600/400"
-                  width="550"
-                  height="550"
-                  alt="Hero"
-                  data-ai-hint="digital finance"
+              <Image
+                  src="https://picsum.photos/seed/finance/600/400"
+                  width="600"
+                  height="400"
+                  alt="Modern investment platform visual"
+                  data-ai-hint="digital finance investment"
                   className="mx-auto aspect-video overflow-hidden rounded-xl object-cover"
                 />
-              </div>
             </div>
           </div>
         </section>
+
+        {/* Features Section */}
+        <section id="features" className="w-full py-20 md:py-32 bg-background">
+          <div className="container px-4 md:px-6">
+            <div className="flex flex-col items-center justify-center space-y-4 text-center">
+              <div className="space-y-2">
+                <div className="inline-block rounded-lg bg-secondary px-3 py-1 text-sm">Temel Özellikler</div>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Yatırımın Geleceği, Bugün.</h2>
+                <p className="max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                  VaultWise, geleneksel güveni dijital inovasyonla birleştirerek size eşsiz bir birikim deneyimi sunar.
+                </p>
+              </div>
+            </div>
+            <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:max-w-none lg:grid-cols-4 mt-12">
+              {features.map((feature, index) => (
+                <div key={index} className="grid gap-2 p-6 rounded-lg border bg-card hover:shadow-lg transition-shadow">
+                  {feature.icon}
+                  <h3 className="text-lg font-bold">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Asset Showcase Section */}
+        <section className="w-full py-20 md:py-32 bg-secondary/30">
+            <div className="container grid items-center justify-center gap-4 px-4 text-center md:px-6">
+                <div className="space-y-3">
+                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl/tight">Yatırım Yapabileceğiniz Varlıklar</h2>
+                <p className="mx-auto max-w-[600px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                    Portföyünüzü değerli ve dijital varlıklarla kolayca çeşitlendirin.
+                </p>
+                </div>
+                <div className="flex justify-center gap-8 md:gap-12 lg:gap-16 mt-6 flex-wrap">
+                    <div className="flex flex-col items-center gap-2">
+                        <GoldIcon className="h-16 w-16" />
+                        <span className="font-semibold">Altın</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                        <SilverIcon className="h-16 w-16" />
+                        <span className="font-semibold">Gümüş</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                        <BtcIcon className="h-16 w-16" />
+                        <span className="font-semibold">Bitcoin</span>
+                    </div>
+                    <div className="flex flex-col items-center gap-2">
+                        <Zap className="h-16 w-16 text-primary" />
+                        <span className="font-semibold">ve Daha Fazlası</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
       </main>
-      <footer className="flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t">
-        <p className="text-xs text-muted-foreground">&copy; 2024 VaultWise. All rights reserved.</p>
-        <nav className="sm:ml-auto flex gap-4 sm:gap-6">
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-            Terms of Service
-          </Link>
-          <Link href="#" className="text-xs hover:underline underline-offset-4" prefetch={false}>
-            Privacy
-          </Link>
-        </nav>
+      <footer className="bg-background border-t">
+        <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">
+          <div className="flex flex-col items-center gap-4 px-8 md:flex-row md:gap-2 md:px-0">
+            <VaultWiseLogo className="h-6 w-6 text-primary" />
+            <p className="text-center text-sm leading-loose text-muted-foreground md:text-left">
+              &copy; 2024 VaultWise Inc. Tüm hakları saklıdır.
+            </p>
+          </div>
+          <nav className="flex gap-4 sm:ml-auto sm:gap-6">
+            <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+              Kullanım Koşulları
+            </Link>
+            <Link href="#" className="text-sm hover:underline underline-offset-4" prefetch={false}>
+              Gizlilik Politikası
+            </Link>
+          </nav>
+        </div>
       </footer>
     </div>
   );
 }
+
+    
