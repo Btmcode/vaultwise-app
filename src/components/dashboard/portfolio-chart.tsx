@@ -87,9 +87,9 @@ export function PortfolioChart({ dict }: { dict: any }) {
   return (
     <>
       <CardHeader className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <div className="flex-1">
+        <div className="grid gap-2">
           <CardTitle>{dict.title}</CardTitle>
-           <div className="flex items-baseline gap-2 mt-2">
+           <div className="flex items-baseline gap-2">
             <div className="text-3xl font-bold">
                 {formatCurrency(displayValue)}
             </div>
@@ -109,7 +109,7 @@ export function PortfolioChart({ dict }: { dict: any }) {
           className="w-full sm:w-auto"
           onValueChange={(value) => setTimeRange(value as keyof ChartData)}
         >
-          <TabsList className="w-full sm:w-auto">
+          <TabsList className="grid w-full grid-cols-4 sm:w-auto sm:grid-cols-4">
             <TabsTrigger value="live" className="text-xs px-2 sm:px-3">{dict.tabs['live']}</TabsTrigger>
             <TabsTrigger value="1d" className="text-xs px-2 sm:px-3">{dict.tabs['1d']}</TabsTrigger>
             <TabsTrigger value="1w" className="text-xs px-2 sm:px-3">{dict.tabs['1w']}</TabsTrigger>
