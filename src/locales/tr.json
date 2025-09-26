@@ -264,6 +264,10 @@
             "featureNotAvailable": {
                  "title": "Özellik Mevcut Değil",
                  "description": "Profil resmini değiştirme henüz uygulanmadı."
+            },
+             "pictureChanged": {
+                "title": "Resim Güncellendi",
+                "description": "Profil resminiz değiştirildi. Kaydet'e tıklayarak uygulayın."
             }
         }
     },

@@ -1,6 +1,7 @@
 
 "use client";
 
+import { useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { getDictionary } from '@/app/dictionaries';
 import { Header } from '@/components/header';
@@ -19,15 +20,30 @@ export default function ProfilePage() {
   const dict = getDictionary(lang);
   const { toast } = useToast();
   
-  const userAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
+  const originalUserAvatar = PlaceHolderImages.find((img) => img.id === 'user-avatar');
+  const [avatarSrc, setAvatarSrc] = useState(originalUserAvatar?.imageUrl);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
   const profileDict = dict.profilePage;
   const toastDict = profileDict.toast;
 
-  const handleChangePicture = () => {
-    toast({
-        title: toastDict.featureNotAvailable.title,
-        description: toastDict.featureNotAvailable.description,
-    });
+  const handlePictureChangeClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarSrc(reader.result as string);
+        toast({
+          title: toastDict.pictureChanged.title,
+          description: toastDict.pictureChanged.description,
+        });
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSaveChanges = (e: React.FormEvent) => {
@@ -59,13 +75,20 @@ export default function ProfilePage() {
                 <CardContent>
                     <div className="grid gap-4">
                     <div className="flex items-center gap-4">
-                        {userAvatar && (
+                        {avatarSrc && (
                             <Avatar className="h-20 w-20">
-                            <AvatarImage src={userAvatar.imageUrl} alt={userAvatar.description} className="object-cover" />
+                            <AvatarImage src={avatarSrc} alt={originalUserAvatar?.description} className="object-cover" />
                             <AvatarFallback>AV</AvatarFallback>
                             </Avatar>
                         )}
-                        <Button type="button" variant="outline" onClick={handleChangePicture}>{profileDict.changePicture}</Button>
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            onChange={handleFileChange}
+                            className="hidden"
+                            accept="image/png, image/jpeg, image/gif"
+                        />
+                        <Button type="button" variant="outline" onClick={handlePictureChangeClick}>{profileDict.changePicture}</Button>
                     </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="grid gap-2">

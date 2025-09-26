@@ -264,6 +264,10 @@
             "featureNotAvailable": {
                  "title": "Feature Not Available",
                  "description": "Changing profile picture is not yet implemented."
+            },
+            "pictureChanged": {
+                "title": "Picture Updated",
+                "description": "Your profile picture has been changed. Click Save to apply."
             }
         }
     },
