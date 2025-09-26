@@ -4,7 +4,7 @@ import { PortfolioSummary } from "@/components/dashboard/portfolio-summary";
 import { AssetList } from "@/components/dashboard/asset-list";
 import { RecentTransactions } from "@/components/dashboard/recent-transactions";
 import { Suspense } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getDictionary } from "../dictionaries";
 import { AssetDistribution } from "@/components/dashboard/asset-distribution";
@@ -59,10 +59,10 @@ export default async function Home({ params: { lang } }: { params: { lang: 'tr' 
                         {/* PortfolioChart is removed as it was showing dummy data */}
                         <CardHeader>
                             <CardTitle>{dict.portfolioChart.title}</CardTitle>
-                            <CardContent className="h-[250px] w-full flex items-center justify-center text-muted-foreground">
-                                {dict.portfolioChart.description}
-                            </CardContent>
                         </CardHeader>
+                        <CardContent className="h-[250px] w-full flex items-center justify-center text-muted-foreground">
+                            {dict.portfolioChart.description}
+                        </CardContent>
                     </Suspense>
                 </Card>
             </div>
