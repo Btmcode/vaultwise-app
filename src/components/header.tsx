@@ -19,6 +19,7 @@ import { User, Settings, LogOut, Languages, Moon, Sun, Landmark, ArrowLeftRight 
 import { auth } from "@/lib/firebase/client";
 import { signOut } from "firebase/auth";
 import { useToast } from "@/hooks/use-toast";
+import { logout } from "@/app/actions";
 
 const userAvatar = PlaceHolderImages.find((img) => img.id === "user-avatar");
 
@@ -36,39 +37,35 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
 
   const handleLogout = async () => {
     try {
-      // Try to sign out from the client first, but don't let it block the process
-      // if it fails (e.g., user was deleted from Firebase console).
-      try {
-        if (auth) {
-          await signOut(auth);
-        }
-      } catch (clientError) {
-        console.warn("Client-side signOut failed (user might be deleted):", clientError);
-      }
+      // Sign out from the client-side auth state
+      await signOut(auth);
       
-      // ALWAYS call the API route to clear the server-side session cookie.
-      // This is the most important step.
-      const response = await fetch('/api/auth/logout', { method: 'POST' });
-
-      if (!response.ok) {
-        throw new Error('Server failed to clear session.');
-      }
+      // Call the server action to delete the session cookie
+      await logout();
 
       toast({
         title: "Success",
         description: "You have been logged out.",
       });
 
-      // Use window.location.href for a full page refresh to ensure middleware catches the new cookie state.
+      // Redirect to login page after successful logout on both client and server
       window.location.href = `/${currentLang}/login`;
 
     } catch (error) {
       console.error("Logout Error:", error);
-      toast({
-        variant: "destructive",
-        title: "Logout Failed",
-        description: "An error occurred while logging out. Please try again.",
-      });
+      // If client-side signout fails (e.g., user deleted in console),
+      // we should still try to log out from the server.
+      try {
+        await logout();
+        window.location.href = `/${currentLang}/login`;
+      } catch (serverLogoutError) {
+          console.error("Server logout failed after client error:", serverLogoutError);
+          toast({
+            variant: "destructive",
+            title: "Logout Failed",
+            description: "An error occurred while logging out. Please try again.",
+          });
+      }
     }
   };
 

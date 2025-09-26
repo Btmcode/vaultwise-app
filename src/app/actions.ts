@@ -16,6 +16,7 @@ import {
   type MarketAnalysisInput,
   type MarketAnalysisOutput,
 } from "@/ai/flows/market-analysis";
+import { cookies } from "next/headers";
 
 
 export async function getAutomatedSavingsGoal(
@@ -39,4 +40,8 @@ export async function getMarketAnalysis(
 ): Promise<MarketAnalysisOutput> {
   const analysis = await getMarketAnalysisFlow(input);
   return analysis;
+}
+
+export async function logout() {
+  cookies().delete("firebase-session");
 }
