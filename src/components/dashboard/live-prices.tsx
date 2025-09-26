@@ -6,6 +6,9 @@ import { RefreshCw } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
 import { GoldIcon, SilverIcon, InfoIcon, GoldBarIcon, BtcIcon, PaxgIcon, XautIcon, UsdTryIcon } from "@/components/icons";
+import { BuyDialog } from './buy-dialog';
+import { SellDialog } from './sell-dialog';
+import { Separator } from '../ui/separator';
 
 const assetOrder = [
   "XAU",
@@ -44,8 +47,8 @@ export function LivePrices({ dict }: { dict: any }) {
   const livePricesDict = dict.livePrices;
 
   const getChangeBgColor = (change: number) => {
-    if (change > 0) return 'border-green-500 bg-green-500/20';
-    if (change < 0) return 'border-red-500 bg-red-500/20';
+    if (change > 0) return 'border-green-500/50';
+    if (change < 0) return 'border-red-500/50';
     return 'border-border';
   }
 
@@ -88,7 +91,7 @@ export function LivePrices({ dict }: { dict: any }) {
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
                 {Array.from({ length: 8 }).map((_, index) => (
-                    <Skeleton key={index} className="h-[88px] w-full" />
+                    <Skeleton key={index} className="h-[140px] w-full" />
                 ))}
             </div>
         </div>
@@ -131,31 +134,35 @@ export function LivePrices({ dict }: { dict: any }) {
                 const Icon = getIcon(symbol);
                 const isCrypto = 'price' in item && item.price !== undefined;
                 return (
-                <div key={symbol} className="p-1">
-                    <div className={cn(
-                        "flex items-center justify-start gap-4 p-4 rounded-lg bg-card border h-full transition-colors duration-300",
+                <div key={symbol} className={cn(
+                        "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border transition-colors duration-300",
                         getChangeBgColor(item.change24h)
                     )}>
-                        <Icon className={cn("h-10 w-10 flex-shrink-0", symbol === 'XAU' && 'h-12 w-12')} />
-                        <div className="flex-grow flex flex-col justify-center overflow-hidden">
-                            <div className="flex items-center justify-between w-full">
+                    <div className="flex items-start justify-between gap-4">
+                        <div className="flex items-center gap-4">
+                            <Icon className={cn("h-10 w-10 flex-shrink-0", symbol === 'XAU' && 'h-12 w-12')} />
+                             <div className="flex-grow flex flex-col justify-center overflow-hidden">
                                 <p className="font-semibold text-base whitespace-nowrap">{assetNames[symbol] || symbol}</p>
-                                <div className={cn("text-xs font-medium pl-2 whitespace-nowrap", item.change24h > 0 ? "text-green-500" : "text-red-500")}>
-                                    {item.change24h >= 0 ? "+" : ""}
-                                    {item.change24h.toFixed(2)}%
-                                </div>
+                                {isCrypto ? (
+                                    <p className="text-sm font-semibold text-muted-foreground">{formatPrice(item.price, symbol)}</p>
+                                ) : (
+                                     <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
+                                        <span className="font-medium whitespace-nowrap">{livePricesDict.buy}:</span>
+                                        <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.buyPrice, symbol)}</span>
+                                        <span className="font-medium whitespace-nowrap">{livePricesDict.sell}:</span>
+                                        <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.sellPrice, symbol)}</span>
+                                    </div>
+                                )}
                             </div>
-                           {isCrypto ? (
-                                <p className="text-sm text-muted-foreground">{formatPrice(item.price, symbol)}</p>
-                            ) : (
-                                <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
-                                    <span className="font-medium whitespace-nowrap">{livePricesDict.buy}:</span>
-                                    <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.buyPrice, symbol)}</span>
-                                    <span className="font-medium whitespace-nowrap">{livePricesDict.sell}:</span>
-                                    <span className="font-mono text-right whitespace-nowrap">{formatPrice(item.sellPrice, symbol)}</span>
-                                </div>
-                            )}
                         </div>
+                        <div className={cn("text-sm font-bold pl-2 whitespace-nowrap", item.change24h > 0 ? "text-green-500" : "text-red-500")}>
+                            {item.change24h >= 0 ? "+" : ""}
+                            {item.change24h.toFixed(2)}%
+                        </div>
+                    </div>
+                    <div className="flex gap-2 w-full">
+                       <BuyDialog dict={dict} />
+                       <SellDialog dict={dict} />
                     </div>
                 </div>
             )})}

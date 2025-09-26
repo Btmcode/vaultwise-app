@@ -34,7 +34,7 @@ export function BuyDialog({ dict }: { dict: any }) {
   const assetDetails = asset ? assets[asset] : null;
   const amountAsset =
     assetDetails && amountUsd
-      ? (parseFloat(amountUsd) / assetDetails.price).toFixed(6)
+      ? (parseFloat(amountUsd) / (assetDetails.price ?? assetDetails.buyPrice ?? 1)).toFixed(6)
       : "0";
 
   const buyDialogDict = dict.portfolioSummary.buyDialog;
@@ -64,7 +64,7 @@ export function BuyDialog({ dict }: { dict: any }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="sm" className="bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
+        <Button size="sm" className="w-full bg-primary text-primary-foreground hover:bg-green-500 hover:text-white dark:hover:bg-green-600">{buyDialogDict.shortTitle}</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
