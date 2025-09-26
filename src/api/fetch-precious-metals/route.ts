@@ -5,7 +5,7 @@ import { getAdminApp } from '@/lib/firebase/server';
 
 export async function GET() {
     try {
-        const adminApp = getAdminApp(); // Ensure the app is initialized
+        const adminApp = getAdminApp();
         const db = getFirestore(adminApp);
         
         const snapshot = await db.collection('precious_metals').get();
@@ -15,9 +15,14 @@ export async function GET() {
              return NextResponse.json({ error: 'No precious metals data found in database.' }, { status: 404 });
         }
 
-        const data: Record<string, any> = {};
+        const data: any[] = [];
         snapshot.forEach(doc => {
-            data[doc.id] = doc.data();
+            // Add the document ID (which is the product name) to the data object
+            // to match the expected format of the frontend.
+            data.push({
+                "Ürün": doc.id,
+                ...doc.data()
+            });
         });
 
         return NextResponse.json(data);
