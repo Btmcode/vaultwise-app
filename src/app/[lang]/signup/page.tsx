@@ -63,8 +63,10 @@ export default function SignupPage() {
         title: signupDict.toast.success.title,
         description: signupDict.toast.success.description,
       });
-      // Use window.location.href for a full page refresh to ensure middleware catches the new cookie state.
-      window.location.href = `/${lang}`;
+
+      // Use Next.js router for client-side navigation
+      router.push(`/${lang}`);
+
     } catch (error: any) {
       console.error('Signup error:', error);
       

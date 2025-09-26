@@ -64,9 +64,10 @@ export default function LoginPage() {
         title: loginDict.toast.success.title,
         description: loginDict.toast.success.description,
       });
-      // Use window.location.href for a full page refresh to ensure middleware catches the new cookie state.
-      // This is the most reliable way to handle redirection after setting an httpOnly cookie.
-      window.location.href = `/${lang}`;
+      
+      // Use Next.js router for client-side navigation
+      router.push(`/${lang}`);
+
     } catch (error: any) {
       console.error('Login error:', error);
       

@@ -37,35 +37,33 @@ export function Header({ lang, dict }: { lang: 'tr' | 'en', dict: any }) {
 
   const handleLogout = async () => {
     try {
-      // Sign out from the client-side auth state
-      await signOut(auth);
-      
-      // Call the server action to delete the session cookie
+      // Always attempt to clear the server session first.
       await logout();
+      
+      // Then, sign out from the client-side auth state.
+      // This might fail if the user was deleted, but that's okay.
+      try {
+        await signOut(auth);
+      } catch (clientSignOutError) {
+        console.log("Client-side signOut failed (user might be deleted):", clientSignOutError);
+      }
 
       toast({
         title: "Success",
         description: "You have been logged out.",
       });
 
-      // Redirect to login page after successful logout on both client and server
-      window.location.href = `/${currentLang}/login`;
+      // Use Next.js router to redirect to the login page.
+      router.push(`/${currentLang}/login`);
+      router.refresh(); // Force a refresh to ensure middleware re-evaluates auth state.
 
     } catch (error) {
       console.error("Logout Error:", error);
-      // If client-side signout fails (e.g., user deleted in console),
-      // we should still try to log out from the server.
-      try {
-        await logout();
-        window.location.href = `/${currentLang}/login`;
-      } catch (serverLogoutError) {
-          console.error("Server logout failed after client error:", serverLogoutError);
-          toast({
-            variant: "destructive",
-            title: "Logout Failed",
-            description: "An error occurred while logging out. Please try again.",
-          });
-      }
+      toast({
+        variant: "destructive",
+        title: "Logout Failed",
+        description: "An error occurred while logging out. Please try again.",
+      });
     }
   };
 
