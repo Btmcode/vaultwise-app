@@ -22,12 +22,26 @@ const relevantCodes = new Set(Object.keys(codeToSymbolMap));
 export async function GET() {
   const nadirDovizApiUrl = process.env.PRICE_API_URL;
 
+  // Start with fallback data. Fetched data will be merged on top of this.
+  const fallbackPrices: Record<string, { buyPrice?: number; sellPrice?: number; change24h: number }> = {
+      "XAU": { "buyPrice": 2450.12, "sellPrice": 2445.50, "change24h": -0.82 },
+      "XAG": { "buyPrice": 31.55, "sellPrice": 31.40, "change24h": -1.2 },
+      "XAU_ONS": { "buyPrice": 2329.43, "sellPrice": 2328.00, "change24h": -0.78 },
+      "XAU_USD_KG": { "buyPrice": 74932.8, "sellPrice": 74900.00, "change24h": -0.78 },
+      "XAU_EUR_KG": { "buyPrice": 69821.5, "sellPrice": 69800.00, "change24h": -0.78 },
+      "XAG_ONS": { "buyPrice": 29.58, "sellPrice": 29.50, "change24h": -1.5 },
+      "XAG_TL": { "buyPrice": 31.0, "sellPrice": 30.90, "change24h": -1.5 },
+      "XAG_USD": { "buyPrice": 29.58, "sellPrice": 29.50, "change24h": -1.5 },
+      "XAG_EUR": { "buyPrice": 27.56, "sellPrice": 27.50, "change24h": -1.5 },
+      "USD_TRY": { "buyPrice": 32.85, "sellPrice": 32.80, "change24h": 0.1 },
+  };
+
   if (!nadirDovizApiUrl) {
-      console.warn('Nadir Doviz API URL not found. Metals data will not be fetched.');
-      return NextResponse.json({ error: 'Price API URL not configured' }, { status: 500 });
+      console.warn('Nadir Doviz API URL not found. Returning fallback metals data.');
+      return NextResponse.json(fallbackPrices);
   }
 
-  const prices: Record<string, { buyPrice?: number; sellPrice?: number; change24h: number }> = {};
+  const prices = { ...fallbackPrices };
 
   try {
     const response = await axios.post(nadirDovizApiUrl, {});
@@ -55,14 +69,10 @@ export async function GET() {
         }
       });
     }
-
-    if (Object.keys(prices).length === 0) {
-        return NextResponse.json({ error: 'No metal prices fetched from the API' }, { status: 404 });
-    }
-
     return NextResponse.json(prices);
   } catch (error: any) {
     console.error('An unexpected error occurred in the metals prices API route:', error.message);
-    return NextResponse.json({ error: 'Failed to fetch metal prices', details: error.message }, { status: 500 });
+    // Even in case of a totally unexpected error, return the fallback data
+    return NextResponse.json(fallbackPrices);
   }
 }

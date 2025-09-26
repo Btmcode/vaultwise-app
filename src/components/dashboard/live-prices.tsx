@@ -46,6 +46,21 @@ const iconMap: Record<string, React.FC<React.SVGProps<SVGSVGElement>>> = {
   "USD/TRY": UsdTryIcon,
 };
 
+const apiSymbolMap: Record<string, string> = {
+    "HAS ALTIN": "XAU",
+    "Altın/ONS": "XAU_ONS",
+    "Altın USD/Kg": "XAU_USD_KG",
+    "Altın EUR/Kg": "XAU_EUR_KG",
+    "Gümüş/ONS": "XAG_ONS",
+    "Gümüş/TL": "XAG_TL",
+    "Gümüş/USD": "XAG_USD",
+    "Gümüş/EUR": "XAG_EUR",
+    "Bitcoin": "BTC",
+    "PAX Gold": "PAXG",
+    "Tether Gold": "XAUT",
+    "USD/TRY": "USD_TRY",
+}
+
 export function LivePrices({ dict }: { dict: any }) {
   const { liveAssets, loading, error, lastUpdated, refreshData } = useLivePrices();
   const livePricesDict = dict.livePrices;
@@ -61,13 +76,17 @@ export function LivePrices({ dict }: { dict: any }) {
 
     let currency = "USD";
     let locale = "en-US";
-
+    
+    // Determine currency based on symbol
     if (symbol.includes("EUR")) {
       currency = "EUR";
       locale = "de-DE";
     } else if (symbol.includes("TL") || symbol === "HAS ALTIN") {
       currency = "TRY";
       locale = "tr-TR";
+    } else if (symbol === "USD/TRY") {
+        currency = "TRY";
+        locale = "tr-TR";
     }
     
     const options: Intl.NumberFormatOptions = {
@@ -87,31 +106,27 @@ export function LivePrices({ dict }: { dict: any }) {
   };
 
   const getIcon = (symbol: string) => {
-    // Handle mapping from API symbols to display names for icons
-    if (symbol === "BTC") return BtcIcon;
-    if (symbol === "PAXG") return PaxgIcon;
-    if (symbol === "XAUT") return XautIcon;
     return iconMap[symbol] || InfoIcon;
   };
   
-  const displayAssets = assetOrder.map(symbol => {
-      if (liveAssets[symbol]) return liveAssets[symbol];
-      // Handle mapping for crypto
-      if (symbol === 'Bitcoin' && liveAssets['BTC']) return { ...liveAssets['BTC'], symbol: 'Bitcoin' };
-      if (symbol === 'PAX Gold' && liveAssets['PAXG']) return { ...liveAssets['PAXG'], symbol: 'PAX Gold' };
-      if (symbol === 'Tether Gold' && liveAssets['XAUT']) return { ...liveAssets['XAUT'], symbol: 'Tether Gold' };
+  const displayAssets = assetOrder.map(displayName => {
+      const apiSymbol = apiSymbolMap[displayName];
+      const assetData = liveAssets[apiSymbol];
+      if (assetData) {
+          return { ...assetData, displayName };
+      }
       return null;
   }).filter(Boolean);
 
   const renderCardContent = (item: any) => {
-    const symbol = item.symbol;
-    const isCrypto = symbol === 'Bitcoin' || symbol === 'PAX Gold' || symbol === 'Tether Gold';
+    const displayName = item.displayName;
+    const isCrypto = displayName === 'Bitcoin' || displayName === 'PAX Gold' || displayName === 'Tether Gold';
     
-    if (isCrypto) {
+    if (isCrypto || displayName === 'USD/TRY') {
       return (
         <div className="flex flex-col justify-center">
-            <p className="font-semibold text-lg whitespace-nowrap">{symbol}</p>
-             <p className="font-mono text-xl font-bold whitespace-nowrap text-left">{formatPrice(item.price, symbol)}</p>
+            <p className="font-semibold text-lg whitespace-nowrap">{displayName}</p>
+             <p className="font-mono text-xl font-bold whitespace-nowrap text-left">{formatPrice(item.price, displayName)}</p>
         </div>
       );
     }
@@ -119,20 +134,20 @@ export function LivePrices({ dict }: { dict: any }) {
     return (
        <div className="flex flex-col justify-center">
         <p className="font-semibold text-base whitespace-nowrap">
-          {symbol}
+          {displayName}
         </p>
         <div className="text-xs text-muted-foreground grid grid-cols-[auto_1fr] gap-x-2">
           <span className="font-medium whitespace-nowrap">
             {livePricesDict.buy}:
           </span>
           <span className="font-mono text-right whitespace-nowrap">
-            {formatPrice(item.buyPrice, symbol)}
+            {formatPrice(item.buyPrice, displayName)}
           </span>
           <span className="font-medium whitespace-nowrap">
             {livePricesDict.sell}:
           </span>
           <span className="font-mono text-right whitespace-nowrap">
-            {formatPrice(item.sellPrice, symbol)}
+            {formatPrice(item.sellPrice, displayName)}
           </span>
         </div>
       </div>
@@ -196,13 +211,13 @@ export function LivePrices({ dict }: { dict: any }) {
         {displayAssets.map((item) => {
           if (!item) return null;
 
-          const symbol = item.symbol;
-          const Icon = getIcon(symbol);
+          const displayName = item.displayName;
+          const Icon = getIcon(displayName);
           const change24h = item.change24h || 0;
 
           return (
             <div
-              key={symbol}
+              key={displayName}
               className={cn(
                 "flex flex-col justify-between gap-4 p-4 rounded-lg bg-card border-2 transition-colors duration-300",
                 getChangeBgColor(change24h)

@@ -24,17 +24,6 @@ interface ProviderProps {
     children: ReactNode;
 }
 
-const parsePrice = (price: string | number | undefined): number => {
-    if (price === null || price === undefined) return 0;
-    if (typeof price === 'number') return price;
-    if (typeof price === 'string') {
-        const num = parseFloat(price.toString().replace(/\./g, '').replace(',', '.'));
-        return isNaN(num) ? 0 : num;
-    }
-    return 0;
-};
-
-
 export function LivePricesProvider({ children }: ProviderProps) {
     const [liveAssets, setLiveAssets] = useState<Record<string, LiveAssetData>>({});
     const [loading, setLoading] = useState<boolean>(true);
@@ -47,7 +36,7 @@ export function LivePricesProvider({ children }: ProviderProps) {
         
         try {
             const [metalsResponse, cryptoResponse] = await Promise.all([
-                fetch('/api/fetch-precious-metals', { cache: 'no-store'}),
+                fetch('/api/prices/metals', { cache: 'no-store'}),
                 fetch('/api/prices/crypto', { cache: 'no-store'})
             ]);
             
@@ -62,23 +51,16 @@ export function LivePricesProvider({ children }: ProviderProps) {
 
             const metalsData = await metalsResponse.json();
             const cryptoData = await cryptoResponse.json();
-            
-            if (!Array.isArray(metalsData)) {
-                 throw new Error("Invalid data format received from metals API.");
-            }
 
             const processedAssets: Record<string, LiveAssetData> = {};
             
-            metalsData.forEach((item: any) => {
-                const symbol = item['Ürün']; 
-                if (!symbol) return;
-                
-                processedAssets[symbol] = {
+            Object.keys(metalsData).forEach(symbol => {
+                 processedAssets[symbol] = {
                     symbol: symbol,
-                    buyPrice: parsePrice(item.Alis),
-                    sellPrice: parsePrice(item.Satis),
-                    change24h: parsePrice(item.Degisim)
-                };
+                    buyPrice: metalsData[symbol].buyPrice,
+                    sellPrice: metalsData[symbol].sellPrice,
+                    change24h: metalsData[symbol].change24h,
+                 }
             });
 
             Object.keys(cryptoData).forEach(symbol => {
