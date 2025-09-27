@@ -1,4 +1,5 @@
 
+
 'use client';
 
 import Link from 'next/link';
@@ -8,8 +9,9 @@ import { getDictionary } from '@/app/dictionaries';
 import { VaultWiseLogo } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { PriceTicker } from '@/components/landing/price-ticker';
-import { ShieldCheck, Cpu, Zap, Moon, Sun } from 'lucide-react';
+import { ShieldCheck, Cpu, Zap, Moon, Sun, Menu } from 'lucide-react';
 import { useTheme } from 'next-themes';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 
 const HeroScene = dynamic(() => import('@/components/landing/hero-scene'), {
   ssr: false,
@@ -37,7 +39,7 @@ export default function LandingPage() {
       <header className="fixed top-0 left-0 right-0 z-50 px-4 lg:px-6 h-16 flex items-center bg-background/80 backdrop-blur-sm">
         <Link href={`/${lang}`} className="flex items-center justify-center" prefetch={false}>
           <VaultWiseLogo className="h-8 w-8 text-primary" />
-          <span className="ml-2 text-xl font-bold">VaultWise</span>
+          <span className="ml-2 text-xl font-bold hidden sm:inline-block">VaultWise</span>
         </Link>
         <nav className="ml-auto flex items-center gap-2 sm:gap-4">
            <Button variant="ghost" size="icon" onClick={toggleTheme}>
@@ -45,12 +47,36 @@ export default function LandingPage() {
             <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             <span className="sr-only">Toggle theme</span>
           </Button>
-          <Button variant="ghost" asChild>
-            <Link href={`/${lang}/login`}>{landingDict.login}</Link>
-          </Button>
-          <Button asChild>
-            <Link href={`/${lang}/signup`}>{landingDict.signup}</Link>
-          </Button>
+          <div className="hidden sm:flex sm:items-center sm:gap-4">
+            <Button variant="ghost" asChild>
+              <Link href={`/${lang}/login`}>{landingDict.login}</Link>
+            </Button>
+            <Button asChild>
+              <Link href={`/${lang}/signup`}>{landingDict.signup}</Link>
+            </Button>
+          </div>
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" size="icon" className="sm:hidden">
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Open menu</span>
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="right">
+              <nav className="grid gap-6 text-lg font-medium mt-8">
+                <Link href={`/${lang}`} className="flex items-center gap-2 text-lg font-semibold">
+                  <VaultWiseLogo className="h-8 w-8 text-primary" />
+                  <span>VaultWise</span>
+                </Link>
+                <Link href={`/${lang}/login`} className="text-muted-foreground hover:text-foreground">
+                  {landingDict.login}
+                </Link>
+                <Link href={`/${lang}/signup`} className="text-muted-foreground hover:text-foreground">
+                  {landingDict.signup}
+                </Link>
+              </nav>
+            </SheetContent>
+          </Sheet>
         </nav>
       </header>
       
