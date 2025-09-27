@@ -1,5 +1,4 @@
 
-
 'use client';
 
 import Link from 'next/link';
@@ -47,7 +46,7 @@ export default function LandingPage() {
             <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
             <span className="sr-only">Toggle theme</span>
           </Button>
-          <div className="hidden sm:flex sm:items-center sm:gap-4">
+          <div className="flex items-center gap-2">
             <Button variant="ghost" asChild>
               <Link href={`/${lang}/login`}>{landingDict.login}</Link>
             </Button>
@@ -55,28 +54,6 @@ export default function LandingPage() {
               <Link href={`/${lang}/signup`}>{landingDict.signup}</Link>
             </Button>
           </div>
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="sm:hidden">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Open menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right">
-              <nav className="grid gap-6 text-lg font-medium mt-8">
-                <Link href={`/${lang}`} className="flex items-center gap-2 text-lg font-semibold">
-                  <VaultWiseLogo className="h-8 w-8 text-primary" />
-                  <span>VaultWise</span>
-                </Link>
-                <Link href={`/${lang}/login`} className="text-muted-foreground hover:text-foreground">
-                  {landingDict.login}
-                </Link>
-                <Link href={`/${lang}/signup`} className="text-muted-foreground hover:text-foreground">
-                  {landingDict.signup}
-                </Link>
-              </nav>
-            </SheetContent>
-          </Sheet>
         </nav>
       </header>
       
@@ -160,3 +137,5 @@ export default function LandingPage() {
     </div>
   );
 }
+
+    
