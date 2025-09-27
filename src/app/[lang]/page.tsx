@@ -1,3 +1,4 @@
+
 'use client';
 
 import Link from 'next/link';
@@ -56,7 +57,7 @@ export default function LandingPage() {
       <main className="flex-1 flex flex-col justify-center relative z-10">
         <section className="w-full pt-24 pb-12 md:pt-32 md:pb-16 lg:pt-40 lg:pb-20 text-center">
           <div className="container mx-auto px-4">
-            <h1 className="text-4xl font-bold tracking-tighter sm:text-6xl xl:text-7xl/none text-foreground">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl xl:text-7xl/none font-bold tracking-tighter text-foreground">
               {landingDict.hero.title}
             </h1>
             <p className="max-w-[700px] mx-auto text-muted-foreground md:text-xl mt-6">
@@ -77,7 +78,7 @@ export default function LandingPage() {
             <PriceTicker />
         </section>
 
-        <section id="features" className="w-full py-12 md:py-16 lg:py-20">
+        <section id="features" className="w-full py-12 md:py-24 lg:py-32">
             <div className="container mx-auto px-4 md:px-6">
                  <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
                     <div className="inline-block rounded-lg bg-muted px-3 py-1 text-sm">{landingDict.features.eyebrow}</div>
@@ -86,7 +87,7 @@ export default function LandingPage() {
                         {landingDict.features.description}
                     </p>
                 </div>
-                <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-1 md:grid-cols-3">
+                <div className="mx-auto grid max-w-5xl items-start gap-8 grid-cols-1 md:grid-cols-3">
                     <div className="flex flex-col items-center text-center p-6 rounded-lg border bg-card hover:shadow-xl transition-shadow duration-300">
                         <div className="p-3 rounded-full bg-primary/10 border border-primary/20 mb-4">
                            <ShieldCheck className="h-8 w-8 text-primary" />
