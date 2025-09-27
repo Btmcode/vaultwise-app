@@ -3,9 +3,6 @@ import admin from 'firebase-admin';
 import type { App } from 'firebase-admin/app';
 import { cookies } from 'next/headers';
 import type { DecodedIdToken } from 'firebase-admin/auth';
-import { redirect } from 'next/navigation';
-import { revalidatePath } from 'next/cache';
-
 
 // This function initializes and returns the Firebase Admin App instance.
 // It ensures that the app is initialized only once across the entire server.
