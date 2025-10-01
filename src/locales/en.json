@@ -1,0 +1,454 @@
+
+{
+    "metadata": {
+        "title": "VaultWise | Modern Multi-Asset Savings Platform",
+        "description": "Secure your future with VaultWise. We provide insured, physical vault storage for your precious metals and digital assets. Start saving with AI-powered strategies and 24/7 trading."
+    },
+    "backToDashboard": "Back to Dashboard",
+    "landingPage": {
+        "login": "Login",
+        "signup": "Sign Up",
+        "hero": {
+            "title": "Real Value, Real Security.",
+            "description": "VaultWise is the only platform that protects even your digital assets in insured, physical vaults. Meet the future standard of savings.",
+            "ctaPrimary": "Start Saving",
+            "ctaSecondary": "Explore"
+        },
+        "features": {
+            "eyebrow": "Why VaultWise?",
+            "title": "The Future of Savings. Today.",
+            "description": "Our platform combines top-tier security with modern financial tools, giving you full control and peace of mind over your assets.",
+            "cards": {
+                "security": {
+                    "title": "Physical Security",
+                    "description": "All your digital and precious metal assets are physically protected in insured and audited high-security vaults."
+                },
+                "ai": {
+                    "title": "AI-Powered Portfolio",
+                    "description": "Our smart algorithms analyze market data to offer you personalized savings strategies and investment opportunities."
+                },
+                "instant": {
+                    "title": "Instant Trading",
+                    "description": "Buy, sell, or convert your assets 24/7. Always stay one step ahead of the market."
+                }
+            }
+        },
+        "footer": {
+            "rights": "All rights reserved.",
+            "terms": "Terms of Use",
+            "privacy": "Privacy Policy",
+            "investors": "For Investors"
+        }
+    },
+    "header": {
+        "myAccount": "My Account",
+        "profile": "Profile",
+        "settings": "Settings",
+        "logout": "Logout",
+        "logoutSuccess": {
+            "title": "Logged Out",
+            "description": "You have been successfully logged out."
+        },
+        "logoutError": {
+            "title": "Logout Failed",
+            "description": "An error occurred during logout. Please try again."
+        },
+        "deposit": "Deposit",
+        "withdraw": "Withdraw"
+    },
+    "assetNames": {
+        "XAU": "Gold",
+        "XAG": "Silver (Gram)",
+        "XAU_ONS": "Gold (Ounce)",
+        "XAU_USD_KG": "Gold (USD/Kg)",
+        "XAU_EUR_KG": "Gold (EUR/Kg)",
+        "XAG_ONS": "Silver (Ounce)",
+        "XAG_TL": "Silver (Gram/TL)",
+        "XAG_USD": "Silver (USD/Gram)",
+        "XAG_EUR": "Silver (EUR/Gram)",
+        "USD_TRY": "USD/TRY Exchange Rate"
+    },
+    "portfolioSummary": {
+        "totalBalance": "Total Balance",
+        "growth": "last 24h",
+        "buyDialog": {
+            "title": "Buy Asset",
+            "shortTitle": "Buy",
+            "description": "Select an asset and enter the amount you want to buy.",
+            "assetLabel": "Asset",
+            "assetPlaceholder": "Select an asset",
+            "amountLabel": "Amount to spend (TL)",
+            "amountPlaceholder": "e.g., 1,000",
+            "approximate": "You will receive approximately {amount} {symbol}.",
+            "buyButton": "Buy",
+            "toastInvalidTitle": "Invalid Input",
+            "toastInvalidDescription": "Please select an asset and enter a valid amount.",
+            "toastInsufficientTitle": "Insufficient Balance",
+            "toastInsufficientDescription": "Your available balance of {balance} TL is not enough for this transaction.",
+            "toastSuccessTitle": "Purchase Successful",
+            "toastSuccessDescription": "You have successfully purchased {amount} {symbol}.",
+            "confirm": {
+                "title": "Confirm Purchase",
+                "description": "Please review and confirm your purchase.",
+                "asset": "Asset",
+                "paymentAmount": "Payment Amount",
+                "amountToReceive": "Amount to Receive",
+                "cancel": "Cancel",
+                "confirm": "Confirm Purchase"
+            }
+        },
+        "sellDialog": {
+            "title": "Sell Asset",
+            "shortTitle": "Sell",
+            "description": "Select an asset and enter the amount you want to sell.",
+            "assetLabel": "Asset to Sell",
+            "assetPlaceholder": "Select an asset from your portfolio",
+            "amountLabel": "Amount to sell",
+            "amountPlaceholder": "e.g., 1.25",
+            "approximate": "You will receive approximately {tl} TL.",
+            "sellButton": "Sell",
+            "toastInvalidTitle": "Invalid Input",
+            "toastInvalidDescription": "Please select an asset and enter a valid amount.",
+            "toastInsufficientTitle": "Insufficient Asset Balance",
+            "toastInsufficientDescription": "You do not have enough {symbol} to sell. Your balance is {amount}.",
+            "toastSuccessTitle": "Sale Successful",
+            "toastSuccessDescription": "You have successfully sold {amount} {symbol} for approximately {tl} TL.",
+            "confirm": {
+                "title": "Confirm Sale",
+                "descriptionSell": "Please review and confirm your sale.",
+                "assetToSell": "Asset to Sell",
+                "amountToSell": "Amount to Sell",
+                "amountToReceive": "Estimated proceeds",
+                "cancel": "Cancel",
+                "confirm": "Confirm Sale"
+            }
+        },
+        "autoSaveDialog": {
+            "title": "AI-Powered Auto-Save",
+            "createTitle": "Create a New Auto-Save Plan",
+            "createDescription": "Let our AI assistant create a personalized savings plan for you. Just answer a few questions.",
+            "suggestionTitle": "Your AI-Generated Plan",
+            "suggestionDescription": "Here's a personalized savings plan based on your goals and preferences.",
+            "goalLabel": "What is your primary financial goal?",
+            "goalPlaceholder": "e.g., Save for a car, retirement, vacation",
+            "incomeLabel": "Your Monthly Income (TL)",
+            "incomePlaceholder": "e.g., 50000",
+            "riskLabel": "What is your risk tolerance?",
+            "riskLow": "Low - I prefer safe, steady growth.",
+            "riskMedium": "Medium - I'm comfortable with some risk for better returns.",
+            "riskHigh": "High - I'm willing to take significant risks for high rewards.",
+            "assetsLabel": "Which assets are you interested in?",
+            "generateButton": "Generate Plan",
+            "suggestionCardDescription": "We suggest automatically saving <b>{amount} TL</b> towards <b>{asset}</b> every month.",
+            "backButton": "Back",
+            "acceptButton": "Accept & Start Plan",
+            "toastErrorTitle": "Suggestion Failed",
+            "toastErrorDescription": "Could not generate a suggestion. Please try again later.",
+            "toastSuccessTitle": "Plan Activated!",
+            "toastSuccessDescription": "Your new auto-save plan for {asset} is now active."
+        }
+    },
+    "portfolioChart": {
+        "title": "Portfolio Performance",
+        "description": "Your portfolio's value over time.",
+        "tabs": {
+            "1d": "1D",
+            "1w": "1W",
+            "1m": "1M",
+            "1y": "1Y"
+        },
+        "tooltip": {
+            "value": "Value",
+            "date": "Date"
+        },
+        "noData": "Not enough data to display chart."
+    },
+    "assetDistribution": {
+        "title": "Asset Distribution",
+        "description": "How your assets are diversified.",
+        "percentage": "Percentage",
+        "noData": "No assets to display."
+    },
+    "recentTransactions": {
+        "title": "Recent Transactions",
+        "description": "Your latest buy and sell activities.",
+        "transactionTypes": {
+            "buy": "Buy",
+            "sell": "Sell",
+            "auto_save": "Auto-Save",
+            "deposit": "Deposit",
+            "withdraw": "Withdraw"
+        }
+    },
+    "preciousMetalsCards": {
+        "title": "Markets",
+        "live": "LIVE",
+        "lastUpdatedText": "less than a minute ago",
+        "dataError": "Data error",
+        "refreshData": "Refresh Data",
+        "noAssetTooltip": "No assets.",
+        "loading": "Loading prices..."
+    },
+    "aiMarketAnalysis": {
+        "title": "AI Market Analysis",
+        "description": "Get an AI-powered summary of the current market situation.",
+        "buttonText": "Generate Analysis",
+        "buttonLoadingText": "Analyzing...",
+        "regenerateButton": "Regenerate",
+        "keyAsset": "Key Asset",
+        "noData": "Not enough market data to generate analysis.",
+        "generationFailed": "Analysis generation failed. Please try again.",
+        "errorTitle": "Analysis Error",
+        "general": "An unexpected error occurred.",
+        "modelOverloaded": "The AI model is currently busy. Please try again in a few moments.",
+        "dataSourceError": "Price data source is currently unavailable."
+    },
+    "autoSavePlans": {
+        "title": "Active Auto-Save Plans",
+        "description": "Your automated savings plans.",
+        "noPlans": "You have no active auto-save plans. Create one with our AI assistant!",
+        "frequency": "Monthly",
+        "amount": "Monthly Amount",
+        "stopButton": "Stop",
+        "toast": {
+            "title": "Plan Deactivated",
+            "description": "The auto-save plan has been stopped."
+        }
+    },
+    "assetList": {
+        "title": "Your Assets",
+        "description": "Detailed view of all assets in your portfolio.",
+        "searchPlaceholder": "Search assets...",
+        "hideLowBalances": "Hide low balances",
+        "table": {
+            "asset": "Asset",
+            "balance": "Your Balance",
+            "price": "Price",
+            "value": "Value",
+            "buy": "Buy",
+            "sell": "Sell"
+        },
+        "noResults": "No assets match your search."
+    },
+    "loginPage": {
+        "title": "Login to Your Account",
+        "description": "Enter your email below to login to your account.",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "forgotPassword": "Forgot your password?",
+        "buttonText": "Login",
+        "signupText": "Don't have an account?",
+        "signupLink": "Sign up",
+        "toast": {
+            "success": {
+                "title": "Login Successful",
+                "description": "Welcome back! Redirecting you to the dashboard."
+            },
+            "error": {
+                "title": "Login Failed",
+                "invalidCredentials": "The email or password you entered is incorrect. Please try again.",
+                "default": "An unknown error occurred. Please try again."
+            }
+        }
+    },
+    "signupPage": {
+        "title": "Create an Account",
+        "description": "Enter your email and password to create an account.",
+        "emailLabel": "Email",
+        "passwordLabel": "Password",
+        "buttonText": "Create Account",
+        "loginText": "Already have an account?",
+        "loginLink": "Login",
+        "toast": {
+            "success": {
+                "title": "Account Created",
+                "description": "Welcome! We're redirecting you to your new dashboard."
+            },
+            "error": {
+                "title": "Signup Failed",
+                "passwordLength": "Password must be at least 6 characters long.",
+                "emailInUse": "This email address is already in use.",
+                "default": "An unknown error occurred. Please try again."
+            }
+        }
+    },
+    "forgotPasswordPage": {
+        "title": "Forgot Password",
+        "description": "Enter your email and we'll send you a link to reset your password.",
+        "emailLabel": "Email",
+        "buttonText": "Send Reset Link",
+        "backToLogin": "Back to Login",
+        "toast": {
+            "success": {
+                "title": "Email Sent",
+                "description": "If an account exists for that email, a password reset link has been sent."
+            },
+            "error": {
+                "title": "Error",
+                "noEmail": "Please enter an email address.",
+                "userNotFound": "No account found with this email address.",
+                "default": "An error occurred. Please try again."
+            }
+        }
+    },
+    "profilePage": {
+        "title": "My Profile",
+        "cardTitle": "Profile Information",
+        "cardDescription": "Update your personal details here.",
+        "changePicture": "Change Picture",
+        "nameLabel": "Name",
+        "emailLabel": "Email",
+        "saveButton": "Save Changes",
+        "toast": {
+            "success": {
+                "title": "Profile Updated",
+                "description": "Your changes have been saved successfully."
+            },
+            "error": {
+                "title": "Update Failed",
+                "description": "Could not update your profile. Please try again."
+            }
+        }
+    },
+    "settingsPage": {
+        "title": "Settings",
+        "account": {
+            "title": "Password",
+            "description": "Update your password here. It's a good practice to use a strong, unique password.",
+            "currentPassword": "Current Password",
+            "newPassword": "New Password",
+            "confirmNewPassword": "Confirm New Password",
+            "saveButton": "Update Password"
+        },
+        "notifications": {
+            "title": "Notifications",
+            "description": "Manage your notification preferences.",
+            "priceAlerts": "Price Alerts",
+            "autoSaveUpdates": "Auto-Save Updates",
+            "newsletter": "Newsletter",
+            "saveButton": "Save Preferences"
+        },
+        "feedback": {
+            "title": "Submit Feedback",
+            "description": "Have an idea or found a bug? Let us know!",
+            "placeholder": "Your feedback is valuable to us...",
+            "submitButton": "Submit Feedback",
+            "toast": {
+                "success": {
+                    "title": "Feedback Received!",
+                    "description": "Thank you for helping us improve."
+                },
+                "error": {
+                    "title": "Submission Failed",
+                    "tooShort": "Feedback must be at least 10 characters.",
+                    "general": "An error occurred. Please try again."
+                }
+            }
+        },
+        "iban": {
+            "title": "Bank Accounts (IBAN)",
+            "description": "Manage your saved bank accounts for deposits and withdrawals.",
+            "accountHolder": "Account Holder Name",
+            "accountHolderPlaceholder": "e.g., John Doe",
+            "iban": "IBAN",
+            "ibanPlaceholder": "TR...",
+            "addButton": "Add Account",
+            "savedAccounts": "Saved Accounts",
+            "noAccounts": "No saved bank accounts.",
+            "deleteConfirm": {
+                "title": "Are you sure?",
+                "description": "This will permanently delete the IBAN ending in {iban}. This action cannot be undone.",
+                "cancel": "Cancel",
+                "confirm": "Delete"
+            },
+            "toast": {
+                "success": {
+                    "addTitle": "Account Added",
+                    "addDescription": "The new bank account has been saved.",
+                    "deleteTitle": "Account Deleted",
+                    "deleteDescription": "The bank account has been removed."
+                },
+                "error": {
+                    "title": "Error",
+                    "emptyFields": "Account holder and IBAN cannot be empty.",
+                    "invalidIban": "Please enter a valid IBAN."
+                }
+            }
+        },
+        "toast": {
+            "saveSuccess": {
+                "title": "Settings Saved",
+                "description": "Your new settings have been applied."
+            }
+        }
+    },
+    "depositPage": {
+        "title": "Deposit Money",
+        "description": "Deposit Turkish Lira to your VaultWise account.",
+        "cardTitle": "Deposit",
+        "cardDescription": "Select one of our bank accounts below to make a transfer. The amount will be credited to your account shortly.",
+        "identityWarning": {
+            "title": "Important Information",
+            "description": "You can only deposit money from a bank account registered under your own name. Transfers from different individuals will be returned."
+        },
+        "amountLabel": "Amount (TL)",
+        "ibanLabel": "Recipient Account (IBAN)",
+        "ibanPlaceholder": "Select a bank account",
+        "noIban": "No bank accounts found to transfer to. Please check back later or contact support.",
+        "button": "Deposit",
+        "toast": {
+            "success": {
+                "title": "Deposit Instruction Received",
+                "description": "Your deposit of {amount} TL has been initiated. It will be reflected in your account after checks."
+            },
+            "error": {
+                "title": "Error",
+                "invalidInput": "Please enter a valid amount and select a recipient bank account."
+            }
+        }
+    },
+    "withdrawPage": {
+        "title": "Withdraw Money",
+        "description": "Withdraw Turkish Lira from your VaultWise account.",
+        "summary": {
+            "title": "Balance Summary",
+            "availableBalance": "Available Balance"
+        },
+        "cardTitle": "Withdrawal",
+        "cardDescription": "Enter the amount and select the IBAN you want to withdraw to.",
+        "amountLabel": "Amount to Withdraw (TL)",
+        "transactionFeeLabel": "Transaction Fee",
+        "netAmountLabel": "Amount to be Transferred",
+        "ibanLabel": "Your Bank Account (IBAN)",
+        "ibanPlaceholder": "Select from your saved accounts",
+        "noIban": "No saved IBAN found. Please add an IBAN from the",
+        "button": "Withdraw",
+        "fastInfo": {
+            "title": "7/24 FAST Transfer",
+            "description": "Withdrawals are processed instantly via the FAST system."
+        },
+        "info": {
+            "title": "Important Information",
+            "personalAccount": "You can only withdraw to a bank account registered under your own name.",
+            "limit24h": "Your remaining daily withdrawal limit is {amount}.",
+            "limit30d": "Your remaining monthly withdrawal limit is {amount}.",
+            "minWithdrawal": "The minimum withdrawal amount is {amount} TL.",
+            "supportedBanks": "Transfers to Akbank, Ziraat, Garanti, İş Bankası, and Yapı Kredi are processed 24/7.",
+            "otherBanks": "Transfers to other banks are processed on weekdays during business hours."
+        },
+        "toast": {
+            "success": {
+                "title": "Withdrawal Successful",
+                "description": "An amount of {amount} TL has been sent to your account."
+            },
+            "error": {
+                "title": "Withdrawal Failed",
+                "invalidInput": "Please select a bank account and enter a valid amount.",
+                "minAmount": "Minimum withdrawal amount is {min} TL.",
+                "insufficientBalance": "Insufficient available balance.",
+                "limit24h": "The amount exceeds your daily withdrawal limit.",
+                "limit30d": "The amount exceeds your monthly withdrawal limit."
+            }
+        }
+    }
+}

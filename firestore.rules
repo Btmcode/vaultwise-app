@@ -1,0 +1,53 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- Herkese açık veri ---
+    match /precious_metals/{metal} {
+      // Piyasa fiyatları herkes tarafından okunabilir
+      allow read: if true;
+      // Kimse doğrudan yazamaz (sadece backend yazabilir)
+      allow write: if false; 
+    }
+    
+    match /crypto_assets/{crypto} {
+      // Kripto varlık fiyatları herkes tarafından okunabilir
+      allow read: if true;
+      // Kimse doğrudan yazamaz (sadece backend yazabilir)
+      allow write: if false; 
+    }
+
+    // --- Kullanıcıya özel veri ---
+    match /users/{userId} {
+      // Kullanıcı sadece kendi verisini okuyabilir/yazabilir
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      // --- İşlemler (transactions) ---
+      match /transactions/{transactionId} {
+         // Kullanıcı kendi işlemini görebilir ve yeni işlem oluşturabilir
+         allow read, create: if request.auth != null && request.auth.uid == userId;
+         // Oluşturulan işlem sonradan değiştirilemez veya silinemez (güvenlik için)
+         allow update, delete: if false;
+      }
+
+      // --- IBAN hesapları ---
+      match /ibanAccounts/{ibanId} {
+        // Kullanıcı kendi IBAN kayıtlarını görebilir ve silebilir
+        allow read, delete: if request.auth != null && request.auth.uid == userId;
+
+        // Yeni IBAN eklerken sadece TR ile başlayan ve toplamda 26 karakter olan format kabul edilir
+        allow create: if request.auth != null 
+                      && request.auth.uid == userId
+                      && request.resource.data.iban is string
+                      && request.resource.data.iban.matches('^TR[0-9]{24}$');
+
+        // Güncellemede de aynı IBAN kontrolü yapılır
+        allow update: if request.auth != null 
+                      && request.auth.uid == userId
+                      && request.resource.data.iban is string
+                      && request.resource.data.iban.matches('^TR[0-9]{24}$');
+      }
+    }
+  }
+}

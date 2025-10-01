@@ -1,0 +1,16 @@
+# These are supported funding model platforms
+
+# GitHub Sponsors: The most direct way to support the project.
+# Replace 'Btmcode' if you set up a different organization or user for sponsorships.
+github: [Btmcode]
+
+# Buy Me a Coffee: A popular and easy way for one-time or recurring support.
+# Assumes your username on buymeacoffee.com is also 'Btmcode'. If not, please change it.
+buy_me_a_coffee: Btmcode
+
+# Custom Link: A direct link to your preferred sponsorship page.
+# This provides a clear call to action.
+custom: ['https://www.buymeacoffee.com/Btmcode']
+
+# Patreon: Uncomment and replace with your username if you decide to use Patreon for monthly subscriptions.
+# patreon: your-patreon-username

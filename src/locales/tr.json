@@ -1,0 +1,455 @@
+
+{
+    "metadata": {
+        "title": "VaultWise | Modern, Çok Varlıklı Birikim Platformu",
+        "description": "Geleceğinizi VaultWise ile güvence altına alın. Değerli metalleriniz ve dijital varlıklarınız için sigortalı, fiziksel kasa depolaması sağlıyoruz. YD destekli stratejiler ve 7/24 alım-satım ile biriktirmeye başlayın."
+    },
+    "backToDashboard": "Kontrol Paneline Geri Dön",
+    "landingPage": {
+        "login": "Giriş Yap",
+        "signup": "Hesap Oluştur",
+        "hero": {
+            "title": "Gerçek Değer, Gerçek Güvence.",
+            "description": "VaultWise, dijital varlıklarınızı dahi sigortalı, fiziksel kasalarda koruyan tek platform. Geleceğin birikim standardı ile tanışın.",
+            "ctaPrimary": "Biriktirmeye Başla",
+            "ctaSecondary": "Keşfet"
+        },
+        "features": {
+            "eyebrow": "Neden VaultWise?",
+            "title": "Geleceğin Birikimi. Bugün.",
+            "description": "Platformumuz, en üst düzey güvenliği modern finansal araçlarla birleştirerek size varlıklarınız üzerinde tam kontrol ve iç rahatlığı sunar.",
+            "cards": {
+                "security": {
+                    "title": "Fiziksel Güvence",
+                    "description": "Tüm dijital ve değerli metal varlıklarınız, sigortalı ve denetlenen yüksek güvenlikli kasalarda fiziksel olarak korunur."
+                },
+                "ai": {
+                    "title": "Yapay Zeka Destekli Portföy",
+                    "description": "Akıllı algoritmalarımız, piyasa verilerini analiz ederek size özel birikim stratejileri ve yatırım fırsatları sunar."
+                },
+                "instant": {
+                    "title": "Anında Alım-Satım",
+                    "description": "Varlıklarınızı 7/24 anında alın, satın veya dönüştürün. Piyasaya her zaman bir adım önde olun."
+                }
+            }
+        },
+        "footer": {
+            "rights": "Tüm hakları saklıdır.",
+            "terms": "Kullanım Koşulları",
+            "privacy": "Gizlilik Politikası",
+            "investors": "Yatırımcı İlişkileri"
+        }
+    },
+    "header": {
+        "myAccount": "Hesabım",
+        "profile": "Profil",
+        "settings": "Ayarlar",
+        "logout": "Çıkış Yap",
+        "logoutSuccess": {
+            "title": "Çıkış Yapıldı",
+            "description": "Başarıyla çıkış yaptınız."
+        },
+        "logoutError": {
+            "title": "Çıkış Başarısız",
+            "description": "Çıkış sırasında bir hata oluştu. Lütfen tekrar deneyin."
+        },
+        "deposit": "Para Yatır",
+        "withdraw": "Para Çek"
+    },
+    "assetNames": {
+        "XAU": "Has Altın",
+        "XAG": "Gümüş (Gram)",
+        "XAU_ONS": "Altın/ONS",
+        "XAU_USD_KG": "Altın (USD/Kg)",
+        "XAU_EUR_KG": "Altın EUR/Kg",
+        "XAG_ONS": "Gümüş/ONS",
+        "XAG_TL": "Gümüş/TL",
+        "XAG_USD": "Gümüş/USD",
+        "XAG_EUR": "Gümüş/EUR",
+        "USD_TRY": "USD/TRY Kuru"
+    },
+    "portfolioSummary": {
+        "totalBalance": "Toplam Bakiye",
+        "growth": "son 24s",
+        "buyDialog": {
+            "title": "Varlık Al",
+            "shortTitle": "Al",
+            "description": "Almak istediğiniz varlığı ve tutarı seçin.",
+            "assetLabel": "Varlık",
+            "assetPlaceholder": "Bir varlık seçin",
+            "amountLabel": "Harcanacak Tutar (TL)",
+            "amountPlaceholder": "Örn: 1.000",
+            "approximate": "Yaklaşık {amount} {symbol} alacaksınız.",
+            "buyButton": "Satın Al",
+            "toastInvalidTitle": "Geçersiz Girdi",
+            "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir tutar girin.",
+            "toastInsufficientTitle": "Yetersiz Bakiye",
+            "toastInsufficientDescription": "{balance} TL olan kullanılabilir bakiyeniz bu işlem için yeterli değil.",
+            "toastSuccessTitle": "Alım Başarılı",
+            "toastSuccessDescription": "Başarıyla {amount} {symbol} satın aldınız.",
+            "confirm": {
+                "title": "Alımı Onayla",
+                "description": "Lütfen alım işleminizi gözden geçirip onaylayın.",
+                "asset": "Alınacak Varlık",
+                "paymentAmount": "Ödenecek Tutar",
+                "amountToReceive": "Alınacak Miktar",
+                "cancel": "İptal",
+                "confirm": "Alımı Onayla"
+            }
+        },
+        "sellDialog": {
+            "title": "Varlık Sat",
+            "shortTitle": "Sat",
+            "description": "Satmak istediğiniz varlığı ve miktarı seçin.",
+            "assetLabel": "Satılacak Varlık",
+            "assetPlaceholder": "Portföyünüzden bir varlık seçin",
+            "amountLabel": "Satılacak miktar",
+            "amountPlaceholder": "Örn: 1.25",
+            "approximate": "Yaklaşık {tl} TL alacaksınız.",
+            "sellButton": "Sat",
+            "toastInvalidTitle": "Geçersiz Girdi",
+            "toastInvalidDescription": "Lütfen bir varlık seçin ve geçerli bir miktar girin.",
+            "toastInsufficientTitle": "Yetersiz Varlık Bakiyesi",
+            "toastInsufficientDescription": "Satmak için yeterli {symbol} sahibi değilsiniz. Bakiyeniz: {amount}.",
+            "toastSuccessTitle": "Satış Başarılı",
+            "toastSuccessDescription": "{amount} {symbol} varlığınızı yaklaşık {tl} TL karşılığında başarıyla sattınız.",
+            "confirm": {
+                "title": "Satışı Onayla",
+                "descriptionSell": "Lütfen satış işleminizi gözden geçirip onaylayın.",
+                "assetToSell": "Satılacak Varlık",
+                "amountToSell": "Satılacak Miktar",
+                "amountToReceive": "Hesaba Geçecek Tutar",
+                "cancel": "İptal",
+                "confirm": "Satışı Onayla"
+            }
+        },
+        "autoSaveDialog": {
+            "title": "YD Destekli Otomatik Birikim",
+            "createTitle": "Yeni Otomatik Birikim Planı Oluştur",
+            "createDescription": "Yapay zeka asistanımızın sizin için kişiselleştirilmiş bir birikim planı oluşturmasına izin verin. Sadece birkaç soruyu yanıtlayın.",
+            "suggestionTitle": "Yapay Zeka Tarafından Oluşturulan Planınız",
+            "suggestionDescription": "İşte hedeflerinize ve tercihlerinize göre kişiselleştirilmiş birikim planınız.",
+            "goalLabel": "Öncelikli finansal hedefiniz nedir?",
+            "goalPlaceholder": "Örn: Araba, emeklilik, tatil için birikim",
+            "incomeLabel": "Aylık Geliriniz (TL)",
+            "incomePlaceholder": "Örn: 50000",
+            "riskLabel": "Risk toleransınız nedir?",
+            "riskLow": "Düşük - Güvenli, istikrarlı büyümeyi tercih ederim.",
+            "riskMedium": "Orta - Daha iyi getiriler için bir miktar risk alabilirim.",
+            "riskHigh": "Yüksek - Yüksek ödüller için önemli riskler almaya hazırım.",
+            "assetsLabel": "Hangi varlıklarla ilgileniyorsunuz?",
+            "generateButton": "Plan Oluştur",
+            "suggestionCardDescription": "Her ay <b>{asset}</b> için otomatik olarak <b>{amount} TL</b> biriktirmenizi öneriyoruz.",
+            "backButton": "Geri",
+            "acceptButton": "Kabul Et & Planı Başlat",
+            "toastErrorTitle": "Öneri Başarısız",
+            "toastErrorDescription": "Bir öneri oluşturulamadı. Lütfen daha sonra tekrar deneyin.",
+            "toastSuccessTitle": "Plan Aktif!",
+            "toastSuccessDescription": "Yeni {asset} otomatik birikim planınız artık aktif."
+        }
+    },
+    "portfolioChart": {
+        "title": "Portföy Performansı",
+        "description": "Portföyünüzün zaman içindeki değeri.",
+        "tabs": {
+            "1d": "1G",
+            "1w": "1H",
+            "1m": "1A",
+            "1y": "1Y"
+        },
+        "tooltip": {
+            "value": "Değer",
+            "date": "Tarih"
+        },
+        "noData": "Grafiği görüntülemek için yeterli veri yok."
+    },
+    "assetDistribution": {
+        "title": "Varlık Dağılımı",
+        "description": "Varlıklarınızın ne kadar çeşitli olduğu.",
+        "percentage": "Yüzde",
+        "noData": "Görüntülenecek varlık yok."
+    },
+    "recentTransactions": {
+        "title": "Son İşlemler",
+        "description": "En son alım ve satım aktiviteleriniz.",
+        "transactionTypes": {
+            "buy": "Alım",
+            "sell": "Satım",
+            "auto_save": "Oto-Birikim",
+            "deposit": "Yatırma",
+            "withdraw": "Çekme"
+        }
+    },
+    "preciousMetalsCards": {
+        "title": "Piyasalar",
+        "live": "CANLI",
+        "lastUpdatedText": "bir dakikadan az önce",
+        "dataError": "Veri hatası",
+        "refreshData": "Verileri Yenile",
+        "noAssetTooltip": "Varlığınız yok.",
+        "loading": "Fiyatlar yükleniyor..."
+    },
+    "aiMarketAnalysis": {
+        "title": "YD Piyasa Analizi",
+        "description": "Mevcut piyasa durumunun yapay zeka destekli bir özetini alın.",
+        "buttonText": "Analiz Oluştur",
+        "buttonLoadingText": "Analiz ediliyor...",
+        "regenerateButton": "Yeniden Oluştur",
+        "keyAsset": "Öne Çıkan",
+        "noData": "Analiz oluşturmak için yeterli piyasa verisi yok.",
+        "generationFailed": "Analiz oluşturma başarısız oldu. Lütfen tekrar deneyin.",
+        "errorTitle": "Analiz Hatası",
+        "general": "Beklenmedik bir hata oluştu.",
+        "modelOverloaded": "Yapay zeka modeli şu anda meşgul. Lütfen birkaç dakika sonra tekrar deneyin.",
+        "dataSourceError": "Fiyat veri kaynağı şu anda kullanılamıyor."
+    },
+    "autoSavePlans": {
+        "title": "Aktif Otomatik Birikim Planları",
+        "description": "Otomatik birikim planlarınız.",
+        "noPlans": "Aktif bir otomatik birikim planınız yok. Yapay zeka asistanımızla bir tane oluşturun!",
+        "frequency": "Aylık",
+        "amount": "Aylık Tutar",
+        "stopButton": "Durdur",
+        "toast": {
+            "title": "Plan Durduruldu",
+            "description": "Otomatik birikim planı durduruldu."
+        }
+    },
+    "assetList": {
+        "title": "Varlıklarım",
+        "description": "Portföyünüzdeki tüm varlıkların detaylı görünümü.",
+        "searchPlaceholder": "Varlık ara...",
+        "hideLowBalances": "Düşük bakiyeleri gizle",
+        "table": {
+            "asset": "Varlık",
+            "balance": "Bakiyeniz",
+            "price": "Fiyat",
+            "value": "Değer",
+            "buy": "Alış",
+            "sell": "Satış"
+        },
+        "noResults": "Aramanızla eşleşen varlık bulunamadı."
+    },
+    "loginPage": {
+        "title": "Hesabınıza Giriş Yapın",
+        "description": "Hesabınıza giriş yapmak için e-postanızı girin.",
+        "emailLabel": "E-posta",
+        "passwordLabel": "Şifre",
+        "forgotPassword": "Şifrenizi mi unuttunuz?",
+        "buttonText": "Giriş Yap",
+        "signupText": "Hesabınız yok mu?",
+        "signupLink": "Kayıt Ol",
+        "toast": {
+            "success": {
+                "title": "Giriş Başarılı",
+                "description": "Tekrar hoş geldiniz! Kontrol paneline yönlendiriliyorsunuz."
+            },
+            "error": {
+                "title": "Giriş Başarısız",
+                "invalidCredentials": "Girdiğiniz e-posta veya şifre yanlış. Lütfen tekrar deneyin.",
+                "default": "Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin."
+            }
+        }
+    },
+    "signupPage": {
+        "title": "Hesap Oluştur",
+        "description": "Bir hesap oluşturmak için e-posta ve şifrenizi girin.",
+        "emailLabel": "E-posta",
+        "passwordLabel": "Şifre",
+        "buttonText": "Hesap Oluştur",
+        "loginText": "Zaten bir hesabınız var mı?",
+        "loginLink": "Giriş Yap",
+        "toast": {
+            "success": {
+                "title": "Hesap Oluşturuldu",
+                "description": "Hoş geldiniz! Yeni kontrol panelinize yönlendiriliyorsunuz."
+            },
+            "error": {
+                "title": "Kayıt Başarısız",
+                "passwordLength": "Şifre en az 6 karakter olmalıdır.",
+                "emailInUse": "Bu e-posta adresi zaten kullanılıyor.",
+                "default": "Bilinmeyen bir hata oluştu. Lütfen tekrar deneyin."
+            }
+        }
+    },
+    "forgotPasswordPage": {
+        "title": "Şifremi Unuttum",
+        "description": "E-postanızı girin, şifrenizi sıfırlamanız için size bir bağlantı gönderelim.",
+        "emailLabel": "E-posta",
+        "buttonText": "Sıfırlama Bağlantısı Gönder",
+        "backToLogin": "Giriş'e Geri Dön",
+        "toast": {
+            "success": {
+                "title": "E-posta Gönderildi",
+                "description": "Bu e-postaya ait bir hesap varsa, bir şifre sıırlama bağlantısı gönderildi."
+            },
+            "error": {
+                "title": "Hata",
+                "noEmail": "Lütfen bir e-posta adresi girin.",
+                "userNotFound": "Bu e-posta adresine sahip bir hesap bulunamadı.",
+                "default": "Bir hata oluştu. Lütfen tekrar deneyin."
+            }
+        }
+    },
+    "profilePage": {
+        "title": "Profilim",
+        "cardTitle": "Profil Bilgileri",
+        "cardDescription": "Kişisel bilgilerinizi buradan güncelleyin.",
+        "changePicture": "Resmi Değiştir",
+        "nameLabel": "İsim",
+        "emailLabel": "E-posta",
+        "saveButton": "Değişiklikleri Kaydet",
+        "toast": {
+            "success": {
+                "title": "Profil Güncellendi",
+                "description": "Değişiklikleriniz başarıyla kaydedildi."
+            },
+             "error": {
+                "title": "Güncelleme Başarısız",
+                "description": "Profiliniz güncellenemedi. Lütfen tekrar deneyin."
+            }
+        }
+    },
+    "settingsPage": {
+        "title": "Ayarlar",
+        "account": {
+            "title": "Şifre",
+            "description": "Şifrenizi buradan güncelleyin. Güçlü ve benzersiz bir şifre kullanmak iyi bir alışkanlıktır.",
+            "currentPassword": "Mevcut Şifre",
+            "newPassword": "Yeni Şifre",
+            "confirmNewPassword": "Yeni Şifreyi Onayla",
+            "saveButton": "Şifreyi Güncelle"
+        },
+        "notifications": {
+            "title": "Bildirimler",
+            "description": "Bildirim tercihlerinizi yönetin.",
+            "priceAlerts": "Fiyat Alarmları",
+            "autoSaveUpdates": "Otomatik Birikim Güncellemeleri",
+            "newsletter": "Bülten",
+            "saveButton": "Tercihleri Kaydet"
+        },
+        "feedback": {
+            "title": "Geri Bildirim Gönder",
+            "description": "Bir fikriniz mi var veya bir hata mı buldunuz? Bize bildirin!",
+            "placeholder": "Geri bildiriminiz bizim için değerlidir...",
+            "submitButton": "Geri Bildirim Gönder",
+            "toast": {
+                "success": {
+                    "title": "Geri Bildirim Alındı!",
+                    "description": "Gelişmemize yardımcı olduğunuz için teşekkür ederiz."
+                },
+                "error": {
+                    "title": "Gönderim Başarısız",
+                    "tooShort": "Geri bildirim en az 10 karakter olmalıdır.",
+                    "general": "Bir hata oluştu. Lütfen tekrar deneyin."
+                }
+            }
+        },
+        "iban": {
+            "title": "Banka Hesapları (IBAN)",
+            "description": "Para yatırma ve çekme işlemleri için kayıtlı banka hesaplarınızı yönetin.",
+            "accountHolder": "Hesap Sahibi Adı",
+            "accountHolderPlaceholder": "Örn: Ali Veli",
+            "iban": "IBAN",
+            "ibanPlaceholder": "TR...",
+            "addButton": "Hesap Ekle",
+            "savedAccounts": "Kayıtlı Hesaplar",
+            "noAccounts": "Kayıtlı banka hesabı bulunmuyor.",
+            "deleteConfirm": {
+                "title": "Emin misiniz?",
+                "description": "Bu işlem, {iban} ile biten IBAN'ı kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+                "cancel": "İptal",
+                "confirm": "Sil"
+            },
+            "toast": {
+                "success": {
+                    "addTitle": "Hesap Eklendi",
+                    "addDescription": "Yeni banka hesabı kaydedildi.",
+                    "deleteTitle": "Hesap Silindi",
+                    "deleteDescription": "Banka hesabı kaldırıldı."
+                },
+                "error": {
+                    "title": "Hata",
+                    "emptyFields": "Hesap sahibi ve IBAN boş bırakılamaz.",
+                    "invalidIban": "Lütfen geçerli bir IBAN girin."
+                }
+            }
+        },
+        "toast": {
+            "saveSuccess": {
+                "title": "Ayarlar Kaydedildi",
+                "description": "Yeni ayarlarınız uygulandı."
+            }
+        }
+    },
+    "depositPage": {
+        "title": "Para Yatır",
+        "description": "VaultWise hesabınıza Türk Lirası yatırın.",
+        "cardTitle": "Para Yatırma",
+        "cardDescription": "Havale yapmak için aşağıdaki banka hesaplarımızdan birini seçin. Tutar kısa süre içinde hesabınıza yansıtılacaktır.",
+        "identityWarning": {
+            "title": "Önemli Bilgilendirme",
+            "description": "Sadece kendi adınıza kayıtlı bir banka hesabından para yatırabilirsiniz. Farklı kişilerden gelen transferler iade edilecektir."
+        },
+        "amountLabel": "Tutar (TL)",
+        "ibanLabel": "Alıcı Hesap (IBAN)",
+        "ibanPlaceholder": "Bir banka hesabı seçin",
+        "noIban": "Transfer yapılacak banka hesabı bulunamadı. Lütfen daha sonra tekrar kontrol edin veya destek ile iletişime geçin.",
+        "button": "Para Yatır",
+        "toast": {
+            "success": {
+                "title": "Yatırma Talimatı Alındı",
+                "description": "{amount} TL tutarındaki yatırma işleminiz başlatıldı. Kontrollerden sonra hesabınıza yansıyacaktır."
+            },
+            "error": {
+                "title": "Hata",
+                "invalidInput": "Lütfen geçerli bir tutar girin ve alıcı banka hesabını seçin."
+            }
+        }
+    },
+    "withdrawPage": {
+        "title": "Para Çek",
+        "description": "VaultWise hesabınızdan Türk Lirası çekin.",
+        "summary": {
+            "title": "Bakiye Özeti",
+            "availableBalance": "Kullanılabilir Bakiye"
+        },
+        "cardTitle": "Para Çekme",
+        "cardDescription": "Çekmek istediğiniz tutarı ve IBAN'ı girin.",
+        "amountLabel": "Çekilecek Tutar (TL)",
+        "transactionFeeLabel": "İşlem Ücreti",
+        "netAmountLabel": "Hesaba Geçecek Tutar",
+        "ibanLabel": "Banka Hesabınız (IBAN)",
+        "ibanPlaceholder": "Kayıtlı hesaplarınızdan seçin",
+        "noIban": "Kayıtlı IBAN bulunamadı. Lütfen",
+        "button": "Para Çek",
+        "fastInfo": {
+            "title": "7/24 FAST Transfer",
+            "description": "Para çekme işlemleri FAST sistemi üzerinden anında gerçekleştirilir."
+        },
+        "info": {
+            "title": "Önemli Bilgiler",
+            "personalAccount": "Yalnızca kendi adınıza kayıtlı bir banka hesabına para çekebilirsiniz.",
+            "limit24h": "Kalan günlük para çekme limitiniz {amount}.",
+            "limit30d": "Kalan aylık para çekme limitiniz {amount}.",
+            "minWithdrawal": "Minimum para çekme tutarı {amount} TL'dir.",
+            "supportedBanks": "Akbank, Ziraat, Garanti, İş Bankası ve Yapı Kredi'ye yapılan transferler 7/24 işleme alınır.",
+            "otherBanks": "Diğer bankalara yapılan transferler iş günlerinde mesai saatleri içinde gerçekleştirilir."
+        },
+        "toast": {
+            "success": {
+                "title": "Çekim Başarılı",
+                "description": "{amount} TL tutarında gönderim yapıldı."
+            },
+            "error": {
+                "title": "Çekim Başarısız",
+                "invalidInput": "Lütfen bir banka hesabı seçin ve geçerli bir tutar girin.",
+                "minAmount": "Minimum çekim tutarı {min} TL'dir.",
+                "insufficientBalance": "Kullanılabilir bakiye yetersiz.",
+                "limit24h": "Tutar, günlük para çekme limitinizi aşıyor.",
+                "limit30d": "Tutar, aylık para çekme limitinizi aşıyor."
+            }
+        }
+    }
+}
+    

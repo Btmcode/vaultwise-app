@@ -1,0 +1,8 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[functions]
+  # Increase the timeout for the main Next.js server function
+  # to allow for longer-running AI operations.
+  "___netlify-server-handler" = { timeout = 25 }
